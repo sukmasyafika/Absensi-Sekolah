@@ -5,4 +5,8 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+// $routes->get('/', 'Home::index');
+
+$routes->setAutoRoute(true);
+// utama
 $routes->get('/', 'Home::index');
