@@ -36,10 +36,10 @@
     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Data Utama:</h6>
-        <a class="collapse-item" href="<?= base_url('kelas'); ?>">Kelas</a>
-        <a class="collapse-item" href="<?= base_url('thnajaran'); ?>">Tahun Pelajaran</a>
-        <a class="collapse-item" href="<?= base_url('mapel'); ?>">Mata Pelajaran</a>
-        <a class="collapse-item" href="<?= base_url('wakel'); ?>">Wali Kelas</a>
+        <a class="collapse-item" href="<?= base_url('akademik/kelas'); ?>">Kelas</a>
+        <a class="collapse-item" href="<?= base_url('akademik/thnajaran'); ?>">Tahun Pelajaran</a>
+        <a class="collapse-item" href="<?= base_url('akademik/mapel'); ?>">Mata Pelajaran</a>
+        <a class="collapse-item" href="<?= base_url('akademik/jurusan'); ?>">Jurusan</a>
       </div>
     </div>
   </li>

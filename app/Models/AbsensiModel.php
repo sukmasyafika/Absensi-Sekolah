@@ -9,7 +9,7 @@ class AbsensiModel extends Model
     protected $table            = 'absensi';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
+    protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $useTimestamps    = true;

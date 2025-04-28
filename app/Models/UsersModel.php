@@ -4,14 +4,14 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ThnAjaranModel extends Model
+class UsersModel extends Model
 {
-    protected $table            = 'thn_ajaran';
+    protected $table            = 'users';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $useTimestamps    = true;
-    protected $allowedFields    = ['semester', 'tahun', 'status'];
+    protected $allowedFields    = ['username', 'email', 'password', 'role', 'status', 'id_guru'];
 }

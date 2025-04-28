@@ -48,7 +48,7 @@
                                     <th class="align-middle"><?= $no++; ?></th>
                                     <td class="text-start align-middle"><?= esc($j->guru); ?></td>
                                     <td class="align-middle"><?= esc($j->mapel); ?></td>
-                                    <td class="align-middle"><?= esc($j->kelas); ?></td>
+                                    <td class="align-middle"><?= esc($j->kelas . ' ' . $j->jurusan); ?></td>
                                     <td class="align-middle"><?= esc($j->hari . ', (' . $j->jam_mulai . '-' . $j->jam_selesai . ')'); ?></td>
                                     <td class="align-middle"><?= esc($j->ruangan); ?></td>
                                     <td class="align-middle"><?= esc($j->semester . ' - ' . $j->tahun); ?></td>
@@ -60,15 +60,17 @@
                                         <?php endif; ?>
                                     </td>
                                     <td class="align-middle">
-                                        <a href="<?= site_url('jadwal/detail/' . $j->id); ?>" class="btn btn-primary btn-sm">
-                                            <i class="bi bi-eye"></i> Detail
-                                        </a>
-                                        <a href="<?= site_url('jadwal/edit/' . $j->id); ?>" class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil-square"></i> Edit
-                                        </a>
-                                        <a href="<?= site_url('jadwal/delete/' . $j->id); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?');">
-                                            <i class="bi bi-trash"></i> Hapus
-                                        </a>
+                                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                                            <a href="<?= site_url('jadwal/detail/' . $j->id); ?>" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-eye"></i> Detail
+                                            </a>
+                                            <a href="<?= site_url('jadwal/edit/' . $j->id); ?>" class="btn btn-warning btn-sm">
+                                                <i class="bi bi-pencil-square"></i> Edit
+                                            </a>
+                                            <a href="<?= site_url('jadwal/delete/' . $j->id); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?');">
+                                                <i class="bi bi-trash"></i> Hapus
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

@@ -58,15 +58,17 @@
                                         <?php endif; ?>
                                     </td>
                                     <td class="align-middle">
-                                        <a href="<?= site_url('guru/detail/' . $g->id); ?>" class="btn btn-primary btn-sm">
-                                            <i class="bi bi-eye"></i> Detail
-                                        </a>
-                                        <a href="<?= site_url('guru/edit/' . $g->id); ?>" class="btn btn-warning btn-sm">
-                                            <i class="bi bi-pencil-square"></i> Edit
-                                        </a>
-                                        <a href="<?= site_url('guru/delete/' . $g->id); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus guru ini?');">
-                                            <i class="bi bi-trash"></i> Hapus
-                                        </a>
+                                        <div class="d-flex flex-wrap justify-content-center gap-2">
+                                            <a href="<?= site_url('guru/detail/' . $g->id); ?>" class="btn btn-primary btn-sm">
+                                                <i class="bi bi-eye"></i> Detail
+                                            </a>
+                                            <a href="<?= site_url('guru/edit/' . $g->id); ?>" class="btn btn-warning btn-sm">
+                                                <i class="bi bi-pencil-square"></i> Edit
+                                            </a>
+                                            <a href="<?= site_url('guru/delete/' . $g->id); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                                <i class="bi bi-trash"></i> Hapus
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

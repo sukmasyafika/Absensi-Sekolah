@@ -13,7 +13,7 @@ class SiswaModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $useTimestamps    = true;
-    protected $allowedFields    = ['nama', 'nisn', 'kelas_id', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'thn_masuk', 'status'];
+    protected $allowedFields    = ['slug', 'nama', 'nisn', 'kelas_id', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'thn_masuk', 'status'];
 
     public function getSiswaWithKelas()
     {

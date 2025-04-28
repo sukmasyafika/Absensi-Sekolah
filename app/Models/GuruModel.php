@@ -13,5 +13,5 @@ class GuruModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $useTimestamps    = True;
-    protected $allowedFields    = ['nama', 'nip', 'jabatan', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'thn_masuk', 'foto', 'status'];
+    protected $allowedFields    = ['slug', 'nama', 'nip', 'jabatan', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'thn_masuk', 'foto', 'status'];
 }

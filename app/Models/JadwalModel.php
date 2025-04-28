@@ -17,11 +17,12 @@ class JadwalModel extends Model
 
     public function getJadwal()
     {
-        return $this->select('jadwal.*, guru.nama AS guru, mapel.kode_mapel AS mapel, kelas.nama_kls AS kelas, thn_ajaran.semester AS semester, thn_ajaran.tahun AS tahun')
+        return $this->select('jadwal.*, guru.nama AS guru, mapel.kode_mapel AS mapel, kelas.nama_kls AS kelas, thn_ajaran.semester AS semester, thn_ajaran.tahun AS tahun, jurusan.kode_jurusan AS jurusan')
             ->join('guru', 'guru.id = jadwal.id_guru')
             ->join('mapel', 'mapel.id = jadwal.id_mapel')
             ->join('kelas', 'kelas.id = jadwal.id_kelas')
             ->join('thn_ajaran', 'thn_ajaran.id = jadwal.id_thnajaran')
+            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
             ->findAll();
     }
 }

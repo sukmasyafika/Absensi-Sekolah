@@ -19,4 +19,7 @@ $routes->get('/absensi', 'Absensi::index');
 
 $routes->get('/jadwal', 'Jadwal::index');
 
-$routes->get('/mapel', 'Mapel::index');
+$routes->get('/akademik/thnajaran', 'Akademik::thnAjaran');
+$routes->get('/akademik/kelas', 'Akademik::kelas');
+$routes->get('/akademik/mapel', 'Akademik::mapel');
+$routes->get('/akademik/wakel', 'Akademik::wakel');

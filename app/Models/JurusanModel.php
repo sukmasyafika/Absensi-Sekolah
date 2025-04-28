@@ -9,9 +9,9 @@ class JurusanModel extends Model
     protected $table            = 'jurusan';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
+    protected $returnType       = 'object';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $useTimestamps    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = ['kode_jurusan', 'nama_jurusan'];
 }
