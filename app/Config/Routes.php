@@ -9,4 +9,14 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->setAutoRoute(true);
 // utama
-$routes->get('/', 'Home::index');
+$routes->get('/', 'Dashboard::index');
+
+$routes->get('/siswa', 'Siswa::index');
+
+$routes->get('/guru', 'Guru::index');
+
+$routes->get('/absensi', 'Absensi::index');
+
+$routes->get('/jadwal', 'Jadwal::index');
+
+$routes->get('/mapel', 'Mapel::index');
