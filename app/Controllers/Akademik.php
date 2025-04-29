@@ -7,6 +7,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\ThnAjaranModel;
 use App\Models\KelasModel;
 use App\Models\mapelModel;
+use App\Models\jurusanModel;
 
 class Akademik extends BaseController
 {
@@ -14,12 +15,14 @@ class Akademik extends BaseController
     protected $thnAjaranModel;
     protected $kelasModel;
     protected $mapelModel;
+    protected $jurusanModel;
 
     public function __construct()
     {
         $this->thnAjaranModel = new ThnAjaranModel();
         $this->kelasModel = new KelasModel();
         $this->mapelModel = new mapelModel();
+        $this->jurusanModel = new jurusanModel();
     }
 
     public function thnajaran()
@@ -50,5 +53,15 @@ class Akademik extends BaseController
         ];
 
         return view('admin/akademik/mapel/index', $data);
+    }
+
+    public function jurusan()
+    {
+        $data = [
+            'title' => 'Mata Pelajaran',
+            'jurusan' => $this->jurusanModel->findAll(),
+        ];
+
+        return view('admin/akademik/jurusan/index', $data);
     }
 }

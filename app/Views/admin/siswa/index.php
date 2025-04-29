@@ -8,7 +8,7 @@
     <div class="card shadow-lg mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Manajemen Siswa</h6>
-            <a href="<?= site_url('siswa/tambah'); ?>" class="btn btn-sm btn-success shadow-sm">
+            <a href="<?= site_url('siswa/import'); ?>" class="btn btn-sm btn-success shadow-sm">
                 <i class="bi bi-file-earmark-spreadsheet me-2"></i> Import Excel
             </a>
         </div>
@@ -16,7 +16,7 @@
         <div class="card-body">
 
             <div class="d-flex justify-content-end mb-3">
-                <a href="<?= site_url('siswa/tambah'); ?>" class="btn btn-primary">
+                <a href="<?= site_url('siswa/create'); ?>" class="btn btn-primary">
                     <i class="bi bi-plus-circle"></i> Tambah Data
                 </a>
             </div>
