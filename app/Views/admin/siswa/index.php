@@ -5,6 +5,19 @@
 <div class="container-fluid">
     <h1 class="h3 mb-3 text-gray-800 fw-bold">Data Siswa</h1>
 
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="<?= site_url('/'); ?>"><i class="bi bi-house"></i></a>
+            </li>
+            <li class="breadcrumb-item"><a href="#">Kelas</a></li>
+            <li class="breadcrumb-item"><a href="#">Jurusan</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Mata Pelajaran</li>
+        </ol>
+    </nav>
+    <!-- End Breadcrumb -->
+
     <div class="card shadow-lg mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Manajemen Siswa</h6>

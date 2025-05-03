@@ -3,7 +3,21 @@
 <?= $this->section('admin-content'); ?>
 
 <div class="container-fluid">
+
     <h1 class="h3 mb-4 text-gray-800 fw-bold">Data Guru</h1>
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="<?= site_url('/'); ?>"><i class="bi bi-house"></i></a>
+            </li>
+            <li class="breadcrumb-item"><a href="#">Kelas</a></li>
+            <li class="breadcrumb-item"><a href="#">Jurusan</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Mata Pelajaran</li>
+        </ol>
+    </nav>
+    <!-- End Breadcrumb -->
 
     <div class="card shadow-lg mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -14,7 +28,6 @@
         </div>
 
         <div class="card-body">
-
             <div class="d-flex justify-content-end mb-3">
                 <a href="<?= site_url('guru/tambah'); ?>" class="btn btn-primary">
                     <i class="bi bi-plus-circle"></i> Tambah Data

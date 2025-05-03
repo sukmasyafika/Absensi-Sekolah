@@ -11,6 +11,10 @@ $routes->setAutoRoute(true);
 // utama
 $routes->get('/', 'Dashboard::index');
 
+$routes->get('/login', 'Login::index');
+
+
+
 $routes->get('/siswa', 'Siswa::index');
 $routes->get('/siswa/create', 'Siswa::create');
 $routes->post('/siswa/save', 'Siswa::save');
