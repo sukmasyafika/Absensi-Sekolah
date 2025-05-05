@@ -15,3 +15,5 @@ $(document).ready(function() {
     dom: '<"row mb-3"<"col-12 col-md-6 mb-2"l><"col-12 col-md-6"f>>t<"row mt-3"<"col-sm-6"i><"col-sm-6"p>>'
   });
 });
+
+

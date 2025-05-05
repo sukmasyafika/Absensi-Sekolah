@@ -6,14 +6,17 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\SiswaModel;
+use App\Models\KelasModel;
 
 class Siswa extends BaseController
 {
     protected $siswaModel;
+    protected $kelasModel;
 
     public function __construct()
     {
         $this->siswaModel = new SiswaModel();
+        $this->kelasModel = new KelasModel();
     }
 
     public function index()
@@ -26,11 +29,21 @@ class Siswa extends BaseController
         return view('admin/siswa/index', $data);
     }
 
+    public function detail($slug)
+    {
+        $data = [
+            'title' => 'Detail Siswa',
+            'siswa' => $this->siswaModel->getSiswa($slug),
+        ];
+        return view('admin/siswa/detail', $data);
+    }
+
     public function create()
     {
         $data = [
             'title' => 'Tambah Siswa',
             'action' => site_url('siswa/save'),
+            'kelas_id' => $this->kelasModel->getKelas(),
             'validation' => \Config\Services::validation()
         ];
 
@@ -100,7 +113,7 @@ class Siswa extends BaseController
         ]);
 
         if (!$validation->run($this->request->getPost())) {
-            return redirect()->back()->withInput()->with('validation', $validation->getErrors());
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
         $slug = url_title($this->request->getVar('nama'), '-', true);
@@ -122,11 +135,15 @@ class Siswa extends BaseController
         return redirect()->to('/siswa');
     }
 
-    public function edit($id)
+    public function edit($slug)
     {
+        $siswa = $this->siswaModel->getSiswa($slug);
+
         $data = [
             'title' => 'Edit Siswa',
-            'action' => site_url('siswa/update/' . $id),
+            'action' => base_url('siswa/update/' . $siswa->id),
+            'kelas_id' => $this->kelasModel->getKelas(),
+            'siswa' => $siswa,
             'validation' => \Config\Services::validation()
         ];
 
@@ -135,6 +152,14 @@ class Siswa extends BaseController
 
     public function update($id)
     {
+        $siswaLama = $this->siswaModel->getSiswa($this->request->getVar('slug'));
+
+        if ($siswaLama && $siswaLama->nama === $this->request->getVar('nama')) {
+            $nama = 'required';
+        } else {
+            $nama = 'required|is_unique[siswa.nama]';
+        }
+
         $validation = service('validation');
         $validation->setRules([
             'nama' => [
@@ -144,12 +169,12 @@ class Siswa extends BaseController
                 ]
             ],
             'nisn' => [
-                'rules' => 'required|is_unique[siswa.nisn]|numeric|exact_length[10]',
+                'rules' => 'required|numeric|exact_length[10]|is_unique[siswa.nisn,id,' . $id . ']',
                 'errors' => [
                     'required'      => 'NISN wajib diisi.',
-                    'is_unique'     => 'NISN sudah terdaftar, gunakan NISN lain.',
                     'numeric'       => 'NISN hanya boleh berisi angka.',
-                    'exact_length'  => 'NISN harus terdiri dari 10 digit angka.'
+                    'exact_length'  => 'NISN harus terdiri dari 10 digit angka.',
+                    'is_unique'     => 'NISN sudah terdaftar, gunakan NISN lain.'
                 ]
             ],
             'kelas_id' => [
@@ -196,7 +221,31 @@ class Siswa extends BaseController
         ]);
 
         if (!$validation->run($this->request->getPost())) {
-            return redirect()->back()->withInput()->with('validation', $validation->getErrors());
+            return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
+
+        $slug = url_title($this->request->getPost('nama'), '-', true);
+        $this->siswaModel->update($id, [
+            'nama'           => $this->request->getPost('nama'),
+            'slug'           => $slug,
+            'nisn'           => $this->request->getPost('nisn'),
+            'kelas_id'       => $this->request->getPost('kelas_id'),
+            'tanggal_lahir'  => $this->request->getPost('tanggal_lahir'),
+            'jenis_kelamin'  => $this->request->getPost('jenis_kelamin'),
+            'agama'          => $this->request->getPost('agama'),
+            'thn_masuk'      => $this->request->getPost('thn_masuk'),
+            'status'         => $this->request->getPost('status'),
+        ]);
+
+        session()->setFlashdata('success', 'Data Siswa Berhasil Diperbaharui.');
+
+        return redirect()->to('/siswa');
+    }
+
+    public function delete($id)
+    {
+        $this->siswaModel->delete($id);
+        session()->setFlashdata('success', 'Data Siswa Berhasil DiHapus.');
+        return redirect()->to('/siswa');
     }
 }
