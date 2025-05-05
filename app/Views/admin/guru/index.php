@@ -6,18 +6,14 @@
 
     <h1 class="h3 mb-4 text-gray-800 fw-bold">Data Guru</h1>
 
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="<?= site_url('/'); ?>"><i class="bi bi-house"></i></a>
-            </li>
-            <li class="breadcrumb-item"><a href="#">Kelas</a></li>
-            <li class="breadcrumb-item"><a href="#">Jurusan</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Mata Pelajaran</li>
-        </ol>
-    </nav>
-    <!-- End Breadcrumb -->
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item">
+            <a href="<?= base_url('dashboard'); ?>" class="text-decoration-none text-primary">
+                <i class="bi bi-house-door-fill"></i> Home
+            </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page"><a href="<?= base_url('guru'); ?>" class="text-decoration-none">Guru</a></li>
+    </ol>
 
     <div class="card shadow-lg mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
