@@ -15,14 +15,6 @@ class SiswaModel extends Model
     protected $useTimestamps    = true;
     protected $allowedFields    = ['slug', 'nama', 'nisn', 'kelas_id', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'thn_masuk', 'status'];
 
-    // public function getSiswa($slug = false)
-    // {
-    //     if ($slug === false) {
-    //         return $this->findAll();
-    //     }
-
-    //     return $this->where(['slug' => $slug])->first();
-    // }
 
     public function getSiswa($slug = false)
     {

@@ -48,10 +48,10 @@
       <!-- End Main Content -->
 
       <!-- Footer -->
-      <footer class="sticky-footer bg-white">
+      <footer class="sticky-footer bg-white border mt-5">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; USTJ 2025</span>
+            <span>Copyright &copy; USTJ FIKOM 2025</span>
           </div>
         </div>
       </footer>

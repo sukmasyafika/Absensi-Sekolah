@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\SiswaModel;
@@ -112,22 +111,22 @@ class Siswa extends BaseController
             ],
         ]);
 
-        if (!$validation->run($this->request->getPost())) {
+        if (!$validation->run($this->request->getVar())) {
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
         $slug = url_title($this->request->getVar('nama'), '-', true);
 
         $this->siswaModel->insert([
-            'nama'           => $this->request->getPost('nama'),
+            'nama'           => $this->request->getVar('nama'),
             'slug'           => $slug,
-            'nisn'           => $this->request->getPost('nisn'),
-            'kelas_id'       => $this->request->getPost('kelas_id'),
-            'tanggal_lahir'  => $this->request->getPost('tanggal_lahir'),
-            'jenis_kelamin'  => $this->request->getPost('jenis_kelamin'),
-            'agama'          => $this->request->getPost('agama'),
-            'thn_masuk'      => $this->request->getPost('thn_masuk'),
-            'status'         => $this->request->getPost('status'),
+            'nisn'           => $this->request->getVar('nisn'),
+            'kelas_id'       => $this->request->getVar('kelas_id'),
+            'tanggal_lahir'  => $this->request->getVar('tanggal_lahir'),
+            'jenis_kelamin'  => $this->request->getVar('jenis_kelamin'),
+            'agama'          => $this->request->getVar('agama'),
+            'thn_masuk'      => $this->request->getVar('thn_masuk'),
+            'status'         => $this->request->getVar('status'),
         ]);
 
         session()->setFlashdata('success', 'Data Siswa Berhasil Ditambahkan.');
@@ -220,21 +219,21 @@ class Siswa extends BaseController
             ],
         ]);
 
-        if (!$validation->run($this->request->getPost())) {
+        if (!$validation->run($this->request->getVar())) {
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
-        $slug = url_title($this->request->getPost('nama'), '-', true);
+        $slug = url_title($this->request->getVar('nama'), '-', true);
         $this->siswaModel->update($id, [
-            'nama'           => $this->request->getPost('nama'),
+            'nama'           => $this->request->getVar('nama'),
             'slug'           => $slug,
-            'nisn'           => $this->request->getPost('nisn'),
-            'kelas_id'       => $this->request->getPost('kelas_id'),
-            'tanggal_lahir'  => $this->request->getPost('tanggal_lahir'),
-            'jenis_kelamin'  => $this->request->getPost('jenis_kelamin'),
-            'agama'          => $this->request->getPost('agama'),
-            'thn_masuk'      => $this->request->getPost('thn_masuk'),
-            'status'         => $this->request->getPost('status'),
+            'nisn'           => $this->request->getVar('nisn'),
+            'kelas_id'       => $this->request->getVar('kelas_id'),
+            'tanggal_lahir'  => $this->request->getVar('tanggal_lahir'),
+            'jenis_kelamin'  => $this->request->getVar('jenis_kelamin'),
+            'agama'          => $this->request->getVar('agama'),
+            'thn_masuk'      => $this->request->getVar('thn_masuk'),
+            'status'         => $this->request->getVar('status'),
         ]);
 
         session()->setFlashdata('success', 'Data Siswa Berhasil Diperbaharui.');

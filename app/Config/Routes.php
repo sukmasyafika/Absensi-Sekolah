@@ -22,12 +22,12 @@ $routes->delete('/siswa/delete/(:num)', 'Siswa::delete/$1');
 $routes->get('/siswa/detail/(:any)', 'Siswa::detail/$1');
 
 $routes->get('/guru', 'Guru::index');
-$routes->get('/guru/(:any)', 'Guru::detail/$1');
 $routes->get('/guru/create', 'Guru::create');
 $routes->post('/guru/save', 'Guru::save');
 $routes->get('/guru/edit/(:segment)', 'Guru::edit/$1');
 $routes->post('/guru/update/(:num)', 'Guru::update/$1');
-$routes->delete('/guru/(:num)', 'Guru::delete/$1');
+$routes->delete('/guru/delete/(:num)', 'Guru::delete/$1');
+$routes->get('/guru/detail/(:any)', 'Guru::detail/$1');
 
 $routes->get('/absensi', 'Absensi::index');
 

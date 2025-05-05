@@ -4,28 +4,36 @@
 
 <div class="container-fluid">
 
-    <h1 class="h3 mb-4 text-gray-800 fw-bold">Data Guru</h1>
-
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item">
             <a href="<?= base_url('dashboard'); ?>" class="text-decoration-none text-primary">
                 <i class="bi bi-house-door-fill"></i> Home
             </a>
         </li>
-        <li class="breadcrumb-item active" aria-current="page"><a href="<?= base_url('guru'); ?>" class="text-decoration-none">Guru</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Guru</li>
     </ol>
+
+    <h1 class="h3 mb-4 text-gray-800 fw-bold">Data Guru</h1>
 
     <div class="card shadow-lg mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <h6 class="m-0 font-weight-bold text-primary">Manajemen Guru</h6>
-            <a href="<?= site_url('guru/tambah'); ?>" class="btn btn-sm btn-success shadow-sm">
+            <h5 class="m-0 font-weight-bold text-primary">Manajemen Guru</h5>
+            <a href="<?= site_url('guru/create'); ?>" class="btn btn-success shadow-sm">
                 <i class="bi bi-file-earmark-spreadsheet me-2"></i> Import Excel
             </a>
         </div>
 
         <div class="card-body">
-            <div class="d-flex justify-content-end mb-3">
-                <a href="<?= site_url('guru/tambah'); ?>" class="btn btn-primary">
+
+            <?php if (session()->getFlashdata('success')) : ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session()->getFlashdata('success'); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
+            <div class="d-flex justify-content-start mb-3">
+                <a href="<?= site_url('guru/create'); ?>" class="btn btn-primary">
                     <i class="bi bi-plus-circle"></i> Tambah Data
                 </a>
             </div>
@@ -68,15 +76,19 @@
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex flex-wrap justify-content-center gap-2">
-                                            <a href="<?= site_url('guru/detail/' . $g->id); ?>" class="btn btn-primary btn-sm">
+                                            <a href="<?= base_url('guru/detail/' . $g->slug); ?>" class="btn btn-primary btn-sm">
                                                 <i class="bi bi-eye"></i> Detail
                                             </a>
-                                            <a href="<?= site_url('guru/edit/' . $g->id); ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= base_url('guru/edit/' . $g->slug); ?>" class="btn btn-warning btn-sm">
                                                 <i class="bi bi-pencil-square"></i> Edit
                                             </a>
-                                            <a href="<?= site_url('guru/delete/' . $g->id); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
-                                                <i class="bi bi-trash"></i> Hapus
-                                            </a>
+                                            <form class="form-hapus d-inline" method="post" action="<?= base_url('guru/delete/' . $g->id); ?>">
+                                                <?= csrf_field(); ?>
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button type="submit" class="btn btn-danger btn-delete btn-sm" onclick="return confirm('Yakin ingin menghapus data guru ini?')">
+                                                    <i class="bi bi-trash"></i> Hapus
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>
