@@ -125,7 +125,16 @@ class Guru extends BaseController
         $img->move('assets/img/guru');
         $namaImg = $img->getName();
 
-        $slug = url_title($this->request->getVar('nama'), '-', true);
+        $nama = trim($this->request->getVar('nama'));
+        $kata = explode(' ', $nama);
+        $duaKata = implode(' ', array_slice($kata, 0, 2));
+        $slugDasar = url_title($duaKata, '-', true);
+        $slug = $slugDasar;
+        $i = 1;
+        while ($this->guruModel->where('slug', $slug)->first()) {
+            $slug = $slugDasar . '-' . $i;
+            $i++;
+        }
 
         $this->guruModel->insert([
             'nama'           => $this->request->getVar('nama'),
@@ -256,7 +265,17 @@ class Guru extends BaseController
             }
         }
 
-        $slug = url_title($this->request->getVar('nama'), '-', true);
+        $nama = trim($this->request->getVar('nama'));
+        $kata = explode(' ', $nama);
+        $duaKata = implode(' ', array_slice($kata, 0, 2));
+        $slugDasar = url_title($duaKata, '-', true);
+        $slug = $slugDasar;
+        $i = 1;
+        while ($this->guruModel->where('slug', $slug)->first()) {
+            $slug = $slugDasar . '-' . $i;
+            $i++;
+        }
+
         $this->guruModel->update($id, [
             'nama'           => $this->request->getVar('nama'),
             'slug'           => $slug,
@@ -282,6 +301,21 @@ class Guru extends BaseController
 
         $this->guruModel->delete($id);
         session()->setFlashdata('success', 'Data guru Berhasil DiHapus.');
+        return redirect()->to('/guru');
+    }
+
+    public function hapus()
+    {
+        $ids = $this->request->getPost('ids');
+        if ($ids) {
+            foreach ($ids as $id) {
+                $this->guruModel->delete($id);
+            }
+            session()->setFlashdata('success', 'Data berhasil dihapus.');
+            return redirect()->to('/guru');
+        }
+
+        session()->setFlashdata('success', 'Tidak ada data yang dipilih.');
         return redirect()->to('/guru');
     }
 }

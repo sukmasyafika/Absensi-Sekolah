@@ -21,19 +21,6 @@
             <div class="card shadow-lg">
                 <div class="card-body">
 
-                    <!-- <?php if (session()->has('errors')) : ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                            <strong>Terjadi Kesalahan:</strong>
-                            <ul>
-                                <?php foreach (session('errors') as $error) : ?>
-                                    <li><?= esc($error); ?></li>
-                                <?php endforeach; ?>
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    <?php endif; ?> -->
-
                     <form action="<?= $action; ?>" method="POST">
                         <?= csrf_field(); ?>
 

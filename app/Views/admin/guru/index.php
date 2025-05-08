@@ -38,65 +38,76 @@
                 </a>
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-striped table-hover" id="datatabel">
-                    <thead class="bg-primary text-white text-center align-middle">
-                        <tr>
-                            <th>No</th>
-                            <th>Nama Lengkap</th>
-                            <th>NIP</th>
-                            <th>Jenis Kelamin</th>
-                            <th>Jabatan</th>
-                            <th>Tahun Masuk</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($guru)): ?>
+            <form action="<?= site_url('guru/hapus'); ?>" method="post" class="form-hapus" id="formHapusBanyak">
+                <?= csrf_field(); ?>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="datatabel">
+                        <thead class="bg-primary text-white text-center ">
                             <tr>
-                                <td colspan="8" class="text-center">Tidak ada data guru.</td>
+                                <th style="width: 2%;" class="align-middle"><input type="checkbox" id="selectAll"></th>
+                                <th style="width: 5%;" class="align-middle">No</th>
+                                <th style="width: 15%;" class="align-middle">Nama Lengkap</th>
+                                <th style="width: 8%;" class="align-middle">NIP</th>
+                                <th style="width: 10%;" class="align-middle">Jenis Kelamin</th>
+                                <th style="width: 10%;" class="align-middle">Jabatan</th>
+                                <th style="width: 5%;" class="align-middle">Tahun Masuk</th>
+                                <th style="width: 10%;" class="align-middle">Status</th>
+                                <th style="width: 20%;" class="align-middle">Action</th>
                             </tr>
-                        <?php else: ?>
-                            <?php $no = 1; ?>
-                            <?php foreach ($guru as $g): ?>
-                                <tr class="text-center">
-                                    <th class="align-middle"><?= $no++; ?></th>
-                                    <td class="text-start align-middle"><?= esc($g->nama); ?></td>
-                                    <td class="align-middle"><?= esc($g->nip); ?></td>
-                                    <td class="align-middle"><?= esc($g->jenis_kelamin); ?></td>
-                                    <td class="align-middle"><?= esc($g->jabatan); ?></td>
-                                    <td class="align-middle"><?= esc($g->thn_masuk); ?></td>
-                                    <td class="align-middle">
-                                        <?php if ($g->status == 'Aktif'): ?>
-                                            <span class="badge bg-success"><?= esc($g->status); ?></span>
-                                        <?php else: ?>
-                                            <span class="badge bg-danger"><?= esc($g->status); ?></span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="d-flex flex-wrap justify-content-center gap-2">
-                                            <a href="<?= base_url('guru/detail/' . $g->slug); ?>" class="btn btn-primary btn-sm">
-                                                <i class="bi bi-eye"></i> Detail
-                                            </a>
-                                            <a href="<?= base_url('guru/edit/' . $g->slug); ?>" class="btn btn-warning btn-sm">
-                                                <i class="bi bi-pencil-square"></i> Edit
-                                            </a>
-                                            <form class="form-hapus d-inline" method="post" action="<?= base_url('guru/delete/' . $g->id); ?>">
-                                                <?= csrf_field(); ?>
-                                                <input type="hidden" name="_method" value="DELETE">
-                                                <button type="submit" class="btn btn-danger btn-delete btn-sm" onclick="return confirm('Yakin ingin menghapus data guru ini?')">
-                                                    <i class="bi bi-trash"></i> Hapus
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($guru)): ?>
+                                <tr>
+                                    <td colspan="8" class="text-center">Tidak ada data guru.</td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                            <?php else: ?>
+                                <?php $no = 1; ?>
+                                <?php foreach ($guru as $g): ?>
+                                    <tr>
+                                        <td><input type="checkbox" class="data-checkbox align-middle" name="ids[]" value="<?= $g->id ?>"></td>
+                                        <td class="align-middle"><?= $no++; ?></td>
+                                        <td class="text-start align-middle"><?= esc($g->nama); ?></td>
+                                        <td class="align-middle"><?= esc($g->nip); ?></td>
+                                        <td class="align-middle"><?= esc($g->jenis_kelamin); ?></td>
+                                        <td class="align-middle"><?= esc($g->jabatan); ?></td>
+                                        <td class="align-middle"><?= esc($g->thn_masuk); ?></td>
+                                        <td class="align-middle">
+                                            <?php if ($g->status == 'Aktif'): ?>
+                                                <span class="badge bg-success"><?= esc($g->status); ?></span>
+                                            <?php else: ?>
+                                                <span class="badge bg-danger"><?= esc($g->status); ?></span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="d-flex flex-wrap justify-content-center gap-2">
+                                                <a href="<?= base_url('guru/detail/' . $g->slug); ?>" class="btn btn-primary btn-sm">
+                                                    <i class="bi bi-eye"></i> Detail
+                                                </a>
+                                                <a href="<?= base_url('guru/edit/' . $g->slug); ?>" class="btn btn-warning btn-sm">
+                                                    <i class="bi bi-pencil-square"></i> Edit
+                                                </a>
+                                                <form class="form-hapus d-inline" method="post" action="<?= base_url('guru/delete/' . $g->id); ?>">
+                                                    <?= csrf_field(); ?>
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <button type="button" class="btn-delete btn btn-danger btn-sm">
+                                                        <i class="bi bi-trash"></i> Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-3">
+                    <button type="button" class="btn-delete btn btn-danger" id="btnHapusBanyak" disabled>
+                        <i class="bi bi-trash3-fill me-1"></i> Hapus Data
+                    </button>
+                </div>
+            </form>
         </div>
 
     </div>
