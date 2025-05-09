@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
     searching: true,
     info: true,
     lengthChange: true,
-    pageLength: 25,
+    pageLength: 10,
     ordering: false,
     language: {
       zeroRecords: "Data tidak ditemukan"

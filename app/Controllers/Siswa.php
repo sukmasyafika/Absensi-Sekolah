@@ -307,8 +307,10 @@ class Siswa extends BaseController
             $spreadsheet = $reader->load($file);
             $rows = $spreadsheet->getActiveSheet()->toArray();
 
+            $validData = [];
             $errors = [];
             $berhasil = 0;
+
             foreach ($rows as $key => $value) {
                 if ($key == 0) continue;
 
@@ -320,55 +322,95 @@ class Siswa extends BaseController
                 $agama = trim($value[6]);
                 $thn_masuk = trim($value[7]);
                 $status = trim($value[8]);
-                $parts = explode(' ', $kelas_id);
 
-                if (count($parts) < 3) {
-                    $errors[] = "Format kolom kelas tidak valid di baris ke-$key (harus: Nama Kelas, Kode Jurusan, Rombel)";
+                $requiredFields = [
+                    'nama' => $nama,
+                    'nisn' => $nisn,
+                    'kelas_id' => $kelas_id,
+                    'tanggal_lahir' => $tanggal_lahir,
+                    'jenis_kelamin' => $jenis_kelamin,
+                    'agama' => $agama,
+                    'thn_masuk' => $thn_masuk,
+                    'status' => $status,
+                ];
+
+                $emptyFields = [];
+                foreach ($requiredFields as $field => $value) {
+                    if (empty($value)) {
+                        $emptyFields[] = ucfirst(str_replace('_', ' ', $field));
+                    }
                 }
 
-                $nama_kls = $parts[0];
-                $kode_jurusan = $parts[1];
-                $rombel = $parts[2];
-                $kelas = $this->kelasModel->getIdByNamaDanJurusanDanRombel($nama_kls, $kode_jurusan, $rombel);
-                if (!$kelas) {
-                    $errors[] = "Kelas $kelas_id Tidak terdaftar / Tidak ada.";
-                }
-
-                $agama1 = $this->siswaModel->getAgama($agama);
-                if (!$agama1) {
-                    $errors[] = "Agama $agama Tidak terdaftar / Tidak ada.";
-                }
-
-                if (!$nama || !$nisn || !$kelas_id || !$tanggal_lahir || !$jenis_kelamin) {
-                    $errors[] = "Baris ke-" . ($key + 1) . " tidak lengkap.";
+                if (!empty($emptyFields)) {
+                    $errors[] = "Baris ke-" . ($key + 1) . " Tidak boleh kosong untuk " . implode(', ', $emptyFields);
                     continue;
                 }
 
-                if (!preg_match('/^\d{10}$/', $nisn)) {
-                    $errors[] = "NISN di baris " . ($key + 1) . " harus 10 digit angka.";
-                    continue;
-                }
+                $customValidations = [
+                    'nisn' => [
+                        'regex' => '/^\d{10}$/',
+                        'error' => "NISN di baris " . ($key + 1) . " harus 10 digit angka.",
+                    ],
+                    'thn_masuk' => [
+                        'regex' => '/^\d{4}$/',
+                        'error' => "Tahun Masuk di baris " . ($key + 1) . " harus 4 digit angka.",
+                    ],
+                ];
 
-                if (!preg_match('/^\d{4}$/', $thn_masuk)) {
-                    $errors[] = "Tahun Masuk di baris " . ($key + 1) . " harus 4 digit angka.";
-                    continue;
+                foreach ($customValidations as $field => $rule) {
+                    if (!preg_match($rule['regex'], $$field)) {
+                        $errors[] = $rule['error'];
+                        continue 2;
+                    }
                 }
 
                 if ($this->siswaModel->where('nisn', $nisn)->first()) {
-                    $errors[] = "NISN Sudah Terdaftar di baris " . ($key + 1) . ".";
+                    $errors[] = "NISN Sudah Terdaftar di baris ke-" . ($key + 1) . ".";
                     continue;
                 }
 
-                if (!in_array(strtolower($jenis_kelamin), ['laki-laki', 'perempuan'])) {
-                    $errors[] = "Jenis kelamin tidak valid di baris " . ($key + 1);
+                $allowed = [
+                    'jenis_kelamin' => ['laki-laki', 'perempuan'],
+                    'agama' => ['islam', 'kristen', 'katolik', 'hindu', 'budha', 'konghucu'],
+                    'status' => ['aktif', 'tidak aktif'],
+                ];
+
+                foreach ($allowed as $field => $validValues) {
+                    if (!in_array(strtolower($$field), $validValues)) {
+                        $errors[] = ucfirst($field) . " " . $$field . " tidak valid di baris ke-" . ($key + 1);
+                    }
+                }
+
+                $parts = explode(' ', $kelas_id);
+                if (count($parts) < 3) {
+                    $errors[] = "Format kolom kelas tidak valid di baris ke-$key (harus: Nama Kelas, Kode Jurusan, Rombel)";
+                    continue;
+                }
+
+                [$nama_kls, $kode_jurusan, $rombel] = $parts;
+                $kelas = $this->kelasModel->getIdByNamaDanJurusanDanRombel($nama_kls, $kode_jurusan, $rombel);
+                if (!$kelas) {
+                    $errors[] = "Kelas $kelas_id Tidak terdaftar / Tidak ada.";
                     continue;
                 }
 
                 if (is_numeric($tanggal_lahir)) {
-                    $tanggal_lahir = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($tanggal_lahir)->format('Y-m-d');
+                    try {
+                        $tanggal_lahir = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($tanggal_lahir)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        $errors[] = "Tanggal lahir tidak valid (format Excel) di baris ke-" . ($key + 1);
+                        continue;
+                    }
                 } else {
-                    $tanggal_lahir = date('Y-m-d', strtotime($tanggal_lahir));
+                    $timestamp = strtotime($tanggal_lahir);
+                    if ($timestamp === false) {
+                        $errors[] = "Format tanggal lahir tidak dikenali di baris ke-" . ($key + 1);
+                        continue;
+                    }
+
+                    $tanggal_lahir = date('Y-m-d', $timestamp);
                 }
+
 
                 $kata = explode(' ', $nama);
                 $duaKata = implode(' ', array_slice($kata, 0, 2));
@@ -379,7 +421,7 @@ class Siswa extends BaseController
                     $slug = $slugDasar . '-' . $i++;
                 }
 
-                $this->siswaModel->insert([
+                $validData[] = [
                     'nama' => $nama,
                     'slug' => $slug,
                     'nisn' => $nisn,
@@ -389,7 +431,7 @@ class Siswa extends BaseController
                     'agama' => $agama,
                     'thn_masuk' => $thn_masuk,
                     'status' => $status,
-                ]);
+                ];
                 $berhasil++;
             }
 
@@ -397,9 +439,11 @@ class Siswa extends BaseController
                 return redirect()->back()->with('error', implode('<br>', $errors));
             }
 
-            return redirect()->back()->with('success', "Import selesai. $berhasil data berhasil, " . count($errors) . " gagal.");
+            $this->siswaModel->insertBatch($validData);
+
+            return redirect()->back()->with('success', "Import berhasil, $berhasil data berhasil diimpor.");
         }
 
-        return redirect()->back()->with('error', 'Format file tidak sesuai. Harus xls atau xlsx.');
+        return redirect()->back()->with('error', 'Format file tidak sesuai, Harus xls atau xlsx.');
     }
 }

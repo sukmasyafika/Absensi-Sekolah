@@ -2,7 +2,7 @@
 
 <?= $this->section('admin-content'); ?>
 
-<div class="container-fluid">
+<div class="container-fluid mt-5 pt-5">
 
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item">
@@ -18,9 +18,50 @@
     <div class="card shadow-lg mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h5 class="m-0 font-weight-bold text-primary">Manajemen Guru</h5>
-            <a href="<?= site_url('guru/create'); ?>" class="btn btn-success shadow-sm">
-                <i class="bi bi-file-earmark-spreadsheet me-2"></i> Import Excel
-            </a>
+            <div class="dropdown-center ms-3">
+                <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-file-earmark-spreadsheet"></i> Import Excel
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="<?= base_url('Guru-Example.xlsx'); ?>">Contoh format File <i class="bi bi-download ms-3"></i></a></li>
+                    <li><a class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#modal-import">Upload File</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Modal Import Data guru -->
+        <div class="modal fade" id="modal-import" tabindex="-1" aria-labelledby="modalImportLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+                <div class="modal-content shadow-lg border-0 rounded-3">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title" id="modalImportLabel">
+                            <i class="bi bi-upload me-2"></i>Import Data guru
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <form action="<?= base_url('guru/import'); ?>" method="post" enctype="multipart/form-data">
+                        <?= csrf_field(); ?>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label fw-semibold">Pilih File Excel</label>
+                                <input type="file" name="file_excel" class="form-control" id="formFile" required>
+                                <div class="form-text text-muted mt-1">
+                                    Hanya mendukung format <strong>.xlsx</strong> atau <strong>.xls</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle me-1"></i> Batal
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-cloud-arrow-up me-1"></i> Import
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
 
         <div class="card-body">
@@ -28,6 +69,14 @@
             <?php if (session()->getFlashdata('success')) : ?>
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <?= session()->getFlashdata('success'); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            <?php if (session()->getFlashdata('error')) : ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Terjadi Kesalahan Mohon Di cek kembali:</strong>
+                    <p class="ps-5"><?= session()->getFlashdata('error'); ?></p>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <?php endif; ?>

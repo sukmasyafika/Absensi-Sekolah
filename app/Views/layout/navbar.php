@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow ">
+<nav class="navbar navbar-expand navbar-light bg-primary topbar mb-4 static-top shadow fixed-top">
   <a class="navbar-brand" href="https://smkn5jpr.sch.id/">
     <img src="<?= base_url('/assets/img/profil/LOGO-SEKOLAH.png'); ?>" alt="SMKN5" width="280">
   </a>
@@ -12,7 +12,7 @@
     <li class="nav-item dropdown no-arrow mx-1">
       <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="bi bi-bell-fill"></i>
+        <i class="bi bi-bell-fill text-white"></i>
         <span class="badge badge-danger badge-counter">0</span>
       </a>
       <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -39,7 +39,7 @@
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="mr-2 d-none d-lg-inline text-gray-600 small">username</span>
+        <span class="mr-2 d-none d-lg-inline text-white small">username</span>
         <img class="img-profile rounded-circle"
           src=" <?= base_url('/assets/img/profil/random_profile.svg'); ?>">
       </a>

@@ -2,7 +2,7 @@
 
 <?= $this->section('admin-content'); ?>
 
-<div class="container-fluid">
+<div class="container-fluid mt-5 pt-5">
 
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item">
@@ -23,7 +23,7 @@
                     <i class="bi bi-file-earmark-spreadsheet"></i> Import Excel
                 </button>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="<?= base_url('Siswa-Example.xlsx'); ?>">Contoh File <i class="bi bi-download ms-3"></i></a></li>
+                    <li><a class="dropdown-item" href="<?= base_url('Siswa-Example.xlsx'); ?>">Contoh Format File <i class="bi bi-download ms-3"></i></a></li>
                     <li><a class="dropdown-item fw-bold" data-bs-toggle="modal" data-bs-target="#modal-import">Upload File</a></li>
                 </ul>
             </div>
@@ -75,10 +75,8 @@
             <?php if (session()->getFlashdata('error')) : ?>
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    <strong>Terjadi Kesalahan:</strong>
-                    <ul>
-                        <li><?= session()->getFlashdata('error'); ?></li>
-                    </ul>
+                    <strong>Terjadi Kesalahan Mohon Di cek kembali:</strong>
+                    <p class="ps-5"><?= session()->getFlashdata('error'); ?></p>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             <?php endif; ?>
@@ -89,7 +87,7 @@
                 </a>
 
                 <form method="get" action="<?= site_url('siswa'); ?>">
-                    <div class="input-group" style="max-width: 250px;">
+                    <div class="input-group" style="max-width: 300px;">
                         <select name="filter_kelas" class="form-select" aria-label="Pilih kelas">
                             <option value="">Semua Kelas</option>
                             <?php foreach ($kelas_id as $kls): ?>
@@ -98,9 +96,12 @@
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <button class="btn btn-outline-primary" type="submit">
+                        <button class="btn btn-primary" type="submit">
                             <i class="bi bi-funnel-fill"></i> Filter
                         </button>
+                        <a href="<?= base_url('siswa'); ?>" class="btn btn-warning">
+                            <i class="bi bi-x-circle"></i> Reset
+                        </a>
                     </div>
                 </form>
             </div>

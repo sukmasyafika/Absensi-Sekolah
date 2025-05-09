@@ -2,7 +2,7 @@
 
 <?= $this->section('admin-content'); ?>
 
-<div class="container-fluid">
+<div class="container-fluid mt-5 pt-5">
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item">
             <a href="<?= base_url('dashboard'); ?>" class="text-decoration-none text-primary">

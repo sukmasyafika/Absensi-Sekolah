@@ -149,14 +149,16 @@ class Guru extends BaseController
             'status'         => $this->request->getVar('status'),
         ]);
 
-        session()->setFlashdata('success', 'Data guru Berhasil Ditambahkan.');
-
-        return redirect()->to('/guru');
+        return redirect()->to('/guru')->with('success', 'Data guru Berhasil Ditambahkan.');
     }
 
     public function edit($slug)
     {
         $guru = $this->guruModel->getGuru($slug);
+
+        if (!$guru) {
+            return redirect()->to('/guru')->with('error', 'Data guru tidak ditemukan.');
+        }
 
         $data = [
             'title' => 'Edit guru',
@@ -289,33 +291,180 @@ class Guru extends BaseController
             'status'         => $this->request->getVar('status'),
         ]);
 
-        session()->setFlashdata('success', 'Data guru Berhasil Diperbaharui.');
-
-        return redirect()->to('/guru');
+        return redirect()->to('/guru')->with('success', 'Guru <strong>' . $guruLama->nama . '</strong> berhasil diperbaharui.');
     }
 
     public function delete($id)
     {
-        $guruFoto = $this->guruModel->find($id);
-        unlink('assets/img/guru/' . $guruFoto->foto);
+        $guru = $this->guruModel->find($id);
 
-        $this->guruModel->delete($id);
-        session()->setFlashdata('success', 'Data guru Berhasil DiHapus.');
-        return redirect()->to('/guru');
+        if ($guru) {
+            if (!empty($guru->foto) && file_exists('assets/img/guru/' . $guru->foto)) {
+                unlink('assets/img/guru/' . $guru->foto);
+            }
+
+            $this->guruModel->delete($id);
+            return redirect()->back()->with('success', 'Guru <strong>' . esc($guru->nama) . '</strong> berhasil dihapus.');
+        }
+
+        return redirect()->back()->with('error', 'Data guru tidak ditemukan.');
     }
 
     public function hapus()
     {
         $ids = $this->request->getPost('ids');
+
         if ($ids) {
+            $jumlah = 0;
             foreach ($ids as $id) {
-                $this->guruModel->delete($id);
+                $guru = $this->guruModel->find($id);
+                if ($guru) {
+                    $this->guruModel->delete($id);
+                    $jumlah++;
+                }
             }
-            session()->setFlashdata('success', 'Data berhasil dihapus.');
-            return redirect()->to('/guru');
+
+            return redirect()->back()->with('success', "<strong>$jumlah</strong> data Guru berhasil dihapus.");
         }
 
-        session()->setFlashdata('success', 'Tidak ada data yang dipilih.');
-        return redirect()->to('/guru');
+        return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+    }
+
+    public function import()
+    {
+        $file = $this->request->getFile('file_excel');
+        $extension = $file->getClientExtension();
+
+        if ($extension == 'xlsx' || $extension == 'xls') {
+            $reader = $extension === 'xls' ? new \PhpOffice\PhpSpreadsheet\Reader\Xls() : new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            $spreadsheet = $reader->load($file);
+            $rows = $spreadsheet->getActiveSheet()->toArray();
+
+            $validData = [];
+            $errors = [];
+            $berhasil = 0;
+
+            foreach ($rows as $key => $value) {
+                if ($key == 0) continue;
+
+                $nama = trim($value[1]);
+                $nip = trim($value[2]);
+                $jabatan = trim($value[3]);
+                $tanggal_lahir = trim($value[4]);
+                $jenis_kelamin = trim($value[5]);
+                $agama = trim($value[6]);
+                $thn_masuk = trim($value[7]);
+                $status = trim($value[8]);
+
+                $requiredFields = [
+                    'nama' => $nama,
+                    'nip' => $nip,
+                    'jabatan' => $jabatan,
+                    'tanggal_lahir' => $tanggal_lahir,
+                    'jenis_kelamin' => $jenis_kelamin,
+                    'agama' => $agama,
+                    'thn_masuk' => $thn_masuk,
+                    'status' => $status,
+                ];
+
+                $emptyFields = [];
+                foreach ($requiredFields as $field => $value) {
+                    if (empty($value)) {
+                        $emptyFields[] = ucfirst(str_replace('_', ' ', $field));
+                    }
+                }
+
+                if (!empty($emptyFields)) {
+                    $errors[] = "Baris ke-" . ($key + 1) . " Tidak boleh kosong untuk " . implode(', ', $emptyFields);
+                    continue;
+                }
+
+                $customValidations = [
+                    'nip' => [
+                        'regex' => '/^\d{18}$/',
+                        'error' => "NIP di baris " . ($key + 1) . " harus 18 digit angka.",
+                    ],
+                    'thn_masuk' => [
+                        'regex' => '/^\d{4}$/',
+                        'error' => "Tahun Masuk di baris " . ($key + 1) . " harus 4 digit angka.",
+                    ],
+                ];
+
+                foreach ($customValidations as $field => $rule) {
+                    if (!preg_match($rule['regex'], $$field)) {
+                        $errors[] = $rule['error'];
+                        continue 2;
+                    }
+                }
+
+                if ($this->guruModel->where('nip', $nip)->first()) {
+                    $errors[] = "NIP Sudah Terdaftar di baris ke-" . ($key + 1) . ".";
+                    continue;
+                }
+
+                $allowed = [
+                    'jenis_kelamin' => ['laki-laki', 'perempuan'],
+                    'agama' => ['islam', 'kristen', 'katolik', 'hindu', 'budha', 'konghucu'],
+                    'status' => ['aktif', 'tidak aktif'],
+                ];
+
+                foreach ($allowed as $field => $validValues) {
+                    if (!in_array(strtolower($$field), $validValues)) {
+                        $errors[] = ucfirst($field) . " " . $$field . " tidak valid di baris ke-" . ($key + 1);
+                    }
+                }
+
+                if (is_numeric($tanggal_lahir)) {
+                    try {
+                        $tanggal_lahir = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($tanggal_lahir)->format('Y-m-d');
+                    } catch (\Exception $e) {
+                        $errors[] = "Tanggal lahir tidak valid (format Excel) di baris ke-" . ($key + 1);
+                        continue;
+                    }
+                } else {
+                    $timestamp = strtotime($tanggal_lahir);
+                    if ($timestamp === false) {
+                        $errors[] = "Format tanggal lahir tidak dikenali di baris ke-" . ($key + 1);
+                        continue;
+                    }
+
+                    $tanggal_lahir = date('Y-m-d', $timestamp);
+                }
+
+
+                $kata = explode(' ', $nama);
+                $duaKata = implode(' ', array_slice($kata, 0, 2));
+                $slugDasar = url_title($duaKata, '-', true);
+                $slug = $slugDasar;
+                $i = 1;
+                while ($this->guruModel->where('slug', $slug)->first()) {
+                    $slug = $slugDasar . '-' . $i++;
+                }
+
+                $validData[] = [
+                    'nama' => $nama,
+                    'slug' => $slug,
+                    'nip' => $nip,
+                    'jabatan' => $jabatan,
+                    'tanggal_lahir' => $tanggal_lahir,
+                    'jenis_kelamin' => $jenis_kelamin,
+                    'agama' => $agama,
+                    'thn_masuk' => $thn_masuk,
+                    'status' => $status,
+                    'foto' => 'default.png',
+                ];
+                $berhasil++;
+            }
+
+            if (!empty($errors)) {
+                return redirect()->back()->with('error', implode('<br>', $errors));
+            }
+
+            $this->guruModel->insertBatch($validData);
+
+            return redirect()->back()->with('success', "Import berhasil, $berhasil data berhasil diimpor.");
+        }
+
+        return redirect()->back()->with('error', 'Format file tidak sesuai, Harus xls atau xlsx.');
     }
 }

@@ -22,6 +22,7 @@
 
 <!-- Css-->
 <link href="<?= base_url('/assets/css/sb-admin-2.min.css'); ?>" rel="stylesheet">
+<link href="<?= base_url('/assets/css/myStyle.css'); ?>" rel="stylesheet">
 
 <!-- chart js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

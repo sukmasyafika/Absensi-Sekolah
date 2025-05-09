@@ -2,7 +2,7 @@
 
 <?= $this->section('admin-content'); ?>
 
-<div class="container-fluid">
+<div class="container-fluid mt-5 pt-5">
 
   <ol class="breadcrumb mb-4">
     <li class="breadcrumb-item">
@@ -16,7 +16,7 @@
 
   <h1 class="h3 mb-3 text-gray-800 fw-bold"><?= $title ?></h1>
 
-  <img src="<?= base_url('assets/img/guru/' . $guru->foto); ?>" alt="<?= $guru->nama; ?>">
+  <img src="<?= base_url('assets/img/guru/' . (!empty($guru->foto) ? $guru->foto : 'default.png')); ?>" alt="<?= esc($guru->nama); ?>">
 
   <h3 class="text-uppercase">Nama lengkap <?= esc($guru->nama); ?></h3>
   <h3 class="text-uppercase">NIP: <?= esc($guru->nip); ?></h3>
