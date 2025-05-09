@@ -15,14 +15,6 @@ class SiswaModel extends Model
     protected $useTimestamps    = true;
     protected $allowedFields    = ['slug', 'nama', 'nisn', 'kelas_id', 'tanggal_lahir', 'jenis_kelamin', 'agama', 'thn_masuk', 'status'];
 
-    // public function getSiswa($slug = false)
-    // {
-    //     if ($slug === false) {
-    //         return $this->findAll();
-    //     }
-
-    //     return $this->where(['slug' => $slug])->first();
-    // }
 
     public function getSiswa($slug = false)
     {
@@ -34,15 +26,24 @@ class SiswaModel extends Model
             return $builder->findAll();
         }
 
-        return $builder->where('siswa.slug', $slug)->first();
+        return $builder->where(['slug' => $slug])->first();
     }
 
-
-    public function getSiswaWithKelas()
+    public function getAgama($agama)
     {
-        return $this->select('siswa.*, kelas.nama_kls AS kelas_name, jurusan.kode_jurusan AS jurusan_name, kelas.rombel')
+        return $this->where('agama', $agama)->first();
+    }
+
+    public function getSiswaWithKelas($filter_kelas = null)
+    {
+        $builder = $this->select('siswa.*, kelas.nama_kls AS kelas_name, jurusan.kode_jurusan AS jurusan_name, kelas.rombel')
             ->join('kelas', 'kelas.id = siswa.kelas_id')
-            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
-            ->findAll();
+            ->join('jurusan', 'jurusan.id = kelas.jurusan_id');
+
+        if (!empty($filter_kelas)) {
+            $builder->where('kelas.id', $filter_kelas);
+        }
+
+        return $builder->findAll();
     }
 }

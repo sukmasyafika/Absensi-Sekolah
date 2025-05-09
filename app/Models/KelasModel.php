@@ -13,7 +13,7 @@ class KelasModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $useTimestamps    = true;
-    protected $allowedFields    = ['nama_kls', 'jurusan_id', 'wali_kelas_id'];
+    protected $allowedFields    = ['nama_kls', 'rombel', 'jurusan_id', 'wali_kelas_id'];
 
     public function getKelas()
     {
@@ -21,5 +21,15 @@ class KelasModel extends Model
             ->join('jurusan', 'jurusan.id = kelas.jurusan_id', 'left')
             ->join('guru', 'guru.id = kelas.wali_kelas_id', 'left')
             ->findAll();
+    }
+
+    public function getIdByNamaDanJurusanDanRombel($nama_kls, $kode_jurusan, $rombel)
+    {
+        return $this->select('kelas.id')
+            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
+            ->where('kelas.nama_kls', $nama_kls)
+            ->where('jurusan.kode_jurusan', $kode_jurusan)
+            ->where('kelas.rombel', $rombel)
+            ->first();
     }
 }
