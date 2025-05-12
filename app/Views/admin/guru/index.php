@@ -113,7 +113,7 @@
                             <?php else: ?>
                                 <?php $no = 1; ?>
                                 <?php foreach ($guru as $g): ?>
-                                    <tr>
+                                    <tr class="text-capitalize">
                                         <td><input type="checkbox" class="data-checkbox align-middle" name="ids[]" value="<?= $g->id ?>"></td>
                                         <td class="align-middle"><?= $no++; ?></td>
                                         <td class="text-start align-middle"><?= esc($g->nama); ?></td>

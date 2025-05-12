@@ -1,11 +1,8 @@
 <?php $uri = service('uri');
-$segment1 = $uri->getSegment(1, '');
-$segment2 = $uri->getSegment(2, '');
+$segment1 = $uri->getSegment(1);
 ?>
 
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion mt-5 pt-5" id="accordionSidebar">
-  <!-- <div class="sidebar-brand sidebar-brand-text align-items-center justify-content-center mt-5 pt-5">SI - ABSENSI</div>
-  <hr class="sidebar-divider"> -->
 
   <li class="nav-item <?= $segment1 == 'dashboard' ? 'active fw-bold' : '' ?>">
     <a class="nav-link" href="<?= base_url('dashboard'); ?>">
@@ -31,23 +28,24 @@ $segment2 = $uri->getSegment(2, '');
       <span class="fs-6">Siswa</span></a>
   </li>
 
-  <?php $akademikOpen = ($segment1 == 'akademik'); ?>
+  <?php $akademikOpen = in_array($segment1, ['kelas', 'thnajaran', 'mapel', 'jurusan']); ?>
   <li class="nav-item <?= $akademikOpen ? 'active fw-bold' : '' ?>">
     <a class="nav-link <?= $akademikOpen ? '' : 'collapsed' ?>" href="#" data-toggle="collapse" data-target="#collapseTwo"
       aria-expanded="<?= $akademikOpen ? 'true' : 'false' ?>" aria-controls="collapseTwo">
       <i class="bi bi-book-half fs-5"></i>
       <span class="fs-6">Akademik</span>
     </a>
-    <div id="collapseTwo" class="collapse  <?= $akademikOpen ? 'show' : '' ?>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+    <div id="collapseTwo" class="collapse <?= $akademikOpen ? 'show' : '' ?>" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
       <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">Data Utama:</h6>
-        <a class="collapse-item <?= $segment2 == 'kelas' ? 'active fw-bold' : '' ?>" href="<?= base_url('akademik/kelas'); ?>">Kelas</a>
-        <a class="collapse-item <?= $segment2 == 'thnajaran' ? 'active fw-bold' : '' ?>" href="<?= base_url('akademik/thnajaran'); ?>">Tahun Pelajaran</a>
-        <a class="collapse-item <?= $segment2 == 'mapel' ? 'active fw-bold' : '' ?>" href="<?= base_url('akademik/mapel'); ?>">Mata Pelajaran</a>
-        <a class="collapse-item <?= $segment2 == 'jurusan' ? 'active fw-bold' : '' ?>" href="<?= base_url('akademik/jurusan'); ?>">Jurusan</a>
+        <a class="collapse-item <?= $segment1 == 'kelas' ? 'active fw-bold' : '' ?>" href="<?= base_url('kelas'); ?>">Kelas</a>
+        <a class="collapse-item <?= $segment1 == 'thnajaran' ? 'active fw-bold' : '' ?>" href="<?= base_url('thnajaran'); ?>">Tahun Pelajaran</a>
+        <a class="collapse-item <?= $segment1 == 'mapel' ? 'active fw-bold' : '' ?>" href="<?= base_url('mapel'); ?>">Mata Pelajaran</a>
+        <a class="collapse-item <?= $segment1 == 'jurusan' ? 'active fw-bold' : '' ?>" href="<?= base_url('jurusan'); ?>">Jurusan</a>
       </div>
     </div>
   </li>
+
 
   <li class="nav-item <?= $segment1 == 'jadwal' ? 'active fw-bold' : '' ?>">
     <a class="nav-link" href="<?= base_url('jadwal'); ?>">

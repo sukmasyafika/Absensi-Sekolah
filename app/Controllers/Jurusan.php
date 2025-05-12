@@ -4,24 +4,25 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\MapelModel;
+use App\Models\jurusanModel;
 
-class Mapel extends BaseController
+class Jurusan extends BaseController
 {
-    protected $mapelModel;
+
+    protected $jurusanModel;
 
     public function __construct()
     {
-        $this->mapelModel = new MapelModel();
+        $this->jurusanModel = new jurusanModel();
     }
 
     public function index()
     {
         $data = [
             'title' => 'Mata Pelajaran',
-            'mapel' => $this->mapelModel->getMapel(),
+            'jurusan' => $this->jurusanModel->findAll(),
         ];
 
-        return view('admin/akademik/mapel/index', $data);
+        return view('admin/akademik/jurusan/index', $data);
     }
 }

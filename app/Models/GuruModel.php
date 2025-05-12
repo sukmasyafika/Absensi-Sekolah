@@ -23,4 +23,9 @@ class GuruModel extends Model
 
         return $this->where(['slug' => $slug])->first();
     }
+
+    public function getWakel()
+    {
+        return $this->where('jabatan', 'Wali Kelas')->select('id, nama')->findAll();
+    }
 }

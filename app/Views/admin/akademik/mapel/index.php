@@ -48,7 +48,7 @@
                     <tbody>
                         <?php if (empty($mapel)): ?>
                             <tr>
-                                <td colspan="8" class="text-center">Tidak ada data mapel.</td>
+                                <td colspan="5" class="text-center">Tidak ada data mapel.</td>
                             </tr>
                         <?php else: ?>
                             <?php $no = 1; ?>

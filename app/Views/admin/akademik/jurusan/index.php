@@ -47,7 +47,7 @@
                     <tbody>
                         <?php if (empty($jurusan)): ?>
                             <tr>
-                                <td colspan="8" class="text-center">Tidak ada data jurusan.</td>
+                                <td colspan="4" class="text-center">Tidak ada data jurusan.</td>
                             </tr>
                         <?php else: ?>
                             <?php $no = 1; ?>

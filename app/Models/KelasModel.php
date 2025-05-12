@@ -23,6 +23,20 @@ class KelasModel extends Model
             ->findAll();
     }
 
+    public function isDuplicate($nama_kls, $rombel, $jurusan_id, $excludeId = null)
+    {
+        $builder = $this->where('nama_kls', $nama_kls)
+            ->where('rombel', $rombel)
+            ->where('jurusan_id', $jurusan_id);
+
+        if ($excludeId) {
+            $builder->where('id !=', $excludeId);
+        }
+
+        return $builder->first() !== null;
+    }
+
+
     public function getIdByNamaDanJurusanDanRombel($nama_kls, $kode_jurusan, $rombel)
     {
         return $this->select('kelas.id')
@@ -31,5 +45,13 @@ class KelasModel extends Model
             ->where('jurusan.kode_jurusan', $kode_jurusan)
             ->where('kelas.rombel', $rombel)
             ->first();
+    }
+
+    public function getJurusan()
+    {
+        return $this->db->table('jurusan')
+            ->select('id, nama_jurusan')
+            ->get()
+            ->getResult();
     }
 }

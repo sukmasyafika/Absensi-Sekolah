@@ -48,7 +48,7 @@
                     <tbody>
                         <?php if (empty($tahun)): ?>
                             <tr>
-                                <td colspan="8" class="text-center">Tidak ada data tahun ajaran.</td>
+                                <td colspan="5" class="text-center">Tidak ada data tahun ajaran.</td>
                             </tr>
                         <?php else: ?>
                             <?php $no = 1; ?>
