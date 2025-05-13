@@ -6,7 +6,7 @@ $segment1 = $uri->getSegment(1);
 
   <li class="nav-item <?= $segment1 == 'dashboard' ? 'active fw-bold' : '' ?>">
     <a class="nav-link" href="<?= base_url('dashboard'); ?>">
-      <i class="bi bi-speedometer2 fs-5"></i>
+      <i class="bi bi-speedometer fs-5"></i>
       <span class="fs-6">Dashboard</span></a>
   </li>
 

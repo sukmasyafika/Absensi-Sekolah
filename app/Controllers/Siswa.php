@@ -59,9 +59,12 @@ class Siswa extends BaseController
         $validation = service('validation');
         $validation->setRules([
             'nama' => [
-                'rules' => 'required',
+                'rules' => 'required|regex_match[/^[A-Za-z\s]+$/]|min_length[3]|max_length[100]',
                 'errors' => [
                     'required' => 'Nama wajib diisi.',
+                    'regex_match' => 'Nama hanya boleh berisi huruf dan spasi.',
+                    'min_length' => 'Nama minimal terdiri dari 3 karakter.',
+                    'max_length' => 'Nama maksimal terdiri dari 100 karakter.'
                 ]
             ],
             'nisn' => [
@@ -178,9 +181,12 @@ class Siswa extends BaseController
         $validation = service('validation');
         $validation->setRules([
             'nama' => [
-                'rules' => 'required',
+                'rules' => 'required|regex_match[/^[A-Za-z\s]+$/]|min_length[3]|max_length[100]',
                 'errors' => [
                     'required' => 'Nama wajib diisi.',
+                    'regex_match' => 'Nama hanya boleh berisi huruf dan spasi.',
+                    'min_length' => 'Nama minimal terdiri dari 3 karakter.',
+                    'max_length' => 'Nama maksimal terdiri dari 100 karakter.'
                 ]
             ],
             'nisn' => [

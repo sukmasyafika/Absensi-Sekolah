@@ -51,9 +51,12 @@ class Guru extends BaseController
         $validation = service('validation');
         $validation->setRules([
             'nama' => [
-                'rules' => 'required',
+                'rules' => 'required|regex_match[/^[A-Za-z.,\s]+$/]|min_length[3]|max_length[100]',
                 'errors' => [
                     'required' => 'Nama wajib diisi.',
+                    'regex_match' => 'Nama hanya boleh berisi huruf.',
+                    'min_length' => 'Nama minimal terdiri dari 3 karakter.',
+                    'max_length' => 'Nama maksimal terdiri dari 100 karakter.'
                 ]
             ],
             'nip' => [
@@ -66,9 +69,11 @@ class Guru extends BaseController
                 ]
             ],
             'jabatan' => [
-                'rules' => 'required',
+                'rules' => 'required|regex_match[/^[A-Za-z.,\s]+$/]|min_length[3]',
                 'errors' => [
-                    'required' => 'Jabatan wajib diisi.'
+                    'required' => 'Jabatan wajib diisi.',
+                    'regex_match' => 'Jabatan hanya boleh berisi huruf.',
+                    'min_length' => 'Jabatan minimal terdiri dari 3 karakter.'
                 ]
             ],
             'tanggal_lahir' => [
@@ -183,9 +188,12 @@ class Guru extends BaseController
         $validation = service('validation');
         $validation->setRules([
             'nama' => [
-                'rules' => 'required',
+                'rules' => 'required|regex_match[/^[A-Za-z.,\s]+$/]|min_length[3]|max_length[100]',
                 'errors' => [
                     'required' => 'Nama wajib diisi.',
+                    'regex_match' => 'Nama hanya boleh berisi huruf.',
+                    'min_length' => 'Nama minimal terdiri dari 3 karakter.',
+                    'max_length' => 'Nama maksimal terdiri dari 100 karakter.'
                 ]
             ],
             'nip' => [
