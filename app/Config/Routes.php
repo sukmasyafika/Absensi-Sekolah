@@ -8,8 +8,12 @@ use CodeIgniter\Router\RouteCollection;
 // $routes->get('/', 'Home::index');
 
 $routes->setAutoRoute(true);
-// utama
-$routes->get('/', 'Login::index');
+
+
+$routes->match(['get', 'post'], 'login', 'Login::index');
+// $routes->get('/login', 'Login::login');
+// $routes->post('/login', 'Login::login');
+$routes->get('/logout', 'Logout::index');
 
 $routes->get('dashboard', 'Dashboard::index');
 
@@ -52,9 +56,13 @@ $routes->get('jurusan', 'Jurusan::index');
 // tahun ajaran
 $routes->get('thnajaran', 'ThnAjaran::index');
 
-// jadwal (nanti sa yg buat)
+// jadwal
 $routes->get('/jadwal', 'Jadwal::index');
-
+$routes->get('/jadwal/create', 'Jadwal::create');
+$routes->post('/jadwal/save', 'Jadwal::save');
+$routes->get('/jadwal/edit/(:num)', 'Jadwal::edit/$1');
+$routes->post('/jadwal/update/(:num)', 'Jadwal::update/$1');
+$routes->delete('/jadwal/delete/(:num)', 'Jadwal::delete/$1');
 
 // untuk halaman guru nanti
 $routes->get('/absensi', 'Absensi::index');

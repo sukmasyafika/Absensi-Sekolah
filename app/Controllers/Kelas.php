@@ -6,18 +6,20 @@ use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\KelasModel;
 use App\Models\GuruModel;
+use App\Models\JurusanModel;
 
 class Kelas extends BaseController
 {
     protected $kelasModel;
     protected $guruModel;
+    protected $jurusanModel;
 
     public function __construct()
     {
         $this->kelasModel = new KelasModel();
         $this->guruModel = new GuruModel();
+        $this->jurusanModel = new JurusanModel();
     }
-
 
     public function index()
     {
@@ -34,7 +36,7 @@ class Kelas extends BaseController
         $data = [
             'title' => 'Tambah Kelas',
             'action' => site_url('kelas/save'),
-            'jurusan' => $this->kelasModel->getJurusan(),
+            'jurusan' => $this->jurusanModel->getListJurusan(),
             'wakel' => $this->guruModel->getWakel(),
             'validation' => \Config\Services::validation()
         ];
@@ -109,7 +111,7 @@ class Kelas extends BaseController
         $data = [
             'title' => 'Edit kelas',
             'kelas' => $kelas,
-            'jurusan' => $this->kelasModel->getJurusan(),
+            'jurusan' => $this->jurusanModel->getListJurusan(),
             'wakel' => $this->guruModel->getWakel(),
             'action' => base_url('kelas/update/' . $kelas->id),
             'validation' => \Config\Services::validation()

@@ -46,12 +46,4 @@ class KelasModel extends Model
             ->where('kelas.rombel', $rombel)
             ->first();
     }
-
-    public function getJurusan()
-    {
-        return $this->db->table('jurusan')
-            ->select('id, nama_jurusan')
-            ->get()
-            ->getResult();
-    }
 }

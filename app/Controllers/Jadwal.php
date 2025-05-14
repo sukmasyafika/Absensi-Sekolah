@@ -7,18 +7,24 @@ use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\JadwalModel;
 use App\Models\KelasModel;
 use App\Models\GuruModel;
+use App\Models\MapelModel;
+use App\Models\ThnAjaranModel;
 
 class Jadwal extends BaseController
 {
     protected $jadwalModel;
     protected $kelasModel;
     protected $guruModel;
+    protected $mapelModel;
+    protected $tahunModel;
 
     public function __construct()
     {
         $this->jadwalModel = new JadwalModel();
         $this->kelasModel = new KelasModel();
         $this->guruModel = new GuruModel();
+        $this->mapelModel = new MapelModel();
+        $this->tahunModel = new ThnAjaranModel();
     }
 
     public function index()
@@ -45,7 +51,10 @@ class Jadwal extends BaseController
         $data = [
             'title' => 'Tambah jadwal',
             'action' => site_url('jadwal/save'),
-            'kelas_id' => $this->kelasModel->getKelas(),
+            'id_kelas' => $this->kelasModel->getKelas(),
+            'guru' => $this->guruModel->findAll(),
+            'mapel' => $this->mapelModel->findAll(),
+            'tahun' => $this->tahunModel->findAll(),
             'validation' => \Config\Services::validation()
         ];
 
@@ -54,9 +63,13 @@ class Jadwal extends BaseController
 
     public function save()
     {
-
         $jamMulai = $this->request->getVar('jam_mulai');
         $jamSelesai = $this->request->getVar('jam_selesai');
+        $ruangan = $this->request->getVar('ruangan');
+        $hari = $this->request->getVar('hari');
+        $id_guru = $this->request->getVar('id_guru');
+        $id_kelas = $this->request->getVar('id_kelas');
+        $jam_ke = $this->request->getVar('jam_ke');
 
 
         $validation = service('validation');
@@ -86,37 +99,40 @@ class Jadwal extends BaseController
                 ]
             ],
             'hari' => [
-                'rules' => 'required',
+                'rules' => 'required|in_list[Senin,Selasa,Rabu,Kamis,Jumat]',
                 'errors' => [
-                    'required' => 'Hari wajib diisi.',
+                    'required' => 'Hari wajib dipilih.',
+                    'in_list' => 'Hari harus salah satu dari Senin sampai Jumat.',
                 ]
             ],
             'jam_ke' => [
-                'rules' => 'required|is_natural_no_zero',
+                'rules' => 'required|is_natural_no_zero|less_than_equal_to[10]',
                 'errors' => [
                     'required' => 'Jam ke-berapa wajib diisi.',
                     'is_natural_no_zero' => 'Jam ke harus berupa angka lebih dari 0.',
+                    'less_than_equal_to' => 'Jam ke tidak boleh lebih dari 10.',
                 ]
             ],
             'jam_mulai' => [
-                'rules' => 'required|valid_time',
+                'rules' => 'required|regex_match[/^[0-2][0-9]:[0-5][0-9]$/]',
                 'errors' => [
                     'required' => 'Jam mulai wajib diisi.',
-                    'valid_time' => 'Format jam mulai tidak valid (hh:mm).',
+                    'regex_match' => 'Format jam mulai harus hh:mm (contoh: 07:30).',
                 ]
             ],
             'jam_selesai' => [
-                'rules' => 'required|valid_time',
+                'rules' => 'required|regex_match[/^[0-2][0-9]:[0-5][0-9]$/]',
                 'errors' => [
                     'required' => 'Jam selesai wajib diisi.',
-                    'valid_time' => 'Format jam selesai tidak valid (hh:mm).',
+                    'regex_match' => 'Format jam selesai harus hh:mm (contoh: 09:15).',
                 ]
             ],
             'ruangan' => [
-                'rules' => 'required|alpha_numeric_punct',
+                'rules' => 'required|alpha_numeric_punct|max_length[20]',
                 'errors' => [
                     'required' => 'Ruangan wajib diisi.',
                     'alpha_numeric_punct' => 'Ruangan hanya boleh berisi huruf, angka, titik, koma, atau spasi.',
+                    'max_length' => 'Nama ruangan maksimal 20 karakter.',
                 ]
             ],
             'status' => [
@@ -133,19 +149,35 @@ class Jadwal extends BaseController
         }
 
         if (strtotime($jamSelesai) <= strtotime($jamMulai)) {
-            return redirect()->back()->withInput()->with('errors', ['jam_selesai' => 'Jam selesai harus lebih besar dari jam mulai.']);
+            return redirect()->back()->withInput()->with('error', 'Jam selesai harus lebih besar dari jam mulai.');
+        }
+
+        if ($this->jadwalModel->getRuangan($hari, $ruangan, $jamMulai, $jamSelesai)) {
+            return redirect()->back()->with('error', 'Ruangan sudah terpakai pada waktu tersebut.');
+        }
+
+        if ($this->jadwalModel->getGuru($hari, $id_guru, $jamMulai, $jamSelesai)) {
+            return redirect()->back()->with('error', 'Guru sudah mengajar di waktu yang sama.');
+        }
+
+        if ($this->jadwalModel->getKelas($hari, $id_kelas, $jamMulai, $jamSelesai)) {
+            return redirect()->back()->with('error', 'Kelas sudah ada pelajaran di waktu itu.');
+        }
+
+        if ($this->jadwalModel->getJamKeDuplikat($hari, $id_kelas, $jam_ke)) {
+            return redirect()->back()->with('error', 'Jam ke yang sama sudah digunakan untuk kelas ini.');
         }
 
         $this->jadwalModel->insert([
-            'id_guru'       => $this->request->getVar('id_guru'),
+            'id_guru'       => $id_guru,
             'id_mapel'      => $this->request->getVar('id_mapel'),
-            'id_kelas'      => $this->request->getVar('id_kelas'),
+            'id_kelas'      => $id_kelas,
             'id_thnajaran'  => $this->request->getVar('id_thnajaran'),
-            'hari'          => $this->request->getVar('hari'),
-            'jam_ke'        => $this->request->getVar('jam_ke'),
+            'hari'          => $hari,
+            'jam_ke'        => $jam_ke,
             'jam_mulai'     => $jamMulai . ':00',
             'jam_selesai'   => $jamSelesai . ':00',
-            'ruangan'       => $this->request->getVar('ruangan'),
+            'ruangan'       => $ruangan,
             'status'        => $this->request->getVar('status'),
         ]);
 

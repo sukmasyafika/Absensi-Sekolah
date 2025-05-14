@@ -14,4 +14,9 @@ class JurusanModel extends Model
     protected $protectFields    = true;
     protected $useTimestamps    = true;
     protected $allowedFields    = ['kode_jurusan', 'nama_jurusan'];
+
+    public function getListJurusan()
+    {
+        return $this->select('id, nama_jurusan')->findAll();
+    }
 }
