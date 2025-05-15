@@ -63,6 +63,7 @@ $routes->post('/jadwal/save', 'Jadwal::save');
 $routes->get('/jadwal/edit/(:num)', 'Jadwal::edit/$1');
 $routes->post('/jadwal/update/(:num)', 'Jadwal::update/$1');
 $routes->delete('/jadwal/delete/(:num)', 'Jadwal::delete/$1');
+$routes->get('/jadwal/detail/(:num)', 'Jadwal::detail/$1');
 
 // untuk halaman guru nanti
 $routes->get('/absensi', 'Absensi::index');

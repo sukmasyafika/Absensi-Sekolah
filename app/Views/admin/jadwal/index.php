@@ -85,68 +85,83 @@
                 <a href="<?= site_url('jadwal/create'); ?>" class="btn btn-primary shadow-sm">
                     <i class="bi bi-plus-circle"></i> Tambah Data
                 </a>
-
             </div>
 
-            <div class="table-responsive">
-                <table class="table table-striped table-hover" id="datatabel">
-                    <thead class="bg-primary text-white text-center align-middle">
-                        <tr>
-                            <th style="width: 2%;" class="align-middle"><input type="checkbox" id="selectAll"></th>
-                            <th>No</th>
-                            <th>Nama Guru</th>
-                            <th>Mata Pelajaran</th>
-                            <th>Kelas</th>
-                            <th>Hari & Jam</th>
-                            <th>Ruangan</th>
-                            <th>Tahun</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($jadwal)): ?>
+            <form action="<?= site_url('jadwal/hapus'); ?>" method="post" class="form-hapus" id="formHapusBanyak">
+                <?= csrf_field(); ?>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="datatabel">
+                        <thead class="bg-primary text-white text-center align-middle">
                             <tr>
-                                <td colspan="9" class="text-center">Tidak ada data jadwal.</td>
+                                <th style="width: 2%;" class="align-middle"><input type="checkbox" id="selectAll"></th>
+                                <th>No</th>
+                                <th>Nama Guru</th>
+                                <th>Mata Pelajaran</th>
+                                <th>Kelas</th>
+                                <th>Hari & Jam</th>
+                                <th>Ruangan</th>
+                                <th>Tahun</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
-                        <?php else: ?>
-                            <?php $no = 1; ?>
-                            <?php foreach ($jadwal as $j): ?>
-                                <tr class="text-center">
-                                    <td><input type="checkbox" class="data-checkbox align-middle" name="ids[]" value="<?= $j->id ?>"></td>
-                                    <td class="align-middle"><?= $no++; ?></td>
-                                    <td class="text-start align-middle"><?= esc($j->guru); ?></td>
-                                    <td class="align-middle"><?= esc($j->mapel); ?></td>
-                                    <td class="align-middle"><?= esc($j->kelas . ' ' . $j->jurusan . ' ' . $j->rombel); ?></td>
-                                    <td class="align-middle"><?= esc($j->hari . ', (' . $j->jam_mulai . '-' . $j->jam_selesai . ')'); ?></td>
-                                    <td class="align-middle"><?= esc($j->ruangan); ?></td>
-                                    <td class="align-middle"><?= esc($j->semester . ' - ' . $j->tahun); ?></td>
-                                    <td class="align-middle">
-                                        <?php if ($j->status == 'Aktif'): ?>
-                                            <span class="badge bg-success"><?= esc($j->status); ?></span>
-                                        <?php else: ?>
-                                            <span class="badge bg-danger"><?= esc($j->status); ?></span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td class="align-middle">
-                                        <div class="d-flex flex-wrap justify-content-center gap-2">
-                                            <a href="<?= site_url('jadwal/detail/' . $j->id); ?>" class="btn btn-primary btn-sm">
-                                                <i class="bi bi-eye"></i> Detail
-                                            </a>
-                                            <a href="<?= site_url('jadwal/edit/' . $j->id); ?>" class="btn btn-warning btn-sm">
-                                                <i class="bi bi-pencil-square"></i> Edit
-                                            </a>
-                                            <a href="<?= site_url('jadwal/delete/' . $j->id); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?');">
-                                                <i class="bi bi-trash"></i> Hapus
-                                            </a>
-                                        </div>
-                                    </td>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($jadwal)): ?>
+                                <tr>
+                                    <td colspan="9" class="text-center">Tidak ada data jadwal.</td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                            <?php else: ?>
+                                <?php $no = 1; ?>
+                                <?php foreach ($jadwal as $j): ?>
+                                    <tr class="text-center text-capitalize">
+                                        <td><input type="checkbox" class="data-checkbox align-middle" name="ids[]" value="<?= $j->id ?>"></td>
+                                        <td class="align-middle"><?= $no++; ?></td>
+                                        <td class="text-start align-middle"><?= esc($j->guru); ?></td>
+                                        <td class="align-middle"><?= esc($j->mapel); ?></td>
+                                        <td class="align-middle"><?= esc($j->kelas . ' ' . $j->jurusan . ' ' . $j->rombel); ?></td>
+                                        <td class="align-middle">
+                                            <?= esc($j->hari . ', (' . date('H:i', strtotime($j->jam_mulai)) . ' - ' . date('H:i', strtotime($j->jam_selesai)) . ')'); ?>
+                                        </td>
+                                        <td class="align-middle text-uppercase"><?= esc($j->ruangan); ?></td>
+                                        <td class="align-middle"><?= esc($j->semester . ' - ' . $j->tahun); ?></td>
+                                        <td class="align-middle">
+                                            <?php if ($j->status == 'Aktif'): ?>
+                                                <span class="badge bg-success"><?= esc($j->status); ?></span>
+                                            <?php else: ?>
+                                                <span class="badge bg-danger"><?= esc($j->status); ?></span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="align-middle">
+                                            <div class="d-flex flex-wrap justify-content-center gap-2">
+                                                <a href="<?= site_url('jadwal/detail/' . $j->id); ?>" class="btn btn-primary btn-sm">
+                                                    <i class="bi bi-eye"></i> Detail
+                                                </a>
+                                                <a href="<?= site_url('jadwal/edit/' . $j->id); ?>" class="btn btn-warning btn-sm">
+                                                    <i class="bi bi-pencil-square"></i> Edit
+                                                </a>
+                                                <form class="form-hapus d-inline" method="post" action="<?= base_url('jadwal/delete/' . $j->id); ?>">
+                                                    <?= csrf_field(); ?>
+                                                    <input type="hidden" name="_method" value="DELETE">
+                                                    <button type="button" class="btn-delete btn btn-danger btn-sm">
+                                                        <i class="bi bi-trash"></i> Hapus
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3">
+                    <button type="button" class="btn-delete btn btn-danger" id="btnHapusBanyak" disabled>
+                        <i class="bi bi-trash3-fill me-1"></i> Hapus Data
+                    </button>
+                </div>
+            </form>
         </div>
 
     </div>

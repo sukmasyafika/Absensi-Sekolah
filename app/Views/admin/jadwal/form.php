@@ -95,7 +95,7 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="ruangan" class="form-label fw-semibold">Ruangan</label>
-                        <input type="text" name="ruangan" id="ruangan" class="form-control <?= (session('errors.ruangan')) ? 'is-invalid' : ''; ?>" value="<?= old('ruangan', $jadwal->ruangan ?? ''); ?>" placeholder="Masukkan">
+                        <input type="text" name="ruangan" id="ruangan" class="form-control <?= (session('errors.ruangan')) ? 'is-invalid' : ''; ?>" value="<?= old('ruangan', $jadwal->ruangan ?? ''); ?>" placeholder="Contoh: Lab-3">
                         <div class="invalid-feedback">
                             <?= session('errors.ruangan'); ?>
                         </div>
@@ -129,7 +129,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="status" class="form-label fw-semibold">Status</label>
                         <select name="status" id="status" class="form-select <?= (session('errors.status')) ? 'is-invalid' : ''; ?>">
-                            <option value="">-- Pilih --</option>
+                            <option value="">-- Pilih Status --</option>
                             <option value="Aktif" <?= old('status', $jadwal->status ?? '') == 'Aktif' ? 'selected' : ''; ?>>Aktif</option>
                             <option value="Tidak Aktif" <?= old('status', $jadwal->status ?? '') == 'Tidak Aktif' ? 'selected' : ''; ?>>Tidak Aktif</option>
                         </select>
@@ -140,7 +140,7 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="jam_mulai" class="form-label fw-semibold">Jam Mulai</label>
-                        <input type="time" name="jam_mulai" id="jam_mulai" class="form-control <?= (session('errors.jam_mulai')) ? 'is-invalid' : ''; ?>" value="<?= old('jam_mulai', $jadwal->jam_mulai ?? ''); ?>" placeholder="Masukkan">
+                        <input type="time" name="jam_mulai" id="jam_mulai" class="form-control <?= (session('errors.jam_mulai')) ? 'is-invalid' : ''; ?>" value="<?= old('jam_mulai', isset($jadwal->jam_mulai) ? substr($jadwal->jam_mulai, 0, 5) : ''); ?>">
                         <div class="invalid-feedback">
                             <?= session('errors.jam_mulai'); ?>
                         </div>
@@ -148,7 +148,7 @@
 
                     <div class="col-md-6 mb-3">
                         <label for="jam_selesai" class="form-label fw-semibold">Jam Selesai</label>
-                        <input type="time" name="jam_selesai" id="jam_selesai" class="form-control <?= (session('errors.jam_selesai')) ? 'is-invalid' : ''; ?>" value="<?= old('jam_selesai', $jadwal->jam_selesai ?? ''); ?>" placeholder="Masukkan">
+                        <input type="time" name="jam_selesai" id="jam_selesai" class="form-control <?= (session('errors.jam_selesai')) ? 'is-invalid' : ''; ?>" value="<?= old('jam_selesai', isset($jadwal->jam_selesai) ? substr($jadwal->jam_selesai, 0, 5) : ''); ?>">
                         <div class="invalid-feedback">
                             <?= session('errors.jam_selesai'); ?>
                         </div>
@@ -161,7 +161,6 @@
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save"></i> <?= isset($jadwal) ? 'Update' : 'Save'; ?> Data
                         </button>
-
                     </div>
                 </div>
             </form>

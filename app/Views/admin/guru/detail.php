@@ -16,20 +16,43 @@
 
   <h1 class="h3 mb-3 text-gray-800 fw-bold"><?= $title ?></h1>
 
-  <img src="<?= base_url('assets/img/guru/' . (!empty($guru->foto) ? $guru->foto : 'default.png')); ?>" alt="<?= esc($guru->nama); ?>">
+  <div class="card shadow-lg border-0 rounded-4">
+    <div class="card-body text-center">
+      <img src="<?= base_url('assets/img/guru/' . (!empty($guru->foto) ? $guru->foto : 'default.png')); ?>"
+        alt="<?= esc($guru->nama); ?>"
+        class="img-thumbnail rounded-circle mb-3"
+        style="width: 150px; height: 150px; object-fit: cover;">
 
-  <h3 class="text-uppercase">Nama lengkap <?= esc($guru->nama); ?></h3>
-  <h3 class="text-uppercase">NIP: <?= esc($guru->nip); ?></h3>
-  <h3 class="text-uppercase">Jabatan: <?= esc($guru->jabatan); ?></h3>
-  <h3 class="text-uppercase">Tanggal Lahir: <?= esc($guru->tanggal_lahir); ?></h3>
-  <h3 class="text-uppercase">jenis Kelamin: <?= esc($guru->jenis_kelamin); ?></h3>
-  <h3 class="text-uppercase">agama: <?= esc($guru->agama); ?></h3>
-  <h3 class="text-uppercase">tahun masuk: <?= esc($guru->thn_masuk); ?></h3>
-  <h3 class="text-uppercase">status: <?= esc($guru->status); ?></h3>
+      <h4 class="text-primary text-uppercase fw-bold"><?= esc($guru->nama); ?></h4>
+      <p class="text-muted mb-4"><?= esc($guru->jabatan); ?></p>
+    </div>
 
-  <a href="<?= base_url('/guru'); ?>" class="btn btn-secondary me-3">
-    <i class="bi bi-arrow-left-square"></i> Kembali
-  </a>
+    <div class="card-body">
+      <div class="row g-4">
+        <div class="col-md-6">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><i class="bi bi-credit-card-2-front me-2 text-primary"></i><strong>NIP:</strong> <?= esc($guru->nip); ?></li>
+            <li class="list-group-item"><i class="bi bi-calendar-event me-2 text-success"></i><strong>Tanggal Lahir:</strong> <?= date('d F Y', strtotime($guru->tanggal_lahir)); ?></li>
+            <li class="list-group-item"><i class="bi bi-gender-ambiguous me-2 text-info"></i><strong>Jenis Kelamin:</strong> <?= esc($guru->jenis_kelamin); ?></li>
+          </ul>
+        </div>
+        <div class="col-md-6">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><i class="bi bi-bookmark-star me-2 text-warning"></i><strong>Agama:</strong> <?= esc($guru->agama); ?></li>
+            <li class="list-group-item"><i class="bi bi-calendar-check me-2 text-danger"></i><strong>Tahun Masuk:</strong> <?= esc($guru->thn_masuk); ?></li>
+            <li class="list-group-item"><i class="bi bi-award-fill me-2 text-secondary"></i><strong>Status:</strong> <?= esc($guru->status); ?></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-4 text-end">
+        <a href="<?= base_url('/guru'); ?>" class="btn btn-outline-secondary rounded-pill px-4">
+          <i class="bi bi-arrow-left-square me-1"></i> Kembali
+        </a>
+      </div>
+    </div>
+  </div>
+
 
 </div>
 
