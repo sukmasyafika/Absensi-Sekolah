@@ -22,6 +22,6 @@ class Absensi extends BaseController
             'absensi' => $this->absensiModel->findAll(),
         ];
 
-        return view('absensi/index', $data);
+        return view('users/absensi/index', $data);
     }
 }

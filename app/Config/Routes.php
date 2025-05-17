@@ -10,9 +10,9 @@ use CodeIgniter\Router\RouteCollection;
 $routes->setAutoRoute(true);
 
 
-$routes->match(['get', 'post'], 'login', 'Login::index');
-// $routes->get('/login', 'Login::login');
-// $routes->post('/login', 'Login::login');
+$routes->get('login', 'Login::index');
+$routes->post('login', 'Login::index');
+
 $routes->get('/logout', 'Logout::index');
 
 $routes->get('dashboard', 'Dashboard::index');

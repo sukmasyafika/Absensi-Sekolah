@@ -59,11 +59,11 @@ $segment1 = $uri->getSegment(1);
       <span class="fs-6">Laporan</span></a>
   </li>
 
-  <li class="nav-item <?= $segment1 == 'setting' ? 'active fw-bold' : '' ?>">
+  <!-- <li class="nav-item <?= $segment1 == 'setting' ? 'active fw-bold' : '' ?>">
     <a class="nav-link" href="<?= base_url('setting'); ?>">
       <i class="bi bi-gear-fill fs-5"></i>
       <span class="fs-6">Setting</span></a>
-  </li>
+  </li> -->
 
   <li class="nav-item">
     <a class="nav-link" href="<?= base_url('logout'); ?>">
@@ -76,5 +76,26 @@ $segment1 = $uri->getSegment(1);
   <div class="text-center d-none d-md-inline">
     <button class="rounded-circle border-0" id="sidebarToggle"></button>
   </div>
+
+  <li class="nav-item <?= $segment1 == 'profil' ? 'active fw-bold' : '' ?>">
+    <a class="nav-link" href="<?= base_url('profil'); ?>">
+      <i class="bi bi-person-circle fs-5"></i>
+      <span class="fs-6">Profil Guru</span>
+    </a>
+  </li>
+
+  <li class="nav-item <?= $segment1 == 'absensi' ? 'active fw-bold' : '' ?>">
+    <a class="nav-link" href="<?= base_url('absensi'); ?>">
+      <i class="bi bi-calendar-check fs-5"></i>
+      <span class="fs-6">Absensi Siswa</span>
+    </a>
+  </li>
+
+  <li class="nav-item <?= $segment1 == 'laporan' ? 'active fw-bold' : '' ?>">
+    <a class="nav-link" href="<?= base_url('laporan'); ?>">
+      <i class="bi bi-clipboard-data fs-5"></i>
+      <span class="fs-6">Rekap Absensi</span>
+    </a>
+  </li>
 
 </ul>

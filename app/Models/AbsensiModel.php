@@ -14,4 +14,12 @@ class AbsensiModel extends Model
     protected $protectFields    = true;
     protected $useTimestamps    = true;
     protected $allowedFields    = ['id', 'id_siswa', 'id_jadwal', 'pertemuan_ke', 'tanggal', 'status', 'jam_absen'];
+
+    public function getAbsen()
+    {
+        return $this->select('absensi.*, siswa.nama AS siswa, jadwal.kode_jurusan AS kd_jurusan, guru.nama AS wakel')
+            ->join('siswa', 'siswa.id = absensi.id_siswa')
+            ->join('jadwal', 'jadwal.id = absensi.id_jadwal')
+            ->findAll();
+    }
 }

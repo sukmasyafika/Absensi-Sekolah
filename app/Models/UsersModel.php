@@ -13,10 +13,5 @@ class UsersModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $useTimestamps    = true;
-    protected $allowedFields    = ['email', 'password', 'role', 'status'];
-
-    public function getByEmail($email)
-    {
-        return $this->where('email', $email)->first();
-    }
+    protected $allowedFields    = ['username', 'id_guru', 'email', 'password', 'role', 'status'];
 }
