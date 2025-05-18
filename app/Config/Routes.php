@@ -9,13 +9,8 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->setAutoRoute(true);
 
-
-$routes->get('login', 'Login::index');
-$routes->post('login', 'Login::index');
-
-$routes->get('/logout', 'Logout::index');
-
 $routes->get('dashboard', 'Dashboard::index');
+$routes->get('dashguru', 'Dashguru::index');
 
 // siswa
 $routes->get('/siswa', 'Siswa::index');
@@ -55,6 +50,11 @@ $routes->get('jurusan', 'Jurusan::index');
 
 // tahun ajaran
 $routes->get('thnajaran', 'ThnAjaran::index');
+$routes->get('/thnajaran/create', 'ThnAjaran::create');
+$routes->post('/thnajaran/save', 'ThnAjaran::save');
+$routes->get('/thnajaran/edit/(:num)', 'ThnAjaran::edit/$1');
+$routes->post('/thnajaran/update/(:num)', 'ThnAjaran::update/$1');
+$routes->delete('/thnajaran/delete/(:num)', 'ThnAjaran::delete/$1');
 
 // jadwal
 $routes->get('/jadwal', 'Jadwal::index');
