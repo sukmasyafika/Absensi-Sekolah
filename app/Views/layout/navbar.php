@@ -1,18 +1,19 @@
-<nav class="navbar navbar-expand navbar-light bg-primary topbar mb-4 static-top shadow fixed-top">
-  <a class="navbar-brand" href="https://smkn5jpr.sch.id/">
-    <img src="<?= base_url('/assets/img/profil/LOGO-SEKOLAH.png'); ?>" alt="SMKN5" width="280">
-  </a>
+<nav class="navbar navbar-expand navbar-light <?= in_groups('admin') ? 'bg-primary' : 'bg-light' ?> topbar mb-4 static-top shadow-lg <?= in_groups('admin') ? 'fixed-top' : '' ?>">
 
   <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
     <i class="fa fa-bars"></i>
   </button>
+
+  <a class="navbar-brand d-none d-md-block" href="https://smkn5jpr.sch.id/">
+    <img src="<?= base_url('/assets/img/profil/LOGO-SEKOLAH.png'); ?>" alt="SMKN5" width="280">
+  </a>
 
   <ul class="navbar-nav ml-auto">
 
     <li class="nav-item dropdown no-arrow mx-1">
       <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <i class="bi bi-bell-fill text-white"></i>
+        <i class="bi bi-bell-fill <?= in_groups('admin') ? 'text-white' : 'text-dark' ?>"></i>
         <span class="badge badge-danger badge-counter">0</span>
       </a>
       <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -39,7 +40,7 @@
     <li class="nav-item dropdown no-arrow">
       <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="mr-2 d-none d-lg-inline text-white small">username</span>
+        <span class="mr-2 d-none d-lg-inline <?= in_groups('admin') ? 'text-white' : 'text-dark' ?> small"><?= user()->username; ?></span>
         <img class="img-profile rounded-circle"
           src=" <?= base_url('/assets/img/profil/random_profile.svg'); ?>">
       </a>
