@@ -31,16 +31,16 @@
       <div class="row g-4">
         <div class="col-md-6">
           <ul class="list-group list-group-flush">
-            <li class="list-group-item"><i class="bi bi-credit-card-2-front me-2 text-primary"></i><strong>NIP:</strong> <?= esc($guru->nip); ?></li>
-            <li class="list-group-item"><i class="bi bi-calendar-event me-2 text-success"></i><strong>Tanggal Lahir:</strong> <?= date('d F Y', strtotime($guru->tanggal_lahir)); ?></li>
-            <li class="list-group-item"><i class="bi bi-gender-ambiguous me-2 text-info"></i><strong>Jenis Kelamin:</strong> <?= esc($guru->jenis_kelamin); ?></li>
+            <li class="list-group-item"><strong>NIP:</strong> <?= esc($guru->nip); ?></li>
+            <li class="list-group-item"><strong>Tanggal Lahir:</strong> <?= date('d F Y', strtotime($guru->tanggal_lahir)); ?></li>
+            <li class="list-group-item"><strong>Jenis Kelamin:</strong> <?= esc($guru->jenis_kelamin); ?></li>
           </ul>
         </div>
         <div class="col-md-6">
           <ul class="list-group list-group-flush">
-            <li class="list-group-item"><i class="bi bi-bookmark-star me-2 text-warning"></i><strong>Agama:</strong> <?= esc($guru->agama); ?></li>
-            <li class="list-group-item"><i class="bi bi-calendar-check me-2 text-danger"></i><strong>Tahun Masuk:</strong> <?= esc($guru->thn_masuk); ?></li>
-            <li class="list-group-item"><i class="bi bi-award-fill me-2 text-secondary"></i><strong>Status:</strong> <?= esc($guru->status); ?></li>
+            <li class="list-group-item"><strong>Agama:</strong> <?= esc($guru->agama); ?></li>
+            <li class="list-group-item"><strong>Tahun Masuk:</strong> <?= esc($guru->thn_masuk); ?></li>
+            <li class="list-group-item"><strong>Status:</strong> <?= esc($guru->status); ?></li>
           </ul>
         </div>
       </div>

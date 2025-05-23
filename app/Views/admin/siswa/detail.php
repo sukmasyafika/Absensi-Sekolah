@@ -23,32 +23,32 @@
         <div class="col-md-6 text-capitalize">
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
-              <i class="bi bi-person-fill me-2 text-primary"></i><strong>Nama Lengkap:</strong> <?= esc($siswa->nama); ?>
+              <strong>Nama Lengkap:</strong> <?= esc($siswa->nama); ?>
             </li>
             <li class="list-group-item">
-              <i class="bi bi-person-vcard me-2 text-info"></i><strong>NISN:</strong> <?= esc($siswa->nisn); ?>
+              <strong>NISN:</strong> <?= esc($siswa->nisn); ?>
             </li>
             <li class="list-group-item">
-              <i class="bi bi-calendar-heart me-2 text-success"></i><strong>Tanggal Lahir:</strong> <?= date('d F Y', strtotime($siswa->tanggal_lahir)); ?>
+              <strong>Tanggal Lahir:</strong> <?= date('d F Y', strtotime($siswa->tanggal_lahir)); ?>
             </li>
             <li class="list-group-item">
-              <i class="bi bi-gender-ambiguous me-2 text-warning"></i><strong>Jenis Kelamin:</strong> <?= esc($siswa->jenis_kelamin); ?>
+              <strong>Jenis Kelamin:</strong> <?= esc($siswa->jenis_kelamin); ?>
             </li>
           </ul>
         </div>
         <div class="col-md-6">
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
-              <i class="bi bi-easel-fill me-2 text-danger"></i><strong>Kelas:</strong> <?= esc($siswa->kelas_name . ' ' . $siswa->jurusan_name . ' ' . $siswa->rombel); ?>
+              <strong>Kelas:</strong> <?= esc($siswa->kelas_name . ' ' . $siswa->jurusan_name . ' ' . $siswa->rombel); ?>
             </li>
             <li class="list-group-item">
-              <i class="bi bi-stars me-2 text-secondary"></i><strong>Agama:</strong> <?= esc($siswa->agama); ?>
+              <strong>Agama:</strong> <?= esc($siswa->agama); ?>
             </li>
             <li class="list-group-item">
-              <i class="bi bi-calendar-plus me-2 text-primary"></i><strong>Tahun Masuk:</strong> <?= esc($siswa->thn_masuk); ?>
+              <strong>Tahun Masuk:</strong> <?= esc($siswa->thn_masuk); ?>
             </li>
             <li class="list-group-item">
-              <i class="bi bi-patch-check-fill me-2 text-success"></i><strong>Status:</strong> <?= esc($siswa->status); ?>
+              <strong>Status:</strong> <?= esc($siswa->status); ?>
             </li>
           </ul>
         </div>
