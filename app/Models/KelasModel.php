@@ -46,4 +46,10 @@ class KelasModel extends Model
             ->where('kelas.rombel', $rombel)
             ->first();
     }
+
+
+    public function countAll()
+    {
+        return $this->countAllResults();
+    }
 }

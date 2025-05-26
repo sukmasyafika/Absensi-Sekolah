@@ -19,4 +19,10 @@ class JurusanModel extends Model
     {
         return $this->select('id, nama_jurusan')->findAll();
     }
+
+
+    public function countAll()
+    {
+        return $this->countAllResults();
+    }
 }

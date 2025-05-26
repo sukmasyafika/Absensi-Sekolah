@@ -110,4 +110,53 @@ class JadwalModel extends Model
 
         return (int) ($result['total'] ?? 0);
     }
+
+    public function getMapelHariIni()
+    {
+        $hariMap = [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+        ];
+
+        $hariIni = $hariMap[date('l')];
+
+        return $this->select('mapel.id, mapel.kode_mapel, mapel.nama_mapel')
+            ->join('mapel', 'mapel.id = jadwal.id_mapel')
+            ->where('jadwal.hari', $hariIni)
+            ->groupBy('mapel.id, mapel.kode_mapel, mapel.nama_mapel')
+            ->findAll();
+    }
+
+    public function getKelasHariIni()
+    {
+        $hariMap = [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat',
+            'Saturday' => 'Sabtu',
+        ];
+
+        $hariIni = $hariMap[date('l')];
+
+        return $this->select('kelas.id, kelas.nama_kls, jurusan.kode_jurusan AS kd_jurusan, kelas.rombel')
+            ->join('kelas', 'kelas.id = jadwal.id_kelas')
+            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
+            ->where('jadwal.hari', $hariIni)
+            ->groupBy('kelas.id, kelas.nama_kls, jurusan.kode_jurusan, kelas.rombel')
+            ->findAll();
+    }
+
+
+    public function countAll()
+    {
+        return $this->countAllResults();
+    }
 }

@@ -81,7 +81,7 @@ $segment1 = $uri->getSegment(1);
     <li class="nav-item <?= $segment1 == 'profil' ? 'active fw-bold' : '' ?>">
       <a class="nav-link" href="<?= base_url('profil'); ?>">
         <i class="bi bi-person-circle fs-5"></i>
-        <span class="fs-6">Profil Guru</span>
+        <span class="fs-6">Profil</span>
       </a>
     </li>
 

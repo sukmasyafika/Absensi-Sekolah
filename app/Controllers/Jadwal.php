@@ -12,11 +12,7 @@ use App\Models\ThnAjaranModel;
 
 class Jadwal extends BaseController
 {
-    protected $jadwalModel;
-    protected $kelasModel;
-    protected $guruModel;
-    protected $mapelModel;
-    protected $tahunModel;
+    protected $jadwalModel, $kelasModel, $guruModel, $mapelModel, $tahunModel;
 
     public function __construct()
     {

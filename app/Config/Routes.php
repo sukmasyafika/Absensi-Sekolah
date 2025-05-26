@@ -12,6 +12,14 @@ $routes->setAutoRoute(true);
 $routes->get('dashboard', 'Dashboard::index');
 $routes->get('dashguru', 'Dashguru::index');
 
+// penguna
+$routes->get('user', 'User::index');
+$routes->get('/user/edit/(:num)', 'user::edit/$1');
+$routes->post('/user/update/(:num)', 'User::update/$1');
+// $routes->post('user/update', 'User::update');
+
+
+
 // siswa
 $routes->get('/siswa', 'Siswa::index');
 $routes->get('/siswa/create', 'Siswa::create');
@@ -65,5 +73,7 @@ $routes->post('/jadwal/update/(:num)', 'Jadwal::update/$1');
 $routes->delete('/jadwal/delete/(:num)', 'Jadwal::delete/$1');
 $routes->get('/jadwal/detail/(:num)', 'Jadwal::detail/$1');
 
-// untuk halaman guru nanti
+// untuk halaman guru
 $routes->get('/absensi', 'Absensi::index');
+
+$routes->get('/profil', 'Profil::index');

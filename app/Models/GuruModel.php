@@ -28,4 +28,9 @@ class GuruModel extends Model
     {
         return $this->where('jabatan', 'Wali Kelas')->select('id, nama')->findAll();
     }
+
+    public function countAll()
+    {
+        return $this->countAllResults();
+    }
 }

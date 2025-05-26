@@ -21,4 +21,10 @@ class MapelModel extends Model
             ->join('thn_ajaran', 'thn_ajaran.id = mapel.id_thnajaran')
             ->findAll();
     }
+
+
+    public function countAll()
+    {
+        return $this->countAllResults();
+    }
 }

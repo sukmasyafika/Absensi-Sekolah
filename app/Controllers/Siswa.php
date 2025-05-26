@@ -9,8 +9,7 @@ use App\Models\KelasModel;
 
 class Siswa extends BaseController
 {
-    protected $siswaModel;
-    protected $kelasModel;
+    protected $siswaModel, $kelasModel;
 
     public function __construct()
     {

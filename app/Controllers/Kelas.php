@@ -10,9 +10,7 @@ use App\Models\JurusanModel;
 
 class Kelas extends BaseController
 {
-    protected $kelasModel;
-    protected $guruModel;
-    protected $jurusanModel;
+    protected $kelasModel, $guruModel, $jurusanModel;
 
     public function __construct()
     {

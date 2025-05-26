@@ -22,4 +22,12 @@ class AbsensiModel extends Model
             ->join('jadwal', 'jadwal.id = absensi.id_jadwal')
             ->findAll();
     }
+
+    public function Getabsenkelas()
+    {
+        return $this->select('absensi.*, siswa.nama AS namaSiswa, kelas.nama_kelas')
+            ->join('siswa', 'siswa.id = absensi.id_siswa')
+            ->join('kelas', 'kelas.id = siswa.id_kelas')
+            ->findAll();
+    }
 }

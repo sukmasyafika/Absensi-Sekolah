@@ -44,4 +44,10 @@ class SiswaModel extends Model
 
         return $builder->findAll();
     }
+
+
+    public function countAll()
+    {
+        return $this->countAllResults();
+    }
 }
