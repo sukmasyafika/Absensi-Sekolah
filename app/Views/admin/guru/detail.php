@@ -10,7 +10,7 @@
         <i class="bi bi-house-door-fill"></i> Home
       </a>
     </li>
-    <li class="breadcrumb-item" aria-current="page"><a href="<?= base_url('siswa'); ?>" class="text-decoration-none">Siswa</a></li>
+    <li class="breadcrumb-item" aria-current="page"><a href="<?= base_url('siswa'); ?>" class="text-decoration-none">Guru</a></li>
     <li class="breadcrumb-item active" aria-current="page"><?= $title; ?></li>
   </ol>
 

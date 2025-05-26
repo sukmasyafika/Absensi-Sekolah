@@ -3,13 +3,14 @@
 <?= $this->section('admin-content'); ?>
 
 <div class="container-fluid mt-5 pt-5">
+
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item">
             <a href="<?= base_url('dashboard'); ?>" class="text-decoration-none text-primary">
                 <i class="bi bi-house-door-fill"></i> Home
             </a>
         </li>
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= base_url('thnajaran'); ?>" class="text-decoration-none">Tahun Ajaran</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= base_url('siswa'); ?>" class="text-decoration-none">Tahun Ajaran</a></li>
         <li class="breadcrumb-item active" aria-current="page"><?= $title; ?></li>
     </ol>
 
