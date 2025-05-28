@@ -2,34 +2,42 @@
 
 <?= $this->section('admin-content'); ?>
 
-<div class="container-fluid">
-    <h1 class="h3 mb-4 text-gray-800 fw-bold">Data Tahun Ajaran</h1>
+<div class="container-fluid mt-5 pt-5">
 
-    <!-- Breadcrumb -->
-    <nav aria-label="breadcrumb" class="mb-3">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="<?= site_url('/'); ?>"><i class="bi bi-house"></i></a>
-            </li>
-            <li class="breadcrumb-item"><a href="#">Kelas</a></li>
-            <li class="breadcrumb-item"><a href="#">Jurusan</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Mata Pelajaran</li>
-        </ol>
-    </nav>
-    <!-- End Breadcrumb -->
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item">
+            <a href="<?= base_url('dashboard'); ?>" class="text-decoration-none text-primary">
+                <i class="bi bi-house-door-fill"></i> Home
+            </a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= base_url('siswa'); ?>" class="text-decoration-none">Tahun Ajaran</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><?= $title; ?></li>
+    </ol>
 
     <div class="card shadow-lg mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Manajemen Tahun Ajaran</h6>
-            <a href="<?= site_url('tahun/tambah'); ?>" class="btn btn-sm btn-success shadow-sm">
-                <i class="bi bi-file-earmark-spreadsheet me-2"></i> Import Excel
-            </a>
         </div>
 
         <div class="card-body">
 
+            <?php if (session()->getFlashdata('success')) : ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= session()->getFlashdata('success'); ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+            <?php if (session()->getFlashdata('error')) : ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <strong>Terjadi Kesalahan Mohon Di cek kembali:</strong>
+                    <p class="ps-5"><?= session()->getFlashdata('error'); ?></p>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <?php endif; ?>
+
             <div class="d-flex justify-content-end mb-3">
-                <a href="<?= site_url('tahun/tambah'); ?>" class="btn btn-primary">
+                <a href="<?= site_url('thnajaran/create'); ?>" class="btn btn-primary">
                     <i class="bi bi-plus-circle"></i> Tambah Data
                 </a>
             </div>
@@ -66,12 +74,16 @@
                                     </td>
                                     <td class="align-middle">
                                         <div class="d-flex flex-wrap justify-content-center gap-2">
-                                            <a href="<?= site_url('tahun/edit/' . $t->id); ?>" class="btn btn-warning btn-sm">
+                                            <a href="<?= site_url('thnajaran/edit/' . $t->id); ?>" class="btn btn-warning btn-sm">
                                                 <i class="bi bi-pencil-square"></i> Edit
                                             </a>
-                                            <a href="<?= site_url('tahun/delete/' . $t->id); ?>" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus jadwal ini?');">
-                                                <i class="bi bi-trash"></i> Hapus
-                                            </a>
+                                            <form class="form-hapus d-inline" method="post" action="<?= base_url('thnajaran/delete/' . $t->id); ?>">
+                                                <?= csrf_field(); ?>
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button type="button" class="btn-delete btn btn-danger btn-sm">
+                                                    <i class="bi bi-trash"></i> Hapus
+                                                </button>
+                                            </form>
                                         </div>
                                     </td>
                                 </tr>

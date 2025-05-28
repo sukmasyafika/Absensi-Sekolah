@@ -52,9 +52,12 @@ $routes->delete('/kelas/delete/(:num)', 'Kelas::delete/$1');
 
 // mapel
 $routes->get('mapel', 'Mapel::index');
+$routes->get('/mapel/create', 'Mapel::create');
+$routes->post('/mapel/save', 'Mapel::save');
+$routes->get('/mapel/edit/(:num)', 'Mapel::edit/$1');
+$routes->post('/mapel/update/(:num)', 'Mapel::update/$1');
+$routes->delete('/mapel/delete/(:num)', 'Mapel::delete/$1');
 
-// jurusan
-$routes->get('jurusan', 'Jurusan::index');
 
 // tahun ajaran
 $routes->get('thnajaran', 'ThnAjaran::index');
@@ -63,6 +66,14 @@ $routes->post('/thnajaran/save', 'ThnAjaran::save');
 $routes->get('/thnajaran/edit/(:num)', 'ThnAjaran::edit/$1');
 $routes->post('/thnajaran/update/(:num)', 'ThnAjaran::update/$1');
 $routes->delete('/thnajaran/delete/(:num)', 'ThnAjaran::delete/$1');
+
+// jurusan
+$routes->get('jurusan', 'Jurusan::index');
+$routes->get('/jurusan/create', 'Jurusan::create');
+$routes->post('/jurusan/save', 'Jurusan::save');
+$routes->get('/jurusan/edit/(:num)', 'Jurusan::edit/$1');
+$routes->post('/jurusan/update/(:num)', 'Jurusan::update/$1');
+$routes->delete('/jurusan/delete/(:num)', 'Jurusan::delete/$1');
 
 // jadwal
 $routes->get('/jadwal', 'Jadwal::index');
