@@ -19,7 +19,7 @@ class ThnAjaran extends BaseController
     {
         $data = [
             'title' => 'Tahun Ajaran',
-            'tahun' => $this->thnAjaranModel->findAll(),
+            'tahun' => $this->thnAjaranModel->getAllOrdered(),
         ];
 
         return view('admin/akademik/thnajaran/index', $data);
@@ -44,41 +44,44 @@ class ThnAjaran extends BaseController
                 'rules' => 'required|in_list[Ganjil,Genap]',
                 'errors' => [
                     'required' => 'Semester wajib dipilih.',
-                    'in_list' => 'Semester harus salah satu dari Ganjil & Genap.',
+                    'in_list' => 'Semester harus antara Ganjil atau Genap.',
                 ]
             ],
             'tahun' => [
                 'rules' => 'required|regex_match[/^\d{4}\/\d{4}$/]',
                 'errors' => [
-                    'required' => '{field} tidak boleh kosong.',
-                    'regex_match' => 'Tahun harus dalam format contoh: 2024/2025.'
+                    'required' => 'Tahun ajaran tidak boleh kosong.',
+                    'regex_match' => 'Format tahun harus contoh: 2024/2025.'
                 ]
             ],
             'status' => [
                 'rules' => 'required|in_list[Aktif,Tidak Aktif]',
                 'errors' => [
                     'required' => 'Status wajib dipilih.',
-                    'in_list' => 'Status harus salah satu dari Aktif atau Tidak Aktif.',
+                    'in_list' => 'Status hanya boleh Aktif atau Tidak Aktif.',
                 ]
-            ],
+            ]
         ]);
 
         if (!$validation->run($this->request->getVar())) {
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
-        if ($this->thnAjaranModel->isDuplicate(
-            $this->request->getVar('semester'),
-            $this->request->getVar('tahun'),
-        )) {
+        $semester = $this->request->getVar('semester');
+        $tahun    = $this->request->getVar('tahun');
+        $status   = $this->request->getVar('status');
+
+        if ($this->thnAjaranModel->isDuplicate($semester, $tahun)) {
             return redirect()->back()->withInput()->with('error', 'Data Tahun Ajaran dengan kombinasi tersebut sudah Terdaftar.');
         }
 
-        $this->thnAjaranModel->insert([
-            'semester'           => $this->request->getVar('semester'),
-            'tahun'             => $this->request->getVar('tahun'),
-            'status'         => $this->request->getVar('status'),
-        ]);
+        $data = [
+            'semester'    => $semester,
+            'tahun'       => $tahun,
+            'status'      => $status,
+        ];
+
+        $this->thnAjaranModel->insertWithStatusCheck($data);
 
         return redirect()->to('/thnajaran')->with('success', 'Data Tahun Ajaran Berhasil Ditambahkan.');
     }
@@ -109,41 +112,44 @@ class ThnAjaran extends BaseController
                 'rules' => 'required|in_list[Ganjil,Genap]',
                 'errors' => [
                     'required' => 'Semester wajib dipilih.',
-                    'in_list' => 'Semester harus salah satu dari Ganjil & Genap.',
+                    'in_list' => 'Semester harus antara Ganjil atau Genap.',
                 ]
             ],
             'tahun' => [
                 'rules' => 'required|regex_match[/^\d{4}\/\d{4}$/]',
                 'errors' => [
-                    'required' => '{field} tidak boleh kosong.',
-                    'regex_match' => 'Tahun harus dalam format contoh: 2024/2025.'
+                    'required' => 'Tahun ajaran tidak boleh kosong.',
+                    'regex_match' => 'Format tahun harus contoh: 2024/2025.'
                 ]
             ],
             'status' => [
                 'rules' => 'required|in_list[Aktif,Tidak Aktif]',
                 'errors' => [
                     'required' => 'Status wajib dipilih.',
-                    'in_list' => 'Status harus salah satu dari Aktif atau Tidak Aktif.',
+                    'in_list' => 'Status hanya boleh Aktif atau Tidak Aktif.',
                 ]
-            ],
+            ]
         ]);
 
         if (!$validation->run($this->request->getVar())) {
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
-        if ($this->thnAjaranModel->isDuplicate(
-            $this->request->getVar('semester'),
-            $this->request->getVar('tahun'),
-        )) {
+        $semester = $this->request->getVar('semester');
+        $tahun    = $this->request->getVar('tahun');
+        $status   = $this->request->getVar('status');
+
+        if ($this->thnAjaranModel->isDuplicate($semester, $tahun, $id)) {
             return redirect()->back()->withInput()->with('error', 'Data Tahun Ajaran dengan kombinasi tersebut sudah Terdaftar.');
         }
 
-        $this->thnAjaranModel->update($id, [
-            'semester'           => $this->request->getVar('semester'),
-            'tahun'             => $this->request->getVar('tahun'),
-            'status'         => $this->request->getVar('status'),
-        ]);
+        $data = [
+            'semester'    => $semester,
+            'tahun'       => $tahun,
+            'status'      => $status,
+        ];
+
+        $this->thnAjaranModel->updateWithStatusCheck($id, $data);
 
         return redirect()->to('/thnajaran')->with('success', 'Data Tahun Ajaran Berhasil Berhasil Diperbaharui.');
     }

@@ -16,9 +16,6 @@ $routes->get('dashguru', 'Dashguru::index');
 $routes->get('user', 'User::index');
 $routes->get('/user/edit/(:num)', 'user::edit/$1');
 $routes->post('/user/update/(:num)', 'User::update/$1');
-// $routes->post('user/update', 'User::update');
-
-
 
 // siswa
 $routes->get('/siswa', 'Siswa::index');
@@ -83,6 +80,10 @@ $routes->get('/jadwal/edit/(:num)', 'Jadwal::edit/$1');
 $routes->post('/jadwal/update/(:num)', 'Jadwal::update/$1');
 $routes->delete('/jadwal/delete/(:num)', 'Jadwal::delete/$1');
 $routes->get('/jadwal/detail/(:num)', 'Jadwal::detail/$1');
+
+// laporan
+$routes->get('/laporan', 'Laporan::index');
+
 
 // untuk halaman guru
 $routes->get('/absensi', 'Absensi::index');

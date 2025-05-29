@@ -19,7 +19,7 @@ class Jurusan extends BaseController
     public function index()
     {
         $data = [
-            'title' => 'Mata Pelajaran',
+            'title' => 'Jurusan',
             'jurusan' => $this->jurusanModel->findAll(),
         ];
 
@@ -42,20 +42,23 @@ class Jurusan extends BaseController
         $validation = service('validation');
         $validation->setRules([
             'kode_jurusan' => [
-                'rules' => 'required|is_unique[jurusan.kode_jurusan]',
+                'rules' => 'required|alpha_numeric|max_length[10]|is_unique[jurusan.kode_jurusan]',
                 'errors' => [
                     'required' => 'Kode jurusan wajib diisi.',
+                    'alpha_numeric' => 'Kode jurusan hanya boleh huruf dan angka.',
+                    'max_length' => 'Kode jurusan maksimal 10 karakter.',
                     'is_unique' => 'Kode Jurusan sudah terdaftar.',
                 ]
             ],
             'nama_jurusan' => [
-                'rules' => 'required|is_unique[jurusan.nama_jurusan]',
+                'rules' => 'required|alpha_space|min_length[3]|is_unique[jurusan.nama_jurusan]',
                 'errors' => [
                     'required' => 'Jurusan wajib diisi.',
+                    'alpha_space' => 'Nama jurusan hanya boleh huruf dan spasi.',
+                    'min_length' => 'Nama jurusan minimal 3 karakter.',
                     'is_unique' => 'Nama Jurusan sudah terdaftar.',
                 ]
-            ],
-
+            ]
         ]);
 
         if (!$validation->run($this->request->getVar())) {
@@ -94,21 +97,23 @@ class Jurusan extends BaseController
         $validation = service('validation');
         $validation->setRules([
             'kode_jurusan' => [
-                'rules' => 'required|is_unique[jurusan.kode_jurusan]|max_length[5]',
+                'rules' => 'required|alpha_numeric|max_length[10]|is_unique[jurusan.kode_jurusan,' . $id . ']',
                 'errors' => [
                     'required' => 'Kode jurusan wajib diisi.',
+                    'alpha_numeric' => 'Kode jurusan hanya boleh huruf dan angka.',
+                    'max_length' => 'Kode jurusan maksimal 10 karakter.',
                     'is_unique' => 'Kode Jurusan sudah terdaftar.',
-                    'max_length' => 'Kode Jurusan tidak boleh lebih dari 5 karakter.',
                 ]
             ],
             'nama_jurusan' => [
-                'rules' => 'required|is_unique[jurusan.nama_jurusan]',
+                'rules' => 'required|alpha_space|min_length[3]|is_unique[jurusan.nama_jurusan,' . $id . ']',
                 'errors' => [
                     'required' => 'Jurusan wajib diisi.',
+                    'alpha_space' => 'Nama jurusan hanya boleh huruf dan spasi.',
+                    'min_length' => 'Nama jurusan minimal 3 karakter.',
                     'is_unique' => 'Nama Jurusan sudah terdaftar.',
                 ]
-            ],
-
+            ]
         ]);
 
         if (!$validation->run($this->request->getVar())) {
@@ -121,5 +126,17 @@ class Jurusan extends BaseController
         ]);
 
         return redirect()->to('/jurusan')->with('success', 'Data Jurusan Berhasil Perbaharui.');
+    }
+
+    public function delete($id)
+    {
+        $jurusan = $this->jurusanModel->find($id);
+
+        if ($jurusan) {
+            $this->jurusanModel->delete($id);
+            return redirect()->back()->with('success', 'jurusan <strong>' . $jurusan->kode_jurusan . '</strong> berhasil dihapus.');
+        }
+
+        return redirect()->back()->with('error', 'Data jurusan tidak ditemukan.');
     }
 }

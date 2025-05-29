@@ -27,7 +27,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="nama" class="form-label input-nama">Nama Lengkap</label>
+                        <label for="nama" class="form-label fw-semibold input-nama">Nama Lengkap</label>
                         <input type="text" name="nama" id="nama" class="form-control  <?= (session('errors.nama')) ? 'is-invalid' : ''; ?> " value="<?= old('nama', $guru->nama ?? ''); ?>" placeholder="Masukkan nama lengkap">
                         <div class="invalid-feedback">
                             <?= session('errors.nama'); ?>
@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="nip" class="form-label">NIP</label>
+                        <label for="nip" class="form-label fw-semibold">NIP</label>
                         <input type="text" name="nip" id="nip" class="form-control <?= (session('errors.nip')) ? 'is-invalid' : ''; ?>" value="<?= old('nip', $guru->nip ?? ''); ?>" placeholder="Masukkan NIP 18 digit">
                         <div class="invalid-feedback">
                             <?= session('errors.nip'); ?>
@@ -44,7 +44,7 @@
 
 
                     <div class="col-md-6 mb-3">
-                        <label for="jabatan" class="form-label">Jabatan</label>
+                        <label for="jabatan" class="form-label fw-semibold">Jabatan</label>
                         <input type="text" name="jabatan" id="jabatan" class="form-control <?= (session('errors.jabatan')) ? 'is-invalid' : ''; ?>" value="<?= old('jabatan', $guru->jabatan ?? ''); ?>" placeholder="Masukkan jabatan">
                         <div class="invalid-feedback">
                             <?= session('errors.jabatan'); ?>
@@ -52,7 +52,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="tanggal_lahir" class="form-label">Tanggal Lahir</label>
+                        <label for="tanggal_lahir" class="form-label fw-semibold">Tanggal Lahir</label>
                         <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="form-control <?= (session('errors.tanggal_lahir')) ? 'is-invalid' : ''; ?>" value="<?= old('tanggal_lahir', isset($guru->tanggal_lahir) ? date('Y-m-d', strtotime($guru->tanggal_lahir)) : ''); ?>">
                         <div class="invalid-feedback">
                             <?= session('errors.tanggal_lahir'); ?>
@@ -60,7 +60,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                        <label for="jenis_kelamin" class="form-label fw-semibold">Jenis Kelamin</label>
                         <select name="jenis_kelamin" id="jenis_kelamin" class="form-select <?= (session('errors.jenis_kelamin')) ? 'is-invalid' : ''; ?>">
                             <option value="">-- Pilih --</option>
                             <option value="Laki-laki" <?= old('jenis_kelamin', $guru->jenis_kelamin ?? '') == 'Laki-laki' ? 'selected' : ''; ?>>Laki-laki</option>
@@ -72,7 +72,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="agama" class="form-label">Agama</label>
+                        <label for="agama" class="form-label fw-semibold">Agama</label>
                         <select name="agama" id="agama" class="form-select <?= (session('errors.agama')) ? 'is-invalid' : ''; ?>">
                             <option value="">-- Pilih --</option>
                             <option value="Islam" <?= old('agama', $guru->agama ?? '') == 'Islam' ? 'selected' : ''; ?>>Islam</option>
@@ -88,7 +88,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="thn_masuk" class="form-label">Tahun Masuk</label>
+                        <label for="thn_masuk" class="form-label fw-semibold">Tahun Masuk</label>
                         <input type="number" name="thn_masuk" id="thn_masuk" class="form-control  <?= (session('errors.thn_masuk')) ? 'is-invalid' : ''; ?>" value="<?= old('thn_masuk', $guru->thn_masuk ?? ''); ?>" placeholder="Contoh: 2024">
                         <div class="invalid-feedback">
                             <?= session('errors.thn_masuk'); ?>
@@ -96,7 +96,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="status" class="form-label">Status</label>
+                        <label for="status" class="form-label fw-semibold">Status</label>
                         <select name="status" id="status" class="form-select <?= (session('errors.status')) ? 'is-invalid' : ''; ?>">
                             <option value="">-- Pilih --</option>
                             <option value="Aktif" <?= old('status', $guru->status ?? '') == 'Aktif' ? 'selected' : ''; ?>>Aktif</option>
@@ -109,7 +109,7 @@
 
                     <div class="col-md-6 mb-3">
                         <input type="hidden" name="fotoLama" value="<?= $guru->foto ?? ''; ?>">
-                        <label for="foto" class="form-label">Pilih Foto</label>
+                        <label for="foto" class="form-label fw-semibold">Pilih Foto</label>
                         <input class="form-control <?= (session('errors.foto')) ? 'is-invalid' : ''; ?>" type="file" id="foto" name="foto" onchange="previewImg()">
 
                         <div class="invalid-feedback">

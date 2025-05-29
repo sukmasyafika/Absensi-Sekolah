@@ -37,7 +37,7 @@
 
 
                         <div class="mb-3">
-                            <label for="kode_jurusan" class="form-label">Kode Jurusan</label>
+                            <label for="kode_jurusan" class="form-label fw-semibold">Kode Jurusan</label>
                             <input type="text" name="kode_jurusan" id="kode_jurusan" class="form-control <?= (session('errors.kode_jurusan')) ? 'is-invalid' : ''; ?>" value="<?= old('kode_jurusan', $jurusan->kode_jurusan ?? ''); ?>" placeholder="Contoh: MM">
                             <div class="invalid-feedback">
                                 <?= session('errors.kode_jurusan'); ?>
@@ -45,8 +45,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="nama_jurusan" class="form-label">Nama Jurusan</label>
-                            <input type="text" name="nama_jurusan" id="nama_jurusan" class="form-control <?= (session('errors.nama_jurusan')) ? 'is-invalid' : ''; ?>" value="<?= old('nama_jurusan', $jurusan->nama_jurusan ?? ''); ?>" placeholder="Contoh: TKJ">
+                            <label for="nama_jurusan" class="form-label fw-semibold">Nama Jurusan</label>
+                            <input type="text" name="nama_jurusan" id="nama_jurusan" class="form-control <?= (session('errors.nama_jurusan')) ? 'is-invalid' : ''; ?>" value="<?= old('nama_jurusan', $jurusan->nama_jurusan ?? ''); ?>" placeholder="Contoh: Multimedia">
                             <div class="invalid-feedback">
                                 <?= session('errors.nama_jurusan'); ?>
                             </div>

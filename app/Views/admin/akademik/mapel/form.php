@@ -22,7 +22,6 @@
             <div class="card shadow-lg">
                 <div class="card-body">
 
-
                     <?php if (session()->getFlashdata('error')) : ?>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <i class="bi bi-exclamation-triangle-fill me-2"></i>
@@ -36,23 +35,23 @@
                         <?= csrf_field(); ?>
 
                         <div class="mb-3">
-                            <label for="kode_mapel" class="form-label">Kode Mata Pelajaran</label>
-                            <input type="text" name="kode_mapel" id="kode_mapel" class="form-control <?= (session('errors.kode_mapel')) ? 'is-invalid' : ''; ?>" value="<?= old('kode_mapel', $mapel->kode_mapel ?? ''); ?>">
+                            <label for="kode_mapel" class="form-label fw-semibold">Kode Mata Pelajaran</label>
+                            <input type="text" name="kode_mapel" id="kode_mapel" class="form-control <?= (session('errors.kode_mapel')) ? 'is-invalid' : ''; ?>" value="<?= old('kode_mapel', $mapel->kode_mapel ?? ''); ?>" placeholder="Masukan Kode Mapel">
                             <div class="invalid-feedback">
                                 <?= session('errors.kode_mapel'); ?>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="nama_mapel" class="form-label">Nama Mata Pelajaran</label>
-                            <input type="text" name="nama_mapel" id="nama_mapel" class="form-control <?= (session('errors.nama_mapel')) ? 'is-invalid' : ''; ?>" value="<?= old('nama_mapel', $mapel->nama_mapel ?? ''); ?>">
+                            <label for="nama_mapel" class="form-label fw-semibold">Nama Mata Pelajaran</label>
+                            <input type="text" name="nama_mapel" id="nama_mapel" class="form-control <?= (session('errors.nama_mapel')) ? 'is-invalid' : ''; ?>" value="<?= old('nama_mapel', $mapel->nama_mapel ?? ''); ?>" placeholder="Masukan Nama Mapel">
                             <div class="invalid-feedback">
                                 <?= session('errors.nama_mapel'); ?>
                             </div>
                         </div>
 
                         <div class="mb-3">
-                            <label for="id_thnAjaran" class="form-label">Semester</label>
+                            <label for="id_thnAjaran" class="form-label fw-semibold">Semester</label>
                             <select name="id_thnAjaran" id="id_thnAjaran" class="form-select <?= (session('errors.id_thnAjaran')) ? 'is-invalid' : ''; ?>">
                                 <option value="">-- Pilih Semester --</option>
                                 <?php foreach ($tahun as $t) : ?>

@@ -74,7 +74,6 @@
             </div>
           </div>
 
-          <!-- Form Absensi -->
           <form action="<?= base_url('') ?>" method="post">
             <?= csrf_field() ?>
 
@@ -108,7 +107,6 @@
             <?php endforeach;
             endif; ?>
 
-            <!-- Tombol Aksi -->
             <div class="mt-4 d-flex gap-3 justify-content-end">
               <button type="submit" class="btn btn-success px-4">
                 <i class="bi bi-check-circle-fill me-1"></i> Selesai

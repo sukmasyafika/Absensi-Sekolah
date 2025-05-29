@@ -10,7 +10,7 @@
                 <i class="bi bi-house-door-fill"></i> Home
             </a>
         </li>
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= base_url('siswa'); ?>" class="text-decoration-none">Tahun Ajaran</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= base_url('kelas'); ?>" class="text-decoration-none">Tahun Ajaran</a></li>
         <li class="breadcrumb-item active" aria-current="page"><?= $title; ?></li>
     </ol>
 
@@ -36,7 +36,7 @@
                         <?= csrf_field(); ?>
 
                         <div class="mb-3">
-                            <label for="semester" class="form-label input-semester">Masukan Semester</label>
+                            <label for="semester" class="form-label fw-semibold input-semester">Masukan Semester</label>
                             <select name="semester" id="semester" class="form-select <?= (session('errors.semester')) ? 'is-invalid' : ''; ?>">
                                 <option value="">-- Pilih Semester --</option>
                                 <option value="Genap" <?= old('semester', $thnajaran->semester ?? '') == 'Genap' ? 'selected' : ''; ?>>Genap</option>
@@ -49,7 +49,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="tahun" class="form-label">Tahun Ajaran</label>
+                            <label for="tahun" class="form-label fw-semibold">Tahun Ajaran</label>
                             <input type="text" name="tahun" id="tahun" class="form-control <?= (session('errors.tahun')) ? 'is-invalid' : ''; ?>" value="<?= old('tahun', $thnajaran->tahun ?? ''); ?>" placeholder="Contoh: 2023/2024">
                             <div class="invalid-feedback">
                                 <?= session('errors.tahun'); ?>
@@ -57,7 +57,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="status" class="form-label input-status">Masukan status</label>
+                            <label for="status" class="form-label fw-semibold input-status">Masukan status</label>
                             <select name="status" id="status" class="form-select <?= (session('errors.status')) ? 'is-invalid' : ''; ?>">
                                 <option value="">-- Pilih status --</option>
                                 <option value="Aktif" <?= old('status', $thnajaran->status ?? '') == 'Aktif' ? 'selected' : ''; ?>>Aktif</option>

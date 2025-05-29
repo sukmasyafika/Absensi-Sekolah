@@ -49,8 +49,8 @@ class Jadwal extends BaseController
             'action' => site_url('jadwal/save'),
             'id_kelas' => $this->kelasModel->getKelas(),
             'guru' => $this->guruModel->findAll(),
-            'mapel' => $this->mapelModel->findAll(),
-            'tahun' => $this->tahunModel->findAll(),
+            'mapel' => $this->mapelModel->getMapel(),
+            'tahun' => $this->tahunModel->getThnAjaran(),
             'validation' => \Config\Services::validation()
         ];
 
@@ -194,8 +194,8 @@ class Jadwal extends BaseController
             'jadwal' => $jadwal,
             'id_kelas' => $this->kelasModel->getKelas(),
             'guru' => $this->guruModel->findAll(),
-            'mapel' => $this->mapelModel->findAll(),
-            'tahun' => $this->tahunModel->findAll(),
+            'mapel' => $this->mapelModel->getMapel(),
+            'tahun' => $this->tahunModel->getThnAjaran(),
             'validation' => \Config\Services::validation()
         ];
 

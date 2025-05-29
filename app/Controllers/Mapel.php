@@ -44,23 +44,27 @@ class Mapel extends BaseController
         $validation = service('validation');
         $validation->setRules([
             'kode_mapel' => [
-                'rules' => 'required|is_unique[mapel.kode_mapel]',
+                'rules' => 'required|alpha_numeric_punct|is_unique[mapel.kode_mapel]',
                 'errors' => [
                     'required' => 'Kode mapel wajib diisi.',
+                    'alpha_numeric_punct' => 'Kode mapel hanya boleh berisi huruf, angka, titik, koma, atau strip.',
                     'is_unique' => 'Kode Mapel sudah terdaftar.',
                 ]
             ],
             'nama_mapel' => [
-                'rules' => 'required|is_unique[mapel.nama_mapel]',
+                'rules' => 'required|string|min_length[3]|is_unique[mapel.nama_mapel]',
                 'errors' => [
-                    'required' => 'Nama Mapel wajib Diisi.',
+                    'required' => 'Nama Mapel wajib diisi.',
+                    'string' => 'Nama Mapel hanya boleh berisi karakter teks.',
+                    'min_length' => 'Nama Mapel minimal 3 karakter.',
                     'is_unique' => 'Nama Mapel sudah terdaftar.',
                 ]
             ],
             'id_thnAjaran' => [
-                'rules' => 'required',
+                'rules' => 'required|is_not_unique[thn_ajaran.id]',
                 'errors' => [
-                    'required' => 'Tahun Ajaran wajib dipilih.'
+                    'required' => 'Tahun Ajaran wajib dipilih.',
+                    'is_not_unique' => 'Tahun Ajaran yang dipilih tidak valid.'
                 ]
             ]
         ]);
@@ -69,12 +73,10 @@ class Mapel extends BaseController
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
-        dd($this->request->getVar());
-
         $this->mapelModel->insert([
-            'kode_mapel'           => $this->request->getVar('kode_mapel'),
-            'nama_mapel'             => $this->request->getVar('nama_mapel'),
-            'id_thnAjaran'         => $this->request->getVar('id_thnAjaran'),
+            'kode_mapel'       => $this->request->getVar('kode_mapel'),
+            'nama_mapel'       => $this->request->getVar('nama_mapel'),
+            'id_thnAjaran'     => $this->request->getVar('id_thnAjaran'),
         ]);
 
         return redirect()->to('/mapel')->with('success', 'Data Mata Pelajaran Berhasil Ditambahkan.');
@@ -104,23 +106,27 @@ class Mapel extends BaseController
         $validation = service('validation');
         $validation->setRules([
             'kode_mapel' => [
-                'rules' => 'required|is_unique[mapel.kode_mapel,id,' . $id . ']',
+                'rules' => 'required|alpha_numeric_punct|is_unique[mapel.kode_mapel,id,' . $id . ']',
                 'errors' => [
                     'required' => 'Kode mapel wajib diisi.',
+                    'alpha_numeric_punct' => 'Kode mapel hanya boleh berisi huruf, angka, titik, koma, atau strip.',
                     'is_unique' => 'Kode Mapel sudah terdaftar.',
                 ]
             ],
             'nama_mapel' => [
-                'rules' => 'required|is_unique[mapel.nama_mapel, id,' . $id . ']',
+                'rules' => 'required|string|min_length[3]|is_unique[mapel.nama_mapel,id,' . $id . ']',
                 'errors' => [
-                    'required' => 'Nama Mapel wajib Diisi.',
+                    'required' => 'Nama Mapel wajib diisi.',
+                    'string' => 'Nama Mapel hanya boleh berisi karakter teks.',
+                    'min_length' => 'Nama Mapel minimal 3 karakter.',
                     'is_unique' => 'Nama Mapel sudah terdaftar.',
                 ]
             ],
             'id_thnAjaran' => [
-                'rules' => 'required',
+                'rules' => 'required|is_not_unique[thn_ajaran.id]',
                 'errors' => [
                     'required' => 'Tahun Ajaran wajib dipilih.',
+                    'is_not_unique' => 'Tahun Ajaran yang dipilih tidak valid.'
                 ]
             ]
         ]);
@@ -130,9 +136,9 @@ class Mapel extends BaseController
         }
 
         $this->mapelModel->update($id, [
-            'kode_mapel'           => $this->request->getVar('kode_mapel'),
-            'nama_mapel'             => $this->request->getVar('nama_mapel'),
-            'id_thnAjaran'         => $this->request->getVar('id_thnAjaran'),
+            'kode_mapel'         => $this->request->getVar('kode_mapel'),
+            'nama_mapel'         => $this->request->getVar('nama_mapel'),
+            'id_thnAjaran'       => $this->request->getVar('id_thnAjaran'),
         ]);
 
         return redirect()->to('/mapel')->with('success', 'Data Mata Pelajaran Berhasil Perbaharui.');

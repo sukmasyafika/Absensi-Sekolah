@@ -10,9 +10,10 @@
                 <i class="bi bi-house-door-fill"></i> Home
             </a>
         </li>
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= base_url('siswa'); ?>" class="text-decoration-none">Tahun Ajaran</a></li>
         <li class="breadcrumb-item active" aria-current="page"><?= $title; ?></li>
     </ol>
+
+    <h1 class="h3 mb-4 text-gray-800 fw-bold">Data Tahun Ajaran</h1>
 
     <div class="card shadow-lg mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -62,7 +63,7 @@
                             <?php $no = 1; ?>
                             <?php foreach ($tahun as $t): ?>
                                 <tr class="text-center">
-                                    <th class="align-middle"><?= $no++; ?></th>
+                                    <td class="align-middle"><?= $no++; ?></td>
                                     <td class="text-start align-middle"><?= esc($t->semester); ?></td>
                                     <td class="align-middle"><?= esc($t->tahun); ?></td>
                                     <td class="align-middle">

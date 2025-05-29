@@ -65,7 +65,7 @@
                       case 'kajur':
                         $badgeClass = 'danger';
                         break;
-                      case 'wali kelas':
+                      case 'wali_kelas':
                         $badgeClass = 'warning';
                         break;
                     }

@@ -10,7 +10,6 @@
                 <i class="bi bi-house-door-fill"></i> Home
             </a>
         </li>
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= base_url('siswa'); ?>" class="text-decoration-none">Jurusan</a></li>
         <li class="breadcrumb-item active" aria-current="page"><?= $title; ?></li>
     </ol>
 
@@ -61,7 +60,7 @@
                             <?php $no = 1; ?>
                             <?php foreach ($jurusan as $j): ?>
                                 <tr class="text-center">
-                                    <th class="align-middle"><?= $no++; ?></th>
+                                    <td class="align-middle"><?= $no++; ?></td>
                                     <td class="text-start align-middle"><?= esc($j->kode_jurusan); ?></td>
                                     <td class="align-middle"><?= esc($j->nama_jurusan); ?></td>
                                     <td class="align-middle">

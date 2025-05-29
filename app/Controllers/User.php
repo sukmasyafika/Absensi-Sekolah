@@ -39,7 +39,7 @@ class User extends BaseController
         $data = [
             'title' => 'Edit pengguna',
             'pengguna' => $pengguna,
-            'guruList' => $this->guruModel->findAll(),
+            'guru' => $this->guruModel->findAll(),
             'validation' => \Config\Services::validation()
         ];
 
@@ -72,24 +72,41 @@ class User extends BaseController
                 ]
             ],
             'role' => [
-                'rules' => 'required|in_list[admin,guru,kajur,wali kelas]',
+                'rules' => 'required|in_list[admin,guru,kajur,wali_kelas]',
                 'errors' => [
                     'required' => 'Role wajib diisi.',
                     'in_list' => 'Role tidak valid.',
                 ]
             ],
+            'active' => [
+                'rules' => 'required|in_list[0,1]',
+                'errors' => [
+                    'required' => 'Status aktif wajib dipilih.',
+                    'in_list' => 'Status aktif harus bernilai 0 atau 1.',
+                ]
+            ]
         ]);
 
         if (!$validation->run($this->request->getVar())) {
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
-        $this->userModel->update($userid, [
-            'id_guru'     => $this->request->getVar('id_guru'),
-            'username'     => $this->request->getVar('username'),
-            'email'        => $this->request->getVar('email'),
-            'group_id'     => $this->request->getVar('group_id'),
-        ]);
+        $dataUser = [
+            'id_guru'  => $this->request->getVar('id_guru'),
+            'username' => $this->request->getVar('username'),
+            'email'    => $this->request->getVar('email'),
+            'active'   => $this->request->getVar('active'),
+        ];
+
+        $roleName = $this->request->getVar('role');
+
+        if (!$this->userModel->updateUserData($userid, $dataUser)) {
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui data pengguna.');
+        }
+
+        if (!$this->userModel->updateUserRole($userid, $roleName)) {
+            return redirect()->back()->withInput()->with('error', 'Gagal memperbarui role pengguna.');
+        }
 
         return redirect()->to('/user')->with('success', 'Data pengguna berhasil diperbaharui.');
     }

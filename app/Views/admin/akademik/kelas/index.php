@@ -63,7 +63,7 @@
                             <?php $no = 1; ?>
                             <?php foreach ($kelas as $k): ?>
                                 <tr class="text-center text-capitalize">
-                                    <th class="align-middle"><?= $no++; ?></th>
+                                    <td class="align-middle"><?= $no++; ?></td>
                                     <td class="text-start align-middle"><?= esc($k->nama_kls); ?></td>
                                     <td class="align-middle"><?= esc($k->rombel); ?></td>
                                     <td class="align-middle"><?= esc($k->jurusan); ?></td>

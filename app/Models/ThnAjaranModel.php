@@ -29,6 +29,29 @@ class ThnAjaranModel extends Model
 
     public function getThnAjaran()
     {
-        return $this->select('id, semester')->findAll();
+        return $this->where('status', 'Aktif')->select('id, semester, tahun')->findAll();
+    }
+
+    public function insertWithStatusCheck(array $data)
+    {
+        if (isset($data['status']) && $data['status'] === 'Aktif') {
+            $this->where('status', 'Aktif')->set('status', 'Tidak Aktif')->update();
+        }
+
+        return $this->insert($data);
+    }
+
+    public function updateWithStatusCheck($id, array $data)
+    {
+        if (isset($data['status']) && $data['status'] === 'Aktif') {
+            $this->where('status', 'Aktif')->where('id !=', $id)->set('status', 'Tidak Aktif')->update();
+        }
+
+        return $this->update($id, $data);
+    }
+
+    public function getAllOrdered()
+    {
+        return $this->orderBy('id', 'DESC')->findAll();
     }
 }

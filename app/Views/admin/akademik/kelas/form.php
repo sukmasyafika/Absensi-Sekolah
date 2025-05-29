@@ -34,7 +34,7 @@
                         <?= csrf_field(); ?>
 
                         <div class="mb-3">
-                            <label for="nama_kls" class="form-label input-nama_kls">Masukan Kelas</label>
+                            <label for="nama_kls" class="form-label fw-semibold input-nama_kls">Masukan Kelas</label>
                             <select name="nama_kls" id="nama_kls" class="form-select <?= (session('errors.nama_kls')) ? 'is-invalid' : ''; ?>">
                                 <option value="">-- Pilih --</option>
                                 <option value="X" <?= old('nama_kls', $kelas->nama_kls ?? '') == 'X' ? 'selected' : ''; ?>>X</option>
@@ -47,7 +47,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="rombel" class="form-label">Rombel</label>
+                            <label for="rombel" class="form-label fw-semibold">Rombel</label>
                             <select name="rombel" id="rombel" class="form-select <?= (session('errors.rombel')) ? 'is-invalid' : ''; ?>">
                                 <option value="">-- Pilih --</option>
                                 <option value="A" <?= old('rombel', $kelas->rombel ?? '') == 'A' ? 'selected' : ''; ?>>A</option>
@@ -60,7 +60,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="jurusan_id" class="form-label">Jurusan</label>
+                            <label for="jurusan_id" class="form-label fw-semibold">Jurusan</label>
                             <select name="jurusan_id" id="jurusan_id" class="form-select <?= (session('errors.jurusan_id')) ? 'is-invalid' : ''; ?>">
                                 <option value="">-- Pilih --</option>
                                 <?php foreach ($jurusan as $j) : ?>
@@ -75,7 +75,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="wali_kelas_id" class="form-label">Wali Kelas</label>
+                            <label for="wali_kelas_id" class="form-label fw-semibold">Wali Kelas</label>
                             <select name="wali_kelas_id" id="wali_kelas_id" class="form-select <?= (session('errors.wali_kelas_id')) ? 'is-invalid' : ''; ?>">
                                 <option value="">-- Pilih --</option>
                                 <?php foreach ($wakel as $w) : ?>
