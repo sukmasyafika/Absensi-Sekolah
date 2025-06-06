@@ -82,3 +82,14 @@ $(document).on('click', '.btn-delete', function () {
 });
 
 
+document.addEventListener('DOMContentLoaded', function () {
+  const toastEl = document.getElementById('toastPesan');
+  if (toastEl) {
+    const toast = new bootstrap.Toast(toastEl, {
+      delay: 10000
+    });
+  toast.show();
+  }
+});
+
+

@@ -53,7 +53,19 @@
             </div>
           </form>
 
-          <div class="btn-group" role="group" aria-label="Export Buttons">
+          <div class="justify-content-between">
+            <a href="<?= base_url('laporan/siswa/excel?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-success btn-sm" title="Export Excel">
+              <i class="bi bi-file-earmark-spreadsheet-fill"></i> Excel
+            </a>
+            <a href="<?= base_url('laporan/siswa/pdf?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-danger btn-sm" title="Export PDF">
+              <i class="bi bi-file-earmark-pdf-fill"></i> PDF
+            </a>
+            <a href="<?= base_url('laporan/siswa/print?' . $_SERVER['QUERY_STRING']); ?>" target="_blank" class="btn btn-secondary btn-sm" title="Cetak">
+              <i class="bi bi-printer-fill"></i> Cetak
+            </a>
+          </div>
+
+          <!-- <div class="btn-group" role="group" aria-label="Export Buttons">
             <a href="<?= base_url('laporan/absensi/excel?' . http_build_query($filter ?? [])); ?>" class="btn btn-sm btn-success" title="Export Excel">
               <i class="bi bi-file-earmark-excel-fill"></i>
             </a>
@@ -63,14 +75,7 @@
             <a href="<?= base_url('laporan/absensi/print?' . http_build_query($filter ?? [])); ?>" target="_blank" class="btn btn-sm btn-secondary" title="Cetak">
               <i class="bi bi-printer-fill"></i>
             </a>
-
-            <a href="<?= base_url('laporan/absensi/excel?all=1'); ?>" class="btn btn-sm btn-outline-success" title="Export Semua Excel">
-              <i class="bi bi-file-earmark-excel"></i> Semua
-            </a>
-            <a href="<?= base_url('laporan/absensi/pdf?all=1'); ?>" class="btn btn-sm btn-outline-danger" title="Export Semua PDF">
-              <i class="bi bi-file-earmark-pdf"></i> Semua
-            </a>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>

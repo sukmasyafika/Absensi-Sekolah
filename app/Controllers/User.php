@@ -110,4 +110,16 @@ class User extends BaseController
 
         return redirect()->to('/user')->with('success', 'Data pengguna berhasil diperbaharui.');
     }
+
+    public function delete($id)
+    {
+        $users = $this->userModel->find($id);
+
+        if ($users) {
+            $this->userModel->delete($id);
+            return redirect()->back()->with('success', 'Data Users <strong>' . $users->username . '</strong> berhasil dihapus.');
+        }
+
+        return redirect()->back()->with('error', 'Data users tidak ditemukan.');
+    }
 }

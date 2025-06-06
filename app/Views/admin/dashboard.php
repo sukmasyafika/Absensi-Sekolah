@@ -3,7 +3,32 @@
 <?= $this->section('admin-content'); ?>
 
 <div class="container-fluid mt-5 pt-5">
-  <h1 class="h3 mb-4 text-gray-800">Dashboard</h1>
+  <h1 class="h3 mb-4 text-gray-800 fw-bold">Dashboard</h1>
+
+  <?php if (session()->getFlashdata('error')): ?>
+    <div class="position-fixed top-0 end-0 pe-3 pt-4 mt-5" style="z-index: 1055">
+      <div id="toastPesan" class="toast align-items-center text-bg-danger border shadow-sm" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body flex-grow-1">
+            <i class="bi bi-exclamation-circle-fill me-2"></i><?= session()->getFlashdata('error'); ?>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 my-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+  <?php endif; ?>
+  <?php if (session()->getFlashdata('success')): ?>
+    <div class="position-fixed top-0 end-0 pe-3 pt-4 mt-5" style="z-index: 1055">
+      <div id="toastPesan" class="toast align-items-center text-bg-success border shadow-sm" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body flex-grow-1">
+            <i class="bi bi-check-circle-fill me-2"></i><?= session()->getFlashdata('success'); ?>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 my-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+  <?php endif; ?>
 
   <div class="row">
 

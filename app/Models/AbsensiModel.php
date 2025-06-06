@@ -13,7 +13,7 @@ class AbsensiModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $useTimestamps    = true;
-    protected $allowedFields    = ['id', 'id_siswa', 'id_jadwal', 'pertemuan_ke', 'tanggal', 'status', 'jam_absen'];
+    protected $allowedFields    = ['id', 'id_siswa', 'id_jadwal', 'pertemuan_ke', 'tanggal', 'status'];
 
     public function getAbsen()
     {
@@ -23,11 +23,80 @@ class AbsensiModel extends Model
             ->findAll();
     }
 
-    public function Getabsenkelas()
+    public function Getabsenkelas($id_kelas, $id_mapel)
     {
-        return $this->select('absensi.*, siswa.nama AS namaSiswa, kelas.nama_kelas')
-            ->join('siswa', 'siswa.id = absensi.id_siswa')
-            ->join('kelas', 'kelas.id = siswa.id_kelas')
+        return $this->select('absensi.*, siswa.id, siswa.nama AS namaSiswa')
+            ->join('siswa', 'siswa.id = absensi.id_siswa', 'right')
+            ->join('jadwal', 'jadwal.id = absensi.id_jadwal', 'left')
+            ->where('siswa.kelas_id', $id_kelas)
+            ->where('jadwal.id_mapel', $id_mapel)
+            ->where('siswa.status', 'Aktif')
             ->findAll();
+    }
+
+    public function getJumlahPertemuan($id_jadwal)
+    {
+        return $this->where('id_jadwal', $id_jadwal)
+            ->groupBy('tanggal')
+            ->distinct()
+            ->countAllResults();
+    }
+
+    public function getUpdateabsen($jadwal, $id_siswa, $tanggal, $pertemuan)
+    {
+        return $this->where('id_jadwal', $jadwal->id)
+            ->where('id_siswa', $id_siswa)
+            ->where('tanggal', $tanggal)
+            ->where('pertemuan_ke', $pertemuan)
+            ->first();
+    }
+
+    public function getCekAbsen($jadwal, $tanggal, $pertemuan)
+    {
+        return $this->where('id_jadwal', $jadwal->id)
+            ->where('tanggal', $tanggal)
+            ->where('pertemuan_ke', $pertemuan)
+            ->first();
+    }
+
+    public function getRekapAbsensi($id_kelas = null, $id_mapel = null, $semester = null, $dari = null, $sampai = null)
+    {
+        $builder = $this->select('siswa.nama, 
+          SUM(CASE WHEN absensi.status = "hadir" THEN 1 ELSE 0 END) AS hadir,
+          SUM(CASE WHEN absensi.status = "sakit" THEN 1 ELSE 0 END) AS sakit,
+          SUM(CASE WHEN absensi.status = "izin" THEN 1 ELSE 0 END) AS izin,
+          SUM(CASE WHEN absensi.status = "alpha" THEN 1 ELSE 0 END) AS alpa,
+          COUNT(absensi.id) AS total')
+            ->join('siswa', 'siswa.id = absensi.id_siswa')
+            ->join('jadwal', 'jadwal.id = absensi.id_jadwal')
+            ->join('mapel', 'mapel.id = jadwal.id_mapel')
+            ->join('kelas', 'kelas.id = jadwal.id_kelas')
+            ->join('thn_ajaran', 'thn_ajaran.id = jadwal.id_thnajaran');
+
+        if (!empty($id_kelas)) {
+            $builder->where('kelas.id', $id_kelas);
+        }
+
+        if (!empty($id_mapel)) {
+            $builder->where('mapel.id', $id_mapel);
+        }
+
+        if (!empty($semester)) {
+            $builder->where('thn_ajaran.semester', $semester);
+        }
+
+        if (!empty($dari)) {
+            $builder->where('absensi.tanggal >=', $dari);
+        }
+
+        if (!empty($sampai)) {
+            $builder->where('absensi.tanggal <=', $sampai);
+        }
+
+        return $builder
+            ->groupBy('absensi.id_siswa')
+            ->orderBy('siswa.nama', 'ASC')
+            ->get()
+            ->getResult();
     }
 }

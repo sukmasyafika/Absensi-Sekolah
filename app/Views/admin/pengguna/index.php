@@ -33,12 +33,12 @@
           <thead class="bg-primary text-white text-center align-middle">
             <tr>
               <th style="width: 5%;">No</th>
-              <th style="width: 20%;">Nama Guru</th>
-              <th style="width: 15%;">Role</th>
+              <th style="width: 15%;">Nama Guru</th>
+              <th style="width: 10%;">Role</th>
               <th style="width: 20%;">Username</th>
               <th style="width: 20%;">Email</th>
               <th style="width: 10%;">Status</th>
-              <th style="width: 10%;">Action</th>
+              <th style="width: 20%;">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -82,9 +82,18 @@
                     <?php endif; ?>
                   </td>
                   <td class="align-middle">
-                    <a href="<?= site_url('user/edit/' . $p->userid); ?>" class="btn btn-warning btn-sm">
-                      <i class="bi bi-pencil-square"></i> Edit
-                    </a>
+                    <div class="d-flex flex-wrap justify-content-center gap-2">
+                      <a href="<?= site_url('user/edit/' . $p->userid); ?>" class="btn btn-warning btn-sm">
+                        <i class="bi bi-pencil-square"></i> Edit
+                      </a>
+                      <form class="form-hapus d-inline" method="post" action="<?= base_url('user/delete/' . $p->userid); ?>">
+                        <?= csrf_field(); ?>
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="button" class="btn-delete btn btn-danger btn-sm">
+                          <i class="bi bi-trash"></i> Hapus
+                        </button>
+                      </form>
+                    </div>
                   </td>
                 </tr>
               <?php endforeach; ?>

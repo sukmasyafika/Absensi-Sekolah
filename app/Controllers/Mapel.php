@@ -6,15 +6,17 @@ use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\ThnAjaranModel;
 use App\Models\MapelModel;
+use App\Models\JurusanModel;
 
 class Mapel extends BaseController
 {
-    protected $mapelModel, $thnAjaranModel;
+    protected $mapelModel, $thnAjaranModel, $jurusanModel;
 
     public function __construct()
     {
         $this->mapelModel = new MapelModel();
         $this->thnAjaranModel = new ThnAjaranModel();
+        $this->jurusanModel = new JurusanModel();
     }
 
     public function index()
@@ -33,6 +35,7 @@ class Mapel extends BaseController
             'title' => 'Tambah Mata Pelajaran',
             'action' => site_url('mapel/save'),
             'tahun' => $this->thnAjaranModel->getThnAjaran(),
+            'jurusan' => $this->jurusanModel->getListJurusan(),
             'validation' => \Config\Services::validation()
         ];
 
@@ -60,6 +63,12 @@ class Mapel extends BaseController
                     'is_unique' => 'Nama Mapel sudah terdaftar.',
                 ]
             ],
+            'id_jurusan' => [
+                'rules' => 'permit_empty|is_not_unique[jurusan.id]',
+                'errors' => [
+                    'is_not_unique' => 'Jurusan yang dipilih tidak valid.'
+                ]
+            ],
             'id_thnAjaran' => [
                 'rules' => 'required|is_not_unique[thn_ajaran.id]',
                 'errors' => [
@@ -73,10 +82,13 @@ class Mapel extends BaseController
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
+        $idJurusan = $this->request->getPost('id_jurusan') ?: null;
+
         $this->mapelModel->insert([
             'kode_mapel'       => $this->request->getVar('kode_mapel'),
             'nama_mapel'       => $this->request->getVar('nama_mapel'),
             'id_thnAjaran'     => $this->request->getVar('id_thnAjaran'),
+            'id_jurusan'       => $idJurusan,
         ]);
 
         return redirect()->to('/mapel')->with('success', 'Data Mata Pelajaran Berhasil Ditambahkan.');
@@ -95,6 +107,7 @@ class Mapel extends BaseController
             'mapel' => $mapel,
             'tahun' => $this->thnAjaranModel->getThnAjaran(),
             'action' => base_url('mapel/update/' . $mapel->id),
+            'jurusan' => $this->jurusanModel->getListJurusan(),
             'validation' => \Config\Services::validation()
         ];
 
@@ -122,6 +135,12 @@ class Mapel extends BaseController
                     'is_unique' => 'Nama Mapel sudah terdaftar.',
                 ]
             ],
+            'id_jurusan' => [
+                'rules' => 'permit_empty|is_not_unique[jurusan.id]',
+                'errors' => [
+                    'is_not_unique' => 'Jurusan yang dipilih tidak valid.'
+                ]
+            ],
             'id_thnAjaran' => [
                 'rules' => 'required|is_not_unique[thn_ajaran.id]',
                 'errors' => [
@@ -135,10 +154,13 @@ class Mapel extends BaseController
             return redirect()->back()->withInput()->with('errors', $validation->getErrors());
         }
 
+        $idJurusan = $this->request->getPost('id_jurusan') ?: null;
+
         $this->mapelModel->update($id, [
             'kode_mapel'         => $this->request->getVar('kode_mapel'),
             'nama_mapel'         => $this->request->getVar('nama_mapel'),
             'id_thnAjaran'       => $this->request->getVar('id_thnAjaran'),
+            'id_jurusan'         => $idJurusan,
         ]);
 
         return redirect()->to('/mapel')->with('success', 'Data Mata Pelajaran Berhasil Perbaharui.');

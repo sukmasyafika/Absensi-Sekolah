@@ -13,7 +13,7 @@ class MapelModel extends Model
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $useTimestamps    = true;
-    protected $allowedFields    = ['id', 'kode_mapel', 'nama_mapel', 'id_thnAjaran'];
+    protected $allowedFields    = ['id', 'kode_mapel', 'nama_mapel', 'id_thnAjaran', 'id_jurusan'];
 
     public function getMapel()
     {
@@ -29,11 +29,18 @@ class MapelModel extends Model
 
         $semesterAktif = $aktif->semester;
 
-        return $this->select('mapel.*, thn_ajaran.semester, thn_ajaran.tahun')
+        return $this->select('mapel.*, thn_ajaran.semester, thn_ajaran.tahun, jurusan.nama_jurusan, jurusan.kode_jurusan')
             ->join('thn_ajaran', 'thn_ajaran.id = mapel.id_thnAjaran')
+            ->join('jurusan', 'jurusan.id = mapel.id_jurusan', 'left')
             ->where('thn_ajaran.semester', $semesterAktif)
             ->findAll();
     }
+
+    public function getIdByKode($kode)
+    {
+        return $this->where('kode_mapel', $kode)->first();
+    }
+
 
     public function countAll()
     {

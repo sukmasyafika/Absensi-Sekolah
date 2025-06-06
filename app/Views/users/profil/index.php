@@ -6,11 +6,6 @@
   <h1 class="h3 mb-4 text-gray-800 fw-bold">My Profil</h1>
   <div class="row justify-content-center">
     <div class="col-lg-6">
-      <div class="d-flex justify-content-end mb-3">
-        <a href="" class="btn btn-primary shadow-sm rounded-pill px-4">
-          <i class="bi bi-pencil-square me-2"></i> Edit Profil
-        </a>
-      </div>
       <div class="card mb-3 shadow-lg">
         <div class="row g-0">
           <div class="col-md-4 d-flex align-items-center justify-content-center bg-danger  text-white rounded">

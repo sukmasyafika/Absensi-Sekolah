@@ -48,6 +48,7 @@
                             <th>No</th>
                             <th>Kode Mapel</th>
                             <th>Nama Mapel</th>
+                            <th>Jenis Mapel</th>
                             <th>Tahun Ajaran</th>
                             <th>Action</th>
                         </tr>
@@ -55,7 +56,7 @@
                     <tbody>
                         <?php if (empty($mapel)): ?>
                             <tr>
-                                <td colspan="5" class="text-center">Tidak ada data mapel.</td>
+                                <td colspan="6" class="text-center">Tidak ada data mapel.</td>
                             </tr>
                         <?php else: ?>
                             <?php $no = 1; ?>
@@ -64,7 +65,10 @@
                                     <td class="align-middle"><?= $no++; ?></td>
                                     <td class="text-start align-middle"><?= esc($m->kode_mapel); ?></td>
                                     <td class="align-middle"><?= esc($m->nama_mapel); ?></td>
-                                    <td class="align-middle"><?= esc($m->semester . ' - ' . $m->tahun); ?></td>
+                                    <td class="align-middle">
+                                        <?= empty($m->nama_jurusan) ? 'Umum' : esc($m->nama_jurusan); ?>
+                                    </td>
+                                    <td class="align-middle"><?= esc($m->semester); ?></td>
                                     <td class="align-middle">
                                         <div class="d-flex flex-wrap justify-content-center gap-2">
                                             <a href="<?= site_url('mapel/edit/' . $m->id); ?>" class="btn btn-warning btn-sm">

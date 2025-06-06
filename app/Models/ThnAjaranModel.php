@@ -29,7 +29,7 @@ class ThnAjaranModel extends Model
 
     public function getThnAjaran()
     {
-        return $this->where('status', 'Aktif')->select('id, semester, tahun')->findAll();
+        return $this->where('status', 'Aktif')->select('id, semester, tahun')->first();
     }
 
     public function insertWithStatusCheck(array $data)
@@ -53,5 +53,10 @@ class ThnAjaranModel extends Model
     public function getAllOrdered()
     {
         return $this->orderBy('id', 'DESC')->findAll();
+    }
+
+    public function getIdByTahunDanSemester($tahun, $semester)
+    {
+        return $this->where('tahun', $tahun)->where('semester', $semester)->first();
     }
 }

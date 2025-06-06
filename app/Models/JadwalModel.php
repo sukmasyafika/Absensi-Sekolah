@@ -22,7 +22,9 @@ class JadwalModel extends Model
             ->join('mapel', 'mapel.id = jadwal.id_mapel')
             ->join('kelas', 'kelas.id = jadwal.id_kelas')
             ->join('thn_ajaran', 'thn_ajaran.id = jadwal.id_thnajaran')
-            ->join('jurusan', 'jurusan.id = kelas.jurusan_id');
+            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
+            ->where('thn_ajaran.status', 'Aktif')
+            ->orderBy('jadwal.id', 'DESC');
 
         if ($id === false) {
             return $builder->findAll();
@@ -111,7 +113,7 @@ class JadwalModel extends Model
         return (int) ($result['total'] ?? 0);
     }
 
-    public function getMapelHariIni()
+    public function getMapelHariIni($guruId)
     {
         $hariMap = [
             'Sunday' => 'Minggu',
@@ -119,20 +121,27 @@ class JadwalModel extends Model
             'Tuesday' => 'Selasa',
             'Wednesday' => 'Rabu',
             'Thursday' => 'Kamis',
-            'Friday' => 'Jumat',
-            'Saturday' => 'Sabtu',
+            'Friday' => 'Jumat'
         ];
 
-        $hariIni = $hariMap[date('l')];
+        $hariInggris = date('l');
+
+        if (!isset($hariMap[$hariInggris])) {
+            return [];
+        }
+
+        $hariIni = $hariMap[$hariInggris];
 
         return $this->select('mapel.id, mapel.kode_mapel, mapel.nama_mapel')
             ->join('mapel', 'mapel.id = jadwal.id_mapel')
             ->where('jadwal.hari', $hariIni)
+            ->where('jadwal.id_guru', $guruId)
+            ->where('jadwal.status', 'Aktif')
             ->groupBy('mapel.id, mapel.kode_mapel, mapel.nama_mapel')
             ->findAll();
     }
 
-    public function getKelasHariIni()
+    public function getKelasHariIni($guruId)
     {
         $hariMap = [
             'Sunday' => 'Minggu',
@@ -140,23 +149,115 @@ class JadwalModel extends Model
             'Tuesday' => 'Selasa',
             'Wednesday' => 'Rabu',
             'Thursday' => 'Kamis',
-            'Friday' => 'Jumat',
-            'Saturday' => 'Sabtu',
+            'Friday' => 'Jumat'
         ];
 
-        $hariIni = $hariMap[date('l')];
+        $hariInggris = date('l');
+
+        if (!isset($hariMap[$hariInggris])) {
+            return [];
+        }
+
+        $hariIni = $hariMap[$hariInggris];
 
         return $this->select('kelas.id, kelas.nama_kls, jurusan.kode_jurusan AS kd_jurusan, kelas.rombel')
             ->join('kelas', 'kelas.id = jadwal.id_kelas')
             ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
             ->where('jadwal.hari', $hariIni)
+            ->where('jadwal.id_guru', $guruId)
+            ->where('jadwal.status', 'Aktif')
             ->groupBy('kelas.id, kelas.nama_kls, jurusan.kode_jurusan, kelas.rombel')
             ->findAll();
     }
 
+    public function getJadwalToday($guruId)
+    {
+
+        $hariMap = [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat'
+        ];
+
+        $hariInggris = date('l');
+
+        if (!isset($hariMap[$hariInggris])) {
+            return [];
+        }
+
+        $hariIni = $hariMap[$hariInggris];
+
+        return $this->select('jadwal.*, mapel.kode_mapel AS mapel, kelas.nama_kls AS kelas, jurusan.kode_jurusan AS jurusan, kelas.rombel')
+            ->join('mapel', 'mapel.id = jadwal.id_mapel')
+            ->join('kelas', 'kelas.id = jadwal.id_kelas')
+            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
+            ->where('jadwal.hari', $hariIni)
+            ->where('jadwal.id_guru', $guruId)
+            ->where('jadwal.status', 'Aktif')
+            ->orderBy('jadwal.jam_mulai', 'ASC')
+            ->findAll();
+    }
+
+    public function getCekJadwal($id_mapel, $id_kelas)
+    {
+        return $this->where('id_mapel', $id_mapel)
+            ->where('id_kelas', $id_kelas)
+            ->first();
+    }
 
     public function countAll()
     {
         return $this->countAllResults();
+    }
+
+    public function getJadwalDashboard($guruId)
+    {
+        $hariMap = [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat'
+        ];
+
+        $hariInggris = date('l');
+
+        if (!isset($hariMap[$hariInggris])) {
+            return [];
+        }
+
+        $hariIni = $hariMap[$hariInggris];
+
+        return $this->select('jadwal.*, mapel.id AS id_jadwal, mapel.nama_mapel, kelas.nama_kls, jurusan.kode_jurusan AS jurusan, kelas.rombel, jadwal.jam_mulai, jadwal.jam_selesai, jadwal.ruangan')
+            ->join('mapel', 'mapel.id = jadwal.id_mapel')
+            ->join('kelas', 'kelas.id = jadwal.id_kelas')
+            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
+            ->where('jadwal.hari', $hariIni)
+            ->where('jadwal.id_guru', $guruId)
+            ->where('jadwal.status', 'Aktif')
+            ->findAll();
+    }
+
+    public function getMapelRekap($guruId)
+    {
+        return $this->select('mapel.id, mapel.kode_mapel, mapel.nama_mapel')
+            ->join('mapel', 'mapel.id = jadwal.id_mapel')
+            ->where('jadwal.id_guru', $guruId)
+            ->groupBy('mapel.id, mapel.kode_mapel, mapel.nama_mapel')
+            ->findAll();
+    }
+
+    public function getKelasRekap($guruId)
+    {
+        return $this->select('kelas.id, kelas.nama_kls, jurusan.kode_jurusan AS kd_jurusan, kelas.rombel')
+            ->join('kelas', 'kelas.id = jadwal.id_kelas')
+            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
+            ->where('jadwal.id_guru', $guruId)
+            ->groupBy('kelas.id, kelas.nama_kls, jurusan.kode_jurusan, kelas.rombel')
+            ->findAll();
     }
 }

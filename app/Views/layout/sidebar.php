@@ -33,7 +33,7 @@ $segment1 = $uri->getSegment(1);
         <span class="fs-6">Siswa</span></a>
     </li>
 
-    <?php $akademikOpen = in_array($segment1, ['kelas', 'thnajaran', 'mapel', 'jurusan']); ?>
+    <?php $akademikOpen = in_array($segment1, ['kelas', 'thnajaran', 'mapel', 'kalender', 'jurusan']); ?>
     <li class="nav-item <?= $akademikOpen ? 'active fw-bold' : '' ?>">
       <a class="nav-link <?= $akademikOpen ? '' : 'collapsed' ?>" href="#" data-toggle="collapse" data-target="#collapseTwo"
         aria-expanded="<?= $akademikOpen ? 'true' : 'false' ?>" aria-controls="collapseTwo">
@@ -47,6 +47,7 @@ $segment1 = $uri->getSegment(1);
           <a class="collapse-item <?= $segment1 == 'thnajaran' ? 'active fw-bold' : '' ?>" href="<?= base_url('thnajaran'); ?>">Tahun Pelajaran</a>
           <a class="collapse-item <?= $segment1 == 'mapel' ? 'active fw-bold' : '' ?>" href="<?= base_url('mapel'); ?>">Mata Pelajaran</a>
           <a class="collapse-item <?= $segment1 == 'jurusan' ? 'active fw-bold' : '' ?>" href="<?= base_url('jurusan'); ?>">Jurusan</a>
+          <a class="collapse-item <?= $segment1 == 'kalender' ? 'active fw-bold' : '' ?>" href="<?= base_url('kalender'); ?>">Kalender Akademik</a>
         </div>
       </div>
     </li>
@@ -69,7 +70,7 @@ $segment1 = $uri->getSegment(1);
       <div class="sidebar-brand-icon rotate-n-15">
         <i class="fas fa-user-shield"></i>
       </div>
-      <div class="sidebar-brand-text mx-3">Guru</div>
+      <div class="sidebar-brand-text mx-3">SI ABSENSI</div>
     </a>
 
     <li class="nav-item <?= $segment1 == 'dashguru' ? 'active fw-bold' : '' ?>">
@@ -92,8 +93,8 @@ $segment1 = $uri->getSegment(1);
       </a>
     </li>
 
-    <li class="nav-item <?= $segment1 == 'laporan' ? 'active fw-bold' : '' ?>">
-      <a class="nav-link" href="<?= base_url('laporan'); ?>">
+    <li class="nav-item <?= $segment1 == 'rekap' ? 'active fw-bold' : '' ?>">
+      <a class="nav-link" href="<?= base_url('rekap'); ?>">
         <i class="bi bi-clipboard-data fs-5"></i>
         <span class="fs-6">Rekap Absensi</span>
       </a>

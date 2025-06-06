@@ -17,11 +17,14 @@ class GuruModel extends Model
 
     public function getGuru($slug = false)
     {
+        $builder = $this->where('status', 'Aktif')
+            ->orderBy('guru.id', 'DESC');
+
         if ($slug === false) {
-            return $this->findAll();
+            return $builder->findAll();
         }
 
-        return $this->where(['slug' => $slug])->first();
+        return $builder->where(['slug' => $slug])->first();
     }
 
     public function getWakel()
@@ -32,5 +35,10 @@ class GuruModel extends Model
     public function countAll()
     {
         return $this->countAllResults();
+    }
+
+    public function getIdByNama($nama)
+    {
+        return $this->where('nama', $nama)->first();
     }
 }

@@ -9,83 +9,100 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->setAutoRoute(true);
 
-$routes->get('dashboard', 'Dashboard::index');
-$routes->get('dashguru', 'Dashguru::index');
+$routes->group('', ['filter' => 'role:admin'], function ($routes) {
 
-// penguna
-$routes->get('user', 'User::index');
-$routes->get('/user/edit/(:num)', 'user::edit/$1');
-$routes->post('/user/update/(:num)', 'User::update/$1');
+  $routes->get('dashboard', 'Dashboard::index');
 
-// siswa
-$routes->get('/siswa', 'Siswa::index');
-$routes->get('/siswa/create', 'Siswa::create');
-$routes->post('/siswa/save', 'Siswa::save');
-$routes->get('/siswa/edit/(:segment)', 'Siswa::edit/$1');
-$routes->post('/siswa/update/(:num)', 'Siswa::update/$1');
-$routes->delete('/siswa/delete/(:num)', 'Siswa::delete/$1');
-$routes->delete('/siswa/hapus', 'Siswa::hapus');
-$routes->get('/siswa/detail/(:any)', 'Siswa::detail/$1');
-$routes->post('/siswa/import', 'Siswa::import');
+  // penguna
+  $routes->get('user', 'User::index');
+  $routes->get('/user/edit/(:num)', 'User::edit/$1');
+  $routes->post('/user/update/(:num)', 'User::update/$1');
+  $routes->delete('/user/delete/(:num)', 'User::delete/$1');
 
-// guru
-$routes->get('/guru', 'Guru::index');
-$routes->get('/guru/create', 'Guru::create');
-$routes->post('/guru/save', 'Guru::save');
-$routes->get('/guru/edit/(:segment)', 'Guru::edit/$1');
-$routes->post('/guru/update/(:num)', 'Guru::update/$1');
-$routes->delete('/guru/delete/(:num)', 'Guru::delete/$1');
-$routes->delete('/guru/hapus', 'Guru::hapus');
-$routes->get('/guru/detail/(:any)', 'Guru::detail/$1');
-$routes->post('/guru/import', 'Guru::import');
+  // siswa
+  $routes->get('/siswa', 'Siswa::index');
+  $routes->get('/siswa/create', 'Siswa::create');
+  $routes->post('/siswa/save', 'Siswa::save');
+  $routes->get('/siswa/edit/(:segment)', 'Siswa::edit/$1');
+  $routes->post('/siswa/update/(:num)', 'Siswa::update/$1');
+  $routes->delete('/siswa/delete/(:num)', 'Siswa::delete/$1');
+  $routes->delete('/siswa/hapus', 'Siswa::hapus');
+  $routes->get('/siswa/detail/(:any)', 'Siswa::detail/$1');
+  $routes->post('/siswa/import', 'Siswa::import');
 
-// kelas
-$routes->get('/kelas', 'Kelas::index');
-$routes->get('/kelas/create', 'Kelas::create');
-$routes->post('/kelas/save', 'Kelas::save');
-$routes->get('/kelas/edit/(:num)', 'Kelas::edit/$1');
-$routes->post('/kelas/update/(:num)', 'Kelas::update/$1');
-$routes->delete('/kelas/delete/(:num)', 'Kelas::delete/$1');
+  // guru
+  $routes->get('/guru', 'Guru::index');
+  $routes->get('/guru/create', 'Guru::create');
+  $routes->post('/guru/save', 'Guru::save');
+  $routes->get('/guru/edit/(:segment)', 'Guru::edit/$1');
+  $routes->post('/guru/update/(:num)', 'Guru::update/$1');
+  $routes->delete('/guru/delete/(:num)', 'Guru::delete/$1');
+  $routes->delete('/guru/hapus', 'Guru::hapus');
+  $routes->get('/guru/detail/(:any)', 'Guru::detail/$1');
+  $routes->post('/guru/import', 'Guru::import');
 
-// mapel
-$routes->get('mapel', 'Mapel::index');
-$routes->get('/mapel/create', 'Mapel::create');
-$routes->post('/mapel/save', 'Mapel::save');
-$routes->get('/mapel/edit/(:num)', 'Mapel::edit/$1');
-$routes->post('/mapel/update/(:num)', 'Mapel::update/$1');
-$routes->delete('/mapel/delete/(:num)', 'Mapel::delete/$1');
+  // kelas
+  $routes->get('/kelas', 'Kelas::index');
+  $routes->get('/kelas/create', 'Kelas::create');
+  $routes->post('/kelas/save', 'Kelas::save');
+  $routes->get('/kelas/edit/(:num)', 'Kelas::edit/$1');
+  $routes->post('/kelas/update/(:num)', 'Kelas::update/$1');
+  $routes->delete('/kelas/delete/(:num)', 'Kelas::delete/$1');
+
+  // mapel
+  $routes->get('mapel', 'Mapel::index');
+  $routes->get('/mapel/create', 'Mapel::create');
+  $routes->post('/mapel/save', 'Mapel::save');
+  $routes->get('/mapel/edit/(:num)', 'Mapel::edit/$1');
+  $routes->post('/mapel/update/(:num)', 'Mapel::update/$1');
+  $routes->delete('/mapel/delete/(:num)', 'Mapel::delete/$1');
+
+  // tahun ajaran
+  $routes->get('thnajaran', 'ThnAjaran::index');
+  $routes->get('/thnajaran/create', 'ThnAjaran::create');
+  $routes->post('/thnajaran/save', 'ThnAjaran::save');
+  $routes->get('/thnajaran/edit/(:num)', 'ThnAjaran::edit/$1');
+  $routes->post('/thnajaran/update/(:num)', 'ThnAjaran::update/$1');
+  $routes->delete('/thnajaran/delete/(:num)', 'ThnAjaran::delete/$1');
+
+  // jurusan
+  $routes->get('jurusan', 'Jurusan::index');
+  $routes->get('/jurusan/create', 'Jurusan::create');
+  $routes->post('/jurusan/save', 'Jurusan::save');
+  $routes->get('/jurusan/edit/(:num)', 'Jurusan::edit/$1');
+  $routes->post('/jurusan/update/(:num)', 'Jurusan::update/$1');
+  $routes->delete('/jurusan/delete/(:num)', 'Jurusan::delete/$1');
+
+  //kalender akademik
+  $routes->get('kalender', 'Kalender::index');
+
+  // jadwal
+  $routes->get('/jadwal', 'Jadwal::index');
+  $routes->get('/jadwal/create', 'Jadwal::create');
+  $routes->post('/jadwal/save', 'Jadwal::save');
+  $routes->get('/jadwal/edit/(:num)', 'Jadwal::edit/$1');
+  $routes->post('/jadwal/update/(:num)', 'Jadwal::update/$1');
+  $routes->delete('/jadwal/delete/(:num)', 'Jadwal::delete/$1');
+  $routes->get('/jadwal/detail/(:num)', 'Jadwal::detail/$1');
+  $routes->post('/jadwal/import', 'Jadwal::import');
+  $routes->delete('/jadwal/hapus', 'Jadwal::hapus');
 
 
-// tahun ajaran
-$routes->get('thnajaran', 'ThnAjaran::index');
-$routes->get('/thnajaran/create', 'ThnAjaran::create');
-$routes->post('/thnajaran/save', 'ThnAjaran::save');
-$routes->get('/thnajaran/edit/(:num)', 'ThnAjaran::edit/$1');
-$routes->post('/thnajaran/update/(:num)', 'ThnAjaran::update/$1');
-$routes->delete('/thnajaran/delete/(:num)', 'ThnAjaran::delete/$1');
+  // laporan
+  $routes->get('/laporan', 'Laporan::index');
+});
 
-// jurusan
-$routes->get('jurusan', 'Jurusan::index');
-$routes->get('/jurusan/create', 'Jurusan::create');
-$routes->post('/jurusan/save', 'Jurusan::save');
-$routes->get('/jurusan/edit/(:num)', 'Jurusan::edit/$1');
-$routes->post('/jurusan/update/(:num)', 'Jurusan::update/$1');
-$routes->delete('/jurusan/delete/(:num)', 'Jurusan::delete/$1');
+$routes->group('', ['filter' => 'role:guru'], function ($routes) {
 
-// jadwal
-$routes->get('/jadwal', 'Jadwal::index');
-$routes->get('/jadwal/create', 'Jadwal::create');
-$routes->post('/jadwal/save', 'Jadwal::save');
-$routes->get('/jadwal/edit/(:num)', 'Jadwal::edit/$1');
-$routes->post('/jadwal/update/(:num)', 'Jadwal::update/$1');
-$routes->delete('/jadwal/delete/(:num)', 'Jadwal::delete/$1');
-$routes->get('/jadwal/detail/(:num)', 'Jadwal::detail/$1');
+  $routes->get('dashguru', 'Dashguru::index');
 
-// laporan
-$routes->get('/laporan', 'Laporan::index');
+  // rekap
+  $routes->get('/rekap', 'Rekap::index');
 
+  // Absensi
+  $routes->get('/absensi', 'Absensi::index');
+  $routes->post('/absensi/save', 'Absensi::save');
+  $routes->post('/absensi/savegurutidakmasuk', 'Absensi::savegurutidakmasuk');
 
-// untuk halaman guru
-$routes->get('/absensi', 'Absensi::index');
-
-$routes->get('/profil', 'Profil::index');
+  $routes->get('/profil', 'Profil::index');
+});

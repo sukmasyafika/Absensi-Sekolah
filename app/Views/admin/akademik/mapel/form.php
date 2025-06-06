@@ -51,15 +51,24 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="id_thnAjaran" class="form-label fw-semibold">Semester</label>
-                            <select name="id_thnAjaran" id="id_thnAjaran" class="form-select <?= (session('errors.id_thnAjaran')) ? 'is-invalid' : ''; ?>">
-                                <option value="">-- Pilih Semester --</option>
-                                <?php foreach ($tahun as $t) : ?>
-                                    <option value="<?= $t->id ?>" <?= old('id_thnAjaran', $mapel->id_thnAjaran ?? '') == $t->id ? 'selected' : '' ?>>
-                                        <?= esc($t->semester); ?>
+                            <label for="id_jurusan" class="form-label fw-semibold">Jurusan</label>
+                            <select name="id_jurusan" id="id_jurusan" class="form-select <?= (session('errors.id_jurusan')) ? 'is-invalid' : ''; ?>">
+                                <option value="">Umum</option>
+                                <?php foreach ($jurusan as $j) : ?>
+                                    <option value="<?= $j->id ?>" <?= old('id_jurusan', $mapel->id_jurusan ?? '') == $j->id ? 'selected' : '' ?>>
+                                        <?= esc($j->nama_jurusan); ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                            <div class="invalid-feedback">
+                                <?= session('errors.id_jurusan'); ?>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_thnAjaran" class="form-label fw-semibold">Semester</label>
+                            <input type="hidden" name="id_thnAjaran" value="<?= $tahun->id ?>">
+                            <input type="text" class="form-control" value="<?= esc($tahun->semester); ?>" readonly>
                             <div class="invalid-feedback">
                                 <?= session('errors.id_thnAjaran'); ?>
                             </div>

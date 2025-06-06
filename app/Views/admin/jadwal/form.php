@@ -49,21 +49,6 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="id_mapel" class="form-label fw-semibold">Mata Pelajaran</label>
-                        <select name="id_mapel" id="id_mapel" class="form-select <?= (session('errors.id_mapel')) ? 'is-invalid' : ''; ?>">
-                            <option value="">-- Pilih Mapel --</option>
-                            <?php foreach ($mapel as $m) : ?>
-                                <option value="<?= $m->id; ?>" <?= old('id_mapel', $jadwal->id_mapel ?? '') == $m->id ? 'selected' : ''; ?>>
-                                    <?= esc($m->nama_mapel); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <div class="invalid-feedback">
-                            <?= session('errors.id_mapel'); ?>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
                         <label for="id_kelas" class="form-label fw-semibold">Kelas</label>
                         <select name="id_kelas" id="id_kelas" class="form-select <?= (session('errors.id_kelas')) ? 'is-invalid' : ''; ?>">
                             <option value="">-- Pilih Kelas --</option>
@@ -79,15 +64,24 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="id_thnajaran" class="form-label fw-semibold">Tahun Ajaran</label>
-                        <select name="id_thnajaran" id="id_thnajaran" class="form-select <?= (session('errors.id_thnajaran')) ? 'is-invalid' : ''; ?>">
-                            <option value="">-- Pilih Tahun --</option>
-                            <?php foreach ($tahun as $t) : ?>
-                                <option value="<?= $t->id; ?>" <?= old('id_thnajaran', $jadwal->id_thnajaran ?? '') == $t->id ? 'selected' : ''; ?>>
-                                    <?= esc($t->tahun); ?>
+                        <label for="id_mapel" class="form-label fw-semibold">Mata Pelajaran</label>
+                        <select name="id_mapel" id="id_mapel" class="form-select <?= (session('errors.id_mapel')) ? 'is-invalid' : ''; ?>">
+                            <option value="">-- Pilih Mapel --</option>
+                            <?php foreach ($mapel as $m) : ?>
+                                <option value="<?= $m->id; ?>" <?= old('id_mapel', $jadwal->id_mapel ?? '') == $m->id ? 'selected' : ''; ?>>
+                                    <?= esc($m->nama_mapel); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
+                        <div class="invalid-feedback">
+                            <?= session('errors.id_mapel'); ?>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="id_thnajaran" class="form-label fw-semibold">Tahun Ajaran</label>
+                        <input type="hidden" name="id_thnajaran" value="<?= $tahun->id ?>">
+                        <input type="text" class="form-control" value="<?= esc($tahun->tahun); ?>" readonly>
                         <div class="invalid-feedback">
                             <?= session('errors.id_thnajaran'); ?>
                         </div>

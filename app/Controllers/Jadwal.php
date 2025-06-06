@@ -48,7 +48,7 @@ class Jadwal extends BaseController
             'title' => 'Tambah jadwal',
             'action' => site_url('jadwal/save'),
             'id_kelas' => $this->kelasModel->getKelas(),
-            'guru' => $this->guruModel->findAll(),
+            'guru' => $this->guruModel->getGuru(),
             'mapel' => $this->mapelModel->getMapel(),
             'tahun' => $this->tahunModel->getThnAjaran(),
             'validation' => \Config\Services::validation()
@@ -193,7 +193,7 @@ class Jadwal extends BaseController
             'action' => base_url('jadwal/update/' . $jadwal->id),
             'jadwal' => $jadwal,
             'id_kelas' => $this->kelasModel->getKelas(),
-            'guru' => $this->guruModel->findAll(),
+            'guru' => $this->guruModel->getGuru(),
             'mapel' => $this->mapelModel->getMapel(),
             'tahun' => $this->tahunModel->getThnAjaran(),
             'validation' => \Config\Services::validation()
@@ -362,5 +362,179 @@ class Jadwal extends BaseController
         }
 
         return redirect()->back()->with('error', 'Tidak ada data yang dipilih.');
+    }
+
+    public function import()
+    {
+        $file = $this->request->getFile('file_excel');
+        $extension = $file->getClientExtension();
+
+        if ($extension == 'xlsx' || $extension == 'xls') {
+            $reader = $extension === 'xls' ? new \PhpOffice\PhpSpreadsheet\Reader\Xls() : new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+            $spreadsheet = $reader->load($file);
+            $rows = $spreadsheet->getActiveSheet()->toArray();
+
+            $validData = [];
+            $errors = [];
+            $berhasil = 0;
+
+            foreach ($rows as $key => $value) {
+                if ($key == 0) continue;
+
+                $guru = trim($value[1]);
+                $mapel = trim($value[2]);
+                $kelas = trim($value[3]);
+                $thnajaran = trim($value[4]);
+                $hari = trim($value[5]);
+                $jamke = trim($value[6]);
+                $jamMulai = trim($value[7]);
+                $jamSelesai = trim($value[8]);
+                $ruangan = trim($value[9]);
+
+                $requiredFields = [
+                    'id_guru' => $guru,
+                    'id_mapel' => $mapel,
+                    'id_kelas' => $kelas,
+                    'id_thnajaran' => $thnajaran,
+                    'hari' => $hari,
+                    'jam_ke' => $jamke,
+                    'jam_mulai' => $jamMulai,
+                    'jam_selesai' => $jamSelesai,
+                    'ruangan' => $ruangan,
+                ];
+
+                $emptyFields = [];
+                foreach ($requiredFields as $field => $value) {
+                    if (empty($value)) {
+                        $emptyFields[] = ucfirst(str_replace('_', ' ', $field));
+                    }
+                }
+
+                if (!empty($emptyFields)) {
+                    $errors[] = "Baris ke-" . ($key + 1) . " Tidak boleh kosong untuk " . implode(', ', $emptyFields);
+                    continue;
+                }
+
+                $guruExist   = $this->guruModel->getIdByNama($guru);
+                $mapelExist  = $this->mapelModel->getIdByKode($mapel);
+
+                list($tahun, $semester) = explode(' - ', $thnajaran);
+                $ajaranExist = $this->tahunModel->getIdByTahunDanSemester($tahun, $semester);
+
+                if (!$guruExist || !$mapelExist || !$ajaranExist) {
+                    $invalids = [];
+
+                    if (!$guruExist) {
+                        $invalids[] = 'Guru (ID: ' . $guru . ')';
+                    } else {
+                        $invalids[] = 'Guru: ' . $guruExist->nama;
+                    }
+
+                    if (!$mapelExist) {
+                        $invalids[] = 'Mapel (ID: ' . $mapel . ')';
+                    } else {
+                        $invalids[] = 'Mapel: ' . $mapelExist->kode_mapel;
+                    }
+
+                    if (!$ajaranExist) {
+                        $invalids[] = 'Tahun Ajaran (ID: ' . $thnajaran . ')';
+                    } else {
+                        $invalids[] = 'Tahun Ajaran: ' . $ajaranExist->tahun . ' - ' . $ajaranExist->semester;
+                    }
+
+                    $errors[] = "Baris ke-" . ($key + 1) . ": Data tidak valid untuk " . implode(', ', $invalids);
+                    continue;
+                }
+
+                if (!preg_match('/^\d{2}:\d{2}(:\d{2})?$/', $jamMulai) || !preg_match('/^\d{2}:\d{2}(:\d{2})?$/', $jamSelesai)) {
+                    $errors[] = "Baris ke-" . ($key + 1) . ": Format jam salah. Gunakan format HH:MM atau HH:MM:SS.";
+                    continue;
+                }
+
+                if (strtotime($jamMulai) >= strtotime($jamSelesai)) {
+                    $errors[] = "Baris ke-" . ($key + 1) . ": Jam mulai harus lebih kecil dari jam selesai.";
+                    continue;
+                }
+
+                $parts = explode(' ', $kelas);
+                if (count($parts) < 3) {
+                    $errors[] = "Format kolom kelas tidak valid di baris ke-$key (harus: Nama Kelas, Kode Jurusan, Rombel)";
+                    continue;
+                }
+                [$nama_kls, $kode_jurusan, $rombel] = $parts;
+                $kelasid = $this->kelasModel->getIdByNamaDanJurusanDanRombel($nama_kls, $kode_jurusan, $rombel);
+                if (!$kelasid) {
+                    $errors[] = "Kelas $nama_kls $kode_jurusan $rombel Tidak terdaftar / Tidak ada.";
+                    continue;
+                }
+
+                $allowed = [
+                    'hari' => ['senin', 'selasa', 'rabu', 'kamis', 'jumat'],
+                ];
+
+                foreach ($allowed as $field => $validValues) {
+                    if (!in_array(strtolower($$field), $validValues)) {
+                        $errors[] = ucfirst($field) . " " . $$field . " tidak valid di baris ke-" . ($key + 1);
+                    }
+                }
+
+                // Cek bentrok kelas
+                $bentrokKelas = $this->jadwalModel->getKelas($hari, $kelas, $jamMulai, $jamSelesai);
+                if ($bentrokKelas) {
+                    $errors[] = "Baris ke-" . ($key + 1) . ": Jadwal kelas bentrok dengan data yang sudah ada.";
+                    continue;
+                }
+
+                // Cek bentrok ruangan
+                $bentrokRuangan = $this->jadwalModel->getRuangan($hari, $ruangan, $jamMulai, $jamSelesai);
+                if ($bentrokRuangan) {
+                    $errors[] = "Baris ke-" . ($key + 1) . ": Ruangan sudah digunakan pada jam tersebut.";
+                    continue;
+                }
+
+                // Cek bentrok Guru
+                $bentrokGuru = $this->jadwalModel->getGuru($hari, $guru, $jamMulai, $jamSelesai);
+                if ($bentrokGuru) {
+                    $errors[] = "Baris ke-" . ($key + 1) . ": Guru sudah Mengajar pada waktu yang sama.";
+                    continue;
+                }
+
+                // Cek bentrok jam
+                $JamKeDuplikat = $this->jadwalModel->getJamKeDuplikat($hari, $kelas, $jamke);
+                if ($JamKeDuplikat) {
+                    $errors[] = "Baris ke-" . ($key + 1) . ": Jam yang sama sudah digunakan untuk kelas ini.";
+                    continue;
+                }
+
+                if (!preg_match('/^\d{4}\/\d{4} - (Ganjil|Genap)$/i', $thnajaran)) {
+                    $errors[] = "Baris ke-" . ($key + 1) . ": Format tahun ajaran harus 'YYYY/YYYY - Ganjil|Genap', contoh: 2025/2026 - Ganjil.";
+                    continue;
+                }
+
+                $validData[] = [
+                    'id_guru' => $guruExist->id,
+                    'id_mapel' => $mapelExist->id,
+                    'id_kelas' => $kelasid->id,
+                    'id_thnajaran' => $ajaranExist->id,
+                    'hari' => $hari,
+                    'jam_ke' => $jamke,
+                    'jam_mulai' => $jamMulai,
+                    'jam_selesai' => $jamSelesai,
+                    'ruangan' => $ruangan,
+                    'status' => 'Aktif',
+                ];
+                $berhasil++;
+            }
+
+            if (!empty($errors)) {
+                return redirect()->back()->with('error', implode('<br>', $errors));
+            }
+
+            $this->jadwalModel->insertBatch($validData);
+
+            return redirect()->back()->with('success', "Import berhasil! Sebanyak $berhasil data telah berhasil dimasukkan.");
+        }
+
+        return redirect()->back()->with('error', 'Format file tidak sesuai, Harus xls atau xlsx.');
     }
 }
