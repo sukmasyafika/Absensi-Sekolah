@@ -54,7 +54,7 @@ class Guru extends BaseController
                 'rules' => 'required|regex_match[/^[A-Za-z.,\s]+$/]|min_length[3]|max_length[100]',
                 'errors' => [
                     'required' => 'Nama wajib diisi.',
-                    'regex_match' => 'Nama hanya boleh berisi huruf.',
+                    'regex_match' => 'Nama tidak boleh berisi huruf.',
                     'min_length' => 'Nama minimal terdiri dari 3 karakter.',
                     'max_length' => 'Nama maksimal terdiri dari 100 karakter.'
                 ]
@@ -105,9 +105,8 @@ class Guru extends BaseController
                 ]
             ],
             'foto' => [
-                'rules' => 'uploaded[foto]|max_size[foto,1024]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]',
+                'rules' => 'max_size[foto,1024]|is_image[foto]|mime_in[foto,image/jpg,image/jpeg,image/png]',
                 'errors' => [
-                    'uploaded' => 'Foto wajib diunggah.',
                     'max_size' => 'Ukuran foto maksimal 1MB.',
                     'is_image' => 'File yang diunggah bukan gambar.',
                     'mime_in'  => 'Format foto Harus JPG, JPEG, atau PNG.'
@@ -119,6 +118,13 @@ class Guru extends BaseController
                     'required' => 'Status wajib dipilih.',
                     'in_list' => 'Status tidak valid.'
                 ]
+            ],
+            'kategori' => [
+                'rules' => 'required|in_list[umum,multimedia,dkv,broadcasting,kriya tekstil,kriya kayu,tata busana]',
+                'errors' => [
+                    'required' => 'Kategori guru wajib dipilih.',
+                    'in_list' => 'Kategori guru tidak valid.',
+                ]
             ]
         ]);
 
@@ -127,8 +133,12 @@ class Guru extends BaseController
         }
 
         $img = $this->request->getFile('foto');
-        $img->move('assets/img/guru');
-        $namaImg = $img->getName();
+        if ($img && $img->isValid() && !$img->hasMoved()) {
+            $namaImg = $img->getName();
+            $img->move('assets/img/guru', $namaImg);
+        } else {
+            $namaImg = 'default.png';
+        }
 
         $nama = trim($this->request->getVar('nama'));
         $kata = explode(' ', $nama);
@@ -152,6 +162,7 @@ class Guru extends BaseController
             'thn_masuk'      => $this->request->getVar('thn_masuk'),
             'foto'           => $namaImg,
             'status'         => $this->request->getVar('status'),
+            'kategori'       => $this->request->getVar('kategori')
         ]);
 
         return redirect()->to('/guru')->with('success', 'Data guru Berhasil Ditambahkan.');
@@ -191,7 +202,7 @@ class Guru extends BaseController
                 'rules' => 'required|regex_match[/^[A-Za-z.,\s]+$/]|min_length[3]|max_length[100]',
                 'errors' => [
                     'required' => 'Nama wajib diisi.',
-                    'regex_match' => 'Nama hanya boleh berisi huruf.',
+                    'regex_match' => 'Nama tidak boleh berisi huruf.',
                     'min_length' => 'Nama minimal terdiri dari 3 karakter.',
                     'max_length' => 'Nama maksimal terdiri dari 100 karakter.'
                 ]
@@ -254,6 +265,13 @@ class Guru extends BaseController
                     'in_list' => 'Status tidak valid.'
                 ]
             ],
+            'kategori' => [
+                'rules' => 'required|in_list[umum,multimedia,dkv,broadcasting,kriya tekstil,kriya kayu,tata busana]',
+                'errors' => [
+                    'required' => 'Kategori guru wajib dipilih.',
+                    'in_list' => 'Kategori guru tidak valid.',
+                ]
+            ]
         ]);
 
         if (!$validation->run($this->request->getVar())) {
@@ -261,13 +279,13 @@ class Guru extends BaseController
         }
 
         $img = $this->request->getFile('foto');
+        $fotoLama = $this->request->getVar('fotoLama');
         if ($img->getError() == 4) {
-            $namaImg = $this->request->getVar('fotoLama');
+            $namaImg = $fotoLama;
         } else {
-            $img->move('assets/img/guru');
             $namaImg = $img->getName();
-            $fotoLama = $this->request->getVar('fotoLama');
-            if ($fotoLama) {
+            $img->move('assets/img/guru', $namaImg);
+            if ($fotoLama && $fotoLama !== 'default.png') {
                 $path = 'assets/img/guru/' . $fotoLama;
                 if (file_exists($path)) {
                     unlink($path);
@@ -297,6 +315,7 @@ class Guru extends BaseController
             'thn_masuk'      => $this->request->getVar('thn_masuk'),
             'foto'           => $namaImg,
             'status'         => $this->request->getVar('status'),
+            'kategori'       => $this->request->getVar('kategori')
         ]);
 
         return redirect()->to('/guru')->with('success', 'Guru <strong>' . $guruLama->nama . '</strong> berhasil diperbaharui.');

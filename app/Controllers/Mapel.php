@@ -165,4 +165,16 @@ class Mapel extends BaseController
 
         return redirect()->to('/mapel')->with('success', 'Data Mata Pelajaran Berhasil Perbaharui.');
     }
+
+    public function delete($id)
+    {
+        $mapel = $this->mapelModel->find($id);
+
+        if ($mapel) {
+            $this->mapelModel->delete($id);
+            return redirect()->back()->with('success', 'mapel <strong>' . $mapel->nama_mapel . '</strong> berhasil dihapus.');
+        }
+
+        return redirect()->back()->with('error', 'Data mapel tidak ditemukan.');
+    }
 }

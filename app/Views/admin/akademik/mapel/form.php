@@ -51,7 +51,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="id_jurusan" class="form-label fw-semibold">Jurusan</label>
+                            <label for="id_jurusan" class="form-label fw-semibold">Jenis Mata Pelajaran</label>
                             <select name="id_jurusan" id="id_jurusan" class="form-select <?= (session('errors.id_jurusan')) ? 'is-invalid' : ''; ?>">
                                 <option value="">Umum</option>
                                 <?php foreach ($jurusan as $j) : ?>

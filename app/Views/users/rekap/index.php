@@ -34,11 +34,10 @@
       <div class="card-body ">
         <form method="GET" action="<?= base_url('rekap') ?>">
           <div class="row mb-3 g-3">
-            <div class="col-md-4">
+            <div class="col-md-6">
               <label for="kelas" class="form-label fw-semibold">Kelas</label>
               <select name="id_kelas" id="kelas" class="form-select">
                 <option value="">-- Pilih Kelas --</option>
-                <option value="all">Semua Kelas</option>
                 <?php foreach ($kelas as $kls) : ?>
                   <option value="<?= $kls->id; ?>" <?= ($id_kelas == $kls->id) ? 'selected' : '' ?>>
                     <?= esc("{$kls->nama_kls} {$kls->kd_jurusan} {$kls->rombel}"); ?>
@@ -46,24 +45,15 @@
                 <?php endforeach; ?>
               </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <label for="mapel" class="form-label fw-semibold">Mata Pelajaran</label>
               <select name="id_mapel" id="mapel" class="form-select">
                 <option value="">-- Pilih Mapel --</option>
-                <option value="all">Semua Mapel</option>
                 <?php foreach ($mapel as $m) : ?>
                   <option value="<?= $m->id; ?>" <?= ($id_mapel == $m->id) ? 'selected' : '' ?>>
                     <?= esc($m->kode_mapel); ?>
                   </option>
                 <?php endforeach; ?>
-              </select>
-            </div>
-            <div class="col-md-4">
-              <label for="semester" class="form-label fw-semibold">Semester</label>
-              <select class="form-select" id="semester" name="semester">
-                <option value="" disabled <?= empty($semester) ? 'selected' : '' ?>>Pilih Semester</option>
-                <option value="ganjil" <?= ($semester == 'ganjil') ? 'selected' : '' ?>>Ganjil</option>
-                <option value="genap" <?= ($semester == 'genap') ? 'selected' : '' ?>>Genap</option>
               </select>
             </div>
           </div>
@@ -78,7 +68,7 @@
             </div>
           </div>
 
-          <div class="text-start">
+          <div class="text-end">
             <button type="submit" class="btn btn-primary">
               <i class="bi bi-search"></i> Tampilkan Rekap
             </button>

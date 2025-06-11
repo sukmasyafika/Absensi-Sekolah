@@ -10,10 +10,11 @@ use App\Models\KelasModel;
 use App\Models\JadwalModel;
 use App\Models\SiswaModel;
 use App\Models\KetAbsenModel;
+use App\Models\KalenderModel;
 
 class Absensi extends BaseController
 {
-    protected $absensiModel, $mapelModel, $kelasModel, $siswaModel, $jadwalModel, $ketAbsenModel;
+    protected $absensiModel, $mapelModel, $kelasModel, $siswaModel, $jadwalModel, $ketAbsenModel, $hariLiburModel;
 
     public function __construct()
     {
@@ -23,6 +24,7 @@ class Absensi extends BaseController
         $this->jadwalModel = new JadwalModel();
         $this->siswaModel = new SiswaModel();
         $this->ketAbsenModel = new KetAbsenModel();
+        $this->hariLiburModel = new KalenderModel();
     }
 
     public function index()
@@ -38,35 +40,40 @@ class Absensi extends BaseController
         $id_mapel = $this->request->getGet('id_mapel');
 
         $mapelData = $id_mapel ? $this->mapelModel->find($id_mapel) : null;
-        $nama_mapel = $mapelData ? $mapelData->nama_mapel : '-';
+        $nama_mapel = $mapelData ? $mapelData->kode_mapel : '-';
         $kelasData = $id_kelas ? $this->kelasModel->find($id_kelas) : null;
         $nama_kelas = $kelasData ? $kelasData->nama_kls : '-';
 
         if ($id_kelas && $id_mapel) {
-            $jadwal = $this->jadwalModel->getCekJadwal($id_mapel, $id_kelas);
+            $jadwal = $this->jadwalModel->getHariJadwal($id_mapel, $id_kelas);
             if ($jadwal) {
                 $id_jadwal = $jadwal->id;
                 $pertemuan = $this->absensiModel->getJumlahPertemuan($id_jadwal) + 1;
 
                 $cekTidakMasuk = $this->ketAbsenModel->isGuruTidakMasuk($guruId, $tanggal, $id_jadwal);
                 if ($cekTidakMasuk) {
-                    return redirect()->to('/absensi')->with('error', 'Anda tidak dapat melakukan absen hari ini karena tercatat sebagai tidak masuk.');
+                    return redirect()->back()->with('error', 'Anda tidak dapat melakukan absen hari ini karena tercatat sebagai tidak masuk.');
+                }
+
+                $libur = $this->hariLiburModel->where('tanggal', $tanggal)->first();
+                if ($libur) {
+                    return redirect()->back()->with('error', 'Hari ini Tanggal Merah ' . $libur->nama_libur . ' - ' . $libur->keterangan);
                 }
             } else {
-                return redirect()->to('/absensi')->with('error', 'Jadwal tidak ditemukan.');
+                return redirect()->back()->with('error', 'Jadwal tidak ditemukan.');
             }
         }
 
         if ($id_kelas && !is_numeric($id_kelas)) {
-            return redirect()->to('/absensi')->with('error', 'ID Kelas tidak valid.');
+            return redirect()->back()->with('error', 'ID Kelas tidak valid.');
         }
         if ($id_mapel && !is_numeric($id_mapel)) {
-            return redirect()->to('/absensi')->with('error', 'ID Mapel tidak valid.');
+            return redirect()->back()->with('error', 'ID Mapel tidak valid.');
         }
 
         $siswa = $this->siswaModel->where('kelas_id', $id_kelas)->where('status', 'Aktif')->findAll();
         if ($id_kelas && empty($siswa)) {
-            return redirect()->to('/absensi')->with('error', 'Tidak ada data siswa di kelas ini.');
+            return redirect()->back()->with('error', 'Tidak ada data siswa di kelas ini.');
         }
 
         $data = [
@@ -94,7 +101,7 @@ class Absensi extends BaseController
         $pertemuan   = $this->request->getPost('pertemuan');
         $statusAbsen = $this->request->getPost('status');
 
-        $jadwal = $this->jadwalModel->getCekJadwal($id_mapel, $id_kelas);
+        $jadwal = $this->jadwalModel->getHariJadwal($id_mapel, $id_kelas);
         if (!$jadwal) {
             return redirect()->to('/absensi')->with('error', 'Jadwal tidak ditemukan.');
         }

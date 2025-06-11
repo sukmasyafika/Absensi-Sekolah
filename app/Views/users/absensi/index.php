@@ -171,12 +171,12 @@
             <?php endforeach;
             endif; ?>
             <div class="mt-4 d-flex gap-3 justify-content-end">
+              <!-- <button type="submit" name="update" value="1" class="btn btn-warning px-4">
+                <i class="bi bi-arrow-repeat me-1"></i> Update Absensi
+              </button> -->
               <button type="submit" class="btn btn-success px-4">
                 <i class="bi bi-check-circle-fill me-1"></i> Selesai
               </button>
-              <!-- <button type="submit" name="update" value="1" class="btn btn-warning px-4">
-                    <i class="bi bi-arrow-repeat me-1"></i> Update Absensi
-                  </button> -->
             </div>
           </form>
 
@@ -184,7 +184,6 @@
       </div>
     </div>
   </div>
-
 
 </div>
 

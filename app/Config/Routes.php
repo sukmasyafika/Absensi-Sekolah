@@ -75,6 +75,12 @@ $routes->group('', ['filter' => 'role:admin'], function ($routes) {
 
   //kalender akademik
   $routes->get('kalender', 'Kalender::index');
+  $routes->get('kalender/getLibur', 'Kalender::getLibur');
+  $routes->get('/kalender/create', 'Kalender::create');
+  $routes->post('/kalender/save', 'Kalender::save');
+  $routes->get('/kalender/edit/(:num)', 'Kalender::edit/$1');
+  $routes->post('/kalender/update/(:num)', 'Kalender::update/$1');
+  $routes->delete('/kalender/delete/(:num)', 'Kalender::delete/$1');
 
   // jadwal
   $routes->get('/jadwal', 'Jadwal::index');

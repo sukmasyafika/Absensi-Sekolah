@@ -124,6 +124,23 @@
                         </div>
                     </div>
 
+                    <div class="col-md-6 mb-3">
+                        <label for="kategori" class="form-label fw-semibold">Kategori</label>
+                        <select name="kategori" id="kategori" class="form-select <?= (session('errors.kategori')) ? 'is-invalid' : ''; ?>">
+                            <option value="">-- Pilih Kategori --</option>
+                            <option value="umum" <?= old('kategori', $guru->kategori ?? '') == 'umum' ? 'selected' : ''; ?>>Umum</option>
+                            <option value="multimedia" <?= old('kategori', $guru->kategori ?? '') == 'multimedia' ? 'selected' : ''; ?>>Multimedia</option>
+                            <option value="dkv" <?= old('kategori', $guru->kategori ?? '') == 'dkv' ? 'selected' : ''; ?>>DKV</option>
+                            <option value="broadcasting" <?= old('kategori', $guru->kategori ?? '') == 'broadcasting' ? 'selected' : ''; ?>>Broadcasting</option>
+                            <option value="kriya tekstil" <?= old('kategori', $guru->kategori ?? '') == 'kriya tekstil' ? 'selected' : ''; ?>>Kriya Tekstil</option>
+                            <option value="kriya kayu" <?= old('kategori', $guru->kategori ?? '') == 'kriya kayu' ? 'selected' : ''; ?>>Kriya Kayu</option>
+                            <option value="tata busana" <?= old('kategori', $guru->kategori ?? '') == 'tata busana' ? 'selected' : ''; ?>>Tata Busana</option>
+                        </select>
+                        <div class="invalid-feedback">
+                            <?= session('errors.kategori'); ?>
+                        </div>
+                    </div>
+
                     <div class="text-start mt-3">
                         <a href="<?= base_url('/guru'); ?>" class="btn btn-secondary me-3">
                             <i class="bi bi-arrow-left-square"></i> Batal

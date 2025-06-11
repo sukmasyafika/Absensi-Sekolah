@@ -24,7 +24,8 @@
         style="width: 150px; height: 150px; object-fit: cover;">
 
       <h4 class="text-primary text-uppercase fw-bold"><?= esc($guru->nama); ?></h4>
-      <p class="text-muted mb-4"><?= esc($guru->jabatan); ?></p>
+      <p class="text-muted fw-bold mb-2"><?= esc($guru->jabatan); ?></p>
+      <p class="text-muted mb-4">Kategori: <?= esc($guru->kategori); ?></p>
     </div>
 
     <div class="card-body">

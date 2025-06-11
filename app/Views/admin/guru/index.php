@@ -98,7 +98,7 @@
                                 <th style="width: 5%;" class="align-middle">No</th>
                                 <th style="width: 15%;" class="align-middle">Nama Lengkap</th>
                                 <th style="width: 8%;" class="align-middle">NIP</th>
-                                <th style="width: 10%;" class="align-middle">Jenis Kelamin</th>
+                                <th style="width: 10%;" class="align-middle">Kategori</th>
                                 <th style="width: 10%;" class="align-middle">Jabatan</th>
                                 <th style="width: 5%;" class="align-middle">Tahun Masuk</th>
                                 <th style="width: 10%;" class="align-middle">Status</th>
@@ -118,7 +118,7 @@
                                         <td class="align-middle"><?= $no++; ?></td>
                                         <td class="text-start align-middle"><?= esc($g->nama); ?></td>
                                         <td class="align-middle"><?= esc($g->nip); ?></td>
-                                        <td class="align-middle"><?= esc($g->jenis_kelamin); ?></td>
+                                        <td class="align-middle"><?= esc($g->kategori); ?></td>
                                         <td class="align-middle"><?= esc($g->jabatan); ?></td>
                                         <td class="align-middle"><?= esc($g->thn_masuk); ?></td>
                                         <td class="align-middle">

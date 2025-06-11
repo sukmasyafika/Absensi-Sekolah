@@ -201,11 +201,51 @@ class JadwalModel extends Model
             ->findAll();
     }
 
-    public function getCekJadwal($id_mapel, $id_kelas)
+    public function getCekJadwal($id_mapel, $id_kelas, $guruId = null, $semester = null)
     {
-        return $this->where('id_mapel', $id_mapel)
+        $builder = $this->where('id_mapel', $id_mapel)
+            ->where('id_kelas', $id_kelas);
+
+        if ($guruId !== null) {
+            $builder = $builder->where('id_guru', $guruId);
+        }
+
+        if ($semester !== null) {
+            $builder = $builder->where('semester', $semester);
+        }
+
+        return $builder->first();
+    }
+
+    public function getHariJadwal($id_mapel, $id_kelas, $guruId = null)
+    {
+
+        $hariMap = [
+            'Sunday' => 'Minggu',
+            'Monday' => 'Senin',
+            'Tuesday' => 'Selasa',
+            'Wednesday' => 'Rabu',
+            'Thursday' => 'Kamis',
+            'Friday' => 'Jumat'
+        ];
+
+        $hariInggris = date('l');
+
+        if (!isset($hariMap[$hariInggris])) {
+            return [];
+        }
+
+        $hariIni = $hariMap[$hariInggris];
+
+        $builder = $this->where('id_mapel', $id_mapel)
             ->where('id_kelas', $id_kelas)
-            ->first();
+            ->where('hari', $hariIni);
+
+        if ($guruId !== null) {
+            $builder->where('id_guru', $guruId);
+        }
+
+        return $builder->first();
     }
 
     public function countAll()

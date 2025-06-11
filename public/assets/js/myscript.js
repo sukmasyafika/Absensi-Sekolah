@@ -18,12 +18,12 @@ document.addEventListener('DOMContentLoaded', function () {
     dom: '<"row mb-3"<"col-12 col-md-6 mb-2"l><"col-12 col-md-6"f>>t<"row mt-3"<"col-sm-6"i><"col-sm-6"p>>'
   });
 
-  table.on('order.dt search.dt draw.dt', function () {
-    let i = 1;
-    table.column(1, { search: 'applied', order: 'applied' }).nodes().each(function (cell) {
-      cell.innerHTML = i++;
-    });
-  });
+  // table.on('order.dt search.dt draw.dt', function () {
+  //   let i = 1;
+  //   table.column(1, { search: 'applied', order: 'applied' }).nodes().each(function (cell) {
+  //     cell.innerHTML = i++;
+  //   });
+  // });
 
   selectAll.addEventListener('click', function () {
     const checkboxes = document.querySelectorAll('.data-checkbox');
@@ -91,5 +91,3 @@ document.addEventListener('DOMContentLoaded', function () {
   toast.show();
   }
 });
-
-

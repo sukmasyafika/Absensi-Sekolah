@@ -13,6 +13,8 @@
         <li class="breadcrumb-item active" aria-current="page"><?= $title; ?></li>
     </ol>
 
+    <h1 class="h3 mb-4 text-gray-800 fw-bold">Data <?= $title; ?></h1>
+
     <div class="card shadow-lg mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Manajemen jurusan</h6>

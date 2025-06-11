@@ -4,18 +4,18 @@ namespace App\Controllers;
 
 use App\Models\JadwalModel;
 use App\Models\AbsensiModel;
-
-
+use App\Models\KalenderModel;
 
 class Dashguru extends BaseController
 {
 
-  protected $jadwalModel, $absenModel;
+  protected $jadwalModel, $absenModel, $hariLiburModel;
 
   public function __construct()
   {
     $this->jadwalModel = new JadwalModel();
     $this->absenModel = new AbsensiModel();
+    $this->hariLiburModel = new KalenderModel();
   }
 
   public function index()
@@ -30,7 +30,8 @@ class Dashguru extends BaseController
       $absen = $this->absenModel
         ->select("absensi.status, COUNT(*) as jumlah")
         ->where('id_jadwal', $jadwal->id)
-        ->where('DATE(tanggal)', date('Y-m-d'))
+        ->where('tanggal >=', date('Y-m-d 00:00:00'))
+        ->where('tanggal <=', date('Y-m-d 23:59:59'))
         ->groupBy('absensi.status')
         ->findAll();
 
@@ -49,16 +50,19 @@ class Dashguru extends BaseController
         $rekap->total += $jumlah;
       }
 
-      // Cek total absensi > 0, baru simpan ke array
       if ($rekap->total > 0) {
         $rekapAbsensi[$jadwal->id] = $rekap;
       }
     }
 
+    $tanggal = date('Y-m-d');
+    $libur = $this->hariLiburModel->where('tanggal', $tanggal)->first();
+
     $data = [
       'title' => 'Dashboard',
       'jadwalHariIni' => $jadwalHariIni,
-      'rekapAbsensi' => $rekapAbsensi
+      'rekapAbsensi' => $rekapAbsensi,
+      'libur' => $libur
     ];
 
     return view('users/dashboard', $data);
