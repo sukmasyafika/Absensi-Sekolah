@@ -8,6 +8,7 @@ use App\Models\AbsensiModel;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class Laporan extends BaseController
 {
@@ -116,55 +117,76 @@ class Laporan extends BaseController
     // ================================================
     // Laporan Absensi
     // ================================================
-    public function absensiExcel()
+    public function exportExcel()
     {
-        $filter = $this->request->getGet();
-        $absensiModel = new AbsensiModel();
-        $data = $absensiModel->getFilteredAbsensi($filter);
+        $absensiModel = new \App\Models\AbsensiModel();
+        $data = $absensiModel->getRekapAbsensiLengkap(); // atau getRekapAbsensi()
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
 
-        // Header
-        $sheet->setCellValue('A1', 'No')
-            ->setCellValue('B1', 'Nama Siswa')
-            ->setCellValue('C1', 'Mata Pelajaran')
-            ->setCellValue('D1', 'Tanggal')
-            ->setCellValue('E1', 'Semester')
-            ->setCellValue('F1', 'Kehadiran');
+        // Judul kolom
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Nama Siswa');
+        $sheet->setCellValue('C1', 'Jenis Kelamin');
+        $sheet->setCellValue('D1', 'Kelas');
+        $sheet->setCellValue('E1', 'Jurusan');
+        $sheet->setCellValue('F1', 'Mata Pelajaran');
+        $sheet->setCellValue('G1', 'Semester');
+        $sheet->setCellValue('H1', 'Hadir');
+        $sheet->setCellValue('I1', 'Sakit');
+        $sheet->setCellValue('J1', 'Izin');
+        $sheet->setCellValue('K1', 'Alpa');
+        $sheet->setCellValue('L1', 'Total Pertemuan');
 
-        // Data
-        $row = 2;
+        // Isi data
         $no = 1;
-        foreach ($data as $absen) {
-            $sheet->setCellValue('A' . $row, $no++)
-                ->setCellValue('B' . $row, $absen['nama'])
-                ->setCellValue('C' . $row, $absen['mapel'])
-                ->setCellValue('D' . $row, $absen['tanggal'])
-                ->setCellValue('E' . $row, $absen['semester'])
-                ->setCellValue('F' . $row, $absen['status']);
-            $row++;
+        $baris = 2;
+        foreach ($data as $row) {
+            $sheet->setCellValue('A' . $baris, $no++);
+            $sheet->setCellValue('B' . $baris, $row->nama);
+            $sheet->setCellValue('C' . $baris, $row->jenis_kelamin);
+            $sheet->setCellValue('D' . $baris, $row->nama_kls . ' ' . $row->rombel);
+            $sheet->setCellValue('E' . $baris, $row->kode_jurusan);
+            $sheet->setCellValue('F' . $baris, $row->nama_mapel);
+            $sheet->setCellValue('G' . $baris, $row->semester);
+            $sheet->setCellValue('H' . $baris, $row->hadir);
+            $sheet->setCellValue('I' . $baris, $row->sakit);
+            $sheet->setCellValue('J' . $baris, $row->izin);
+            $sheet->setCellValue('K' . $baris, $row->alpa);
+            $sheet->setCellValue('L' . $baris, $row->total);
+            $baris++;
         }
 
+        // Buat file excel
         $writer = new Xlsx($spreadsheet);
+        $filename = 'Laporan_Absensi_' . date('Ymd_His') . '.xlsx';
+
+        // Output langsung ke browser
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="Laporan-Absensi.xlsx"');
+        header("Content-Disposition: attachment; filename=\"$filename\"");
+        header('Cache-Control: max-age=0');
+
         $writer->save('php://output');
         exit;
     }
 
-    public function absensiPdf()
+    public function exportPdf()
     {
-        $filter = $this->request->getGet();
-        $absensiModel = new AbsensiModel();
-        $data['absensi'] = $absensiModel->getFilteredAbsensi($filter);
+        $absensiModel = new \App\Models\AbsensiModel();
+        $data = $absensiModel->getRekapAbsensiLengkap();
 
-        $dompdf = new Dompdf();
-        $html = view('laporan/pdf_absensi', $data);
+        $html = view('admin/laporan/pdf_absen', ['data' => $data]);
+
+        $options = new Options();
+        $options->set('isHtml5ParserEnabled', true);
+        $options->set('isRemoteEnabled', true);
+
+        $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
-        $dompdf->stream('Laporan-Absensi.pdf', ['Attachment' => false]);
-        exit;
+
+        $dompdf->stream('Laporan_Absensi_' . date('Ymd_His') . '.pdf', ['Attachment' => true]);
     }
 }

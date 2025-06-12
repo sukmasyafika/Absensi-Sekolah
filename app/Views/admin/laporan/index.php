@@ -54,14 +54,8 @@
           </form>
 
           <div class="justify-content-between">
-            <a href="<?= base_url('laporan/siswa/excel?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-success btn-sm" title="Export Excel">
-              <i class="bi bi-file-earmark-spreadsheet-fill"></i> Excel
-            </a>
-            <a href="<?= base_url('laporan/siswa/pdf?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-danger btn-sm" title="Export PDF">
-              <i class="bi bi-file-earmark-pdf-fill"></i> PDF
-            </a>
-            <a href="<?= base_url('laporan/siswa/print?' . $_SERVER['QUERY_STRING']); ?>" target="_blank" class="btn btn-secondary btn-sm" title="Cetak">
-              <i class="bi bi-printer-fill"></i> Cetak
+            <a href="<?= base_url('laporan/siswa/pdf?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-danger btn-sm" title="Export PDF" tabindex="blank">
+              <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF
             </a>
           </div>
 
@@ -108,14 +102,8 @@
           </form>
 
           <div class="justify-content-between">
-            <a href="<?= base_url('laporan/siswa/excel?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-success btn-sm" title="Export Excel">
-              <i class="bi bi-file-earmark-spreadsheet-fill"></i> Excel
-            </a>
             <a href="<?= base_url('laporan/siswa/pdf?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-danger btn-sm" title="Export PDF">
-              <i class="bi bi-file-earmark-pdf-fill"></i> PDF
-            </a>
-            <a href="<?= base_url('laporan/siswa/print?' . $_SERVER['QUERY_STRING']); ?>" target="_blank" class="btn btn-secondary btn-sm" title="Cetak">
-              <i class="bi bi-printer-fill"></i> Cetak
+              <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF
             </a>
           </div>
         </div>

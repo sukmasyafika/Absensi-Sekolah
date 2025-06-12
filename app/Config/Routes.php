@@ -97,7 +97,11 @@ $routes->group('', ['filter' => 'role:admin'], function ($routes) {
   // laporan
   $routes->get('/laporan', 'Laporan::index');
   $routes->get('laporan/siswa/pdf', 'Laporan::siswaPdf');
+  $routes->get('laporan/siswaExcel', 'Laporan::siswaExcel');
+  $routes->get('/laporan/absensi/excel', 'Laporan::absensiExcel');
+  $routes->get('/laporan/absensi/pdf', 'Laporan::pdf_absen');
 });
+
 $routes->group('', ['filter' => 'role:guru'], function ($routes) {
 
   $routes->get('dashguru', 'Dashguru::index');
@@ -109,6 +113,7 @@ $routes->group('', ['filter' => 'role:guru'], function ($routes) {
   $routes->get('/absensi', 'Absensi::index');
   $routes->post('/absensi/save', 'Absensi::save');
   $routes->post('/absensi/savegurutidakmasuk', 'Absensi::savegurutidakmasuk');
+
 
   $routes->get('/profil', 'Profil::index');
 });
