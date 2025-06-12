@@ -49,4 +49,22 @@ class SiswaModel extends Model
     {
         return $this->countAllResults();
     }
+
+    public function getFilteredData($filter = [])
+    {
+        $builder = $this->select('siswa.*, kelas.nama_kls AS kelas_name, jurusan.kode_jurusan AS jurusan_name, kelas.rombel')
+            ->join('kelas', 'kelas.id = siswa.kelas_id')
+            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
+            ->orderBy('siswa.id', 'DESC');
+
+        if (!empty($filter['kelas_rombel'])) {
+            $builder->where('kelas.rombel', $filter['kelas_rombel']);
+        }
+
+        if (!empty($filter['jurusan'])) {
+            $builder->where('jurusan.kode_jurusan', $filter['jurusan']);
+        }
+
+        return $builder->get()->getResultArray();
+    }
 }

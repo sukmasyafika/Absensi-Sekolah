@@ -96,8 +96,8 @@ $routes->group('', ['filter' => 'role:admin'], function ($routes) {
 
   // laporan
   $routes->get('/laporan', 'Laporan::index');
+  $routes->get('laporan/siswa/pdf', 'Laporan::siswaPdf');
 });
-
 $routes->group('', ['filter' => 'role:guru'], function ($routes) {
 
   $routes->get('dashguru', 'Dashguru::index');
