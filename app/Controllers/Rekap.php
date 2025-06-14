@@ -10,13 +10,12 @@ use App\Models\KelasModel;
 use App\Models\JadwalModel;
 use App\Models\SiswaModel;
 use App\Models\KetAbsenModel;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Models\GuruModel;
 use Dompdf\Dompdf;
 
 class Rekap extends BaseController
 {
-    protected $absensiModel, $mapelModel, $kelasModel, $siswaModel, $jadwalModel, $ketAbsenModel;
+    protected $absensiModel, $mapelModel, $kelasModel, $siswaModel, $jadwalModel, $ketAbsenModel, $guruModel;
 
     public function __construct()
     {
@@ -26,6 +25,7 @@ class Rekap extends BaseController
         $this->jadwalModel = new JadwalModel();
         $this->siswaModel = new SiswaModel();
         $this->ketAbsenModel = new KetAbsenModel();
+        $this->guruModel = new GuruModel();
     }
 
     public function index()
@@ -79,56 +79,113 @@ class Rekap extends BaseController
     {
         $dompdf = new Dompdf();
 
-        $data['siswa'] = $this->siswaModel->findAll();
+        $id_kelas  = $this->request->getGet('id_kelas');
+        $id_mapel  = $this->request->getGet('id_mapel');
+        $dari      = $this->request->getGet('dari');
+        $sampai    = $this->request->getGet('sampai');
 
+        $siswa = $this->siswaModel->where('kelas_id', $id_kelas)->findAll();
+
+        $jadwal = $this->jadwalModel
+            ->where('id_kelas', $id_kelas)
+            ->where('id_mapel', $id_mapel)
+            ->first();
+
+        if (!$jadwal) {
+            return redirect()->back()->with('error', 'Jadwal tidak ditemukan untuk kelas dan mapel yang dipilih.');
+        }
+
+        $id_jadwal = $jadwal->id;
+
+        $tanggalQuery = $this->absensiModel
+            ->select('pertemuan_ke, tanggal')
+            ->where('id_jadwal', $id_jadwal);
+
+        if (!empty($dari)) {
+            $tanggalQuery->where('tanggal >=', date('Y-m-d', strtotime($dari)));
+        }
+
+        if (!empty($sampai)) {
+            $tanggalQuery->where('tanggal <=', date('Y-m-d', strtotime($sampai)));
+        }
+
+        $tanggalPertemuan = $tanggalQuery
+            ->groupBy('pertemuan_ke, tanggal')
+            ->orderBy('pertemuan_ke', 'ASC')
+            ->findAll();
+
+        $rekapAbsensi = [];
+
+        foreach ($siswa as $s) {
+            $rekap = new \stdClass();
+            $rekap->id = $s->id;
+            $rekap->nama = $s->nama;
+            $rekap->jenis_kelamin = $s->jenis_kelamin;
+            $rekap->kehadiran = [];
+            $rekap->H = 0;
+            $rekap->I = 0;
+            $rekap->S = 0;
+            $rekap->A = 0;
+
+            foreach ($tanggalPertemuan as $t) {
+                $absen = $this->absensiModel
+                    ->where('id_jadwal', $id_jadwal)
+                    ->where('id_siswa', $s->id)
+                    ->where('pertemuan_ke', $t->pertemuan_ke)
+                    ->first();
+
+                $mapStatus = [
+                    'Hadir' => 'H',
+                    'Izin' => 'I',
+                    'Sakit' => 'S',
+                    'Alpa' => 'A',
+                    'H' => 'H',
+                    'I' => 'I',
+                    'S' => 'S',
+                    'A' => 'A'
+                ];
+
+                $status = $absen->status ?? '-';
+                $singkat = $mapStatus[$status] ?? '-';
+
+                $rekap->kehadiran[$t->pertemuan_ke] = $singkat;
+
+                if (in_array($singkat, ['H', 'I', 'S', 'A'])) {
+                    $rekap->{$singkat}++;
+                }
+            }
+
+            $rekapAbsensi[] = $rekap;
+        }
+
+        $kelas = $this->kelasModel->find($id_kelas);
+        $waliKelas = $this->guruModel->find($kelas->wali_kelas_id);
+
+        $data = [
+            'siswa' => $rekapAbsensi,
+            'tanggalPertemuan' => $tanggalPertemuan,
+            'kelas' => $this->kelasModel->getKelas($id_kelas),
+            'mapel' => $this->mapelModel->find($id_mapel),
+            'guru' => $this->guruModel->find($jadwal->id_guru),
+            'tahun_ajaran' => $this->jadwalModel->getTahunAjaranByJadwal($id_jadwal),
+            'tgl_cetak' => date('d-m-Y'),
+            'periode' => (!empty($dari) && !empty($sampai))
+                ? date('d/m/Y', strtotime($dari)) . ' - ' . date('d/m/Y', strtotime($sampai))
+                : null,
+            'wali_kelas' => [
+                'nama' => $waliKelas->nama,
+                'nip' => $waliKelas->nip,
+            ]
+        ];
+
+        $dompdf->set_option('isHtml5ParserEnabled', true);
+        $dompdf->set_option('isPhpEnabled', true);
 
         $html = view('users/rekap/absensi_rekap', $data);
         $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
 
         $dompdf->stream('laporan-absensi.pdf', ['Attachment' => false]);
-    }
-
-    public function exportExcel()
-    {
-        $filter_kelas = $this->request->getGet('id_kelas');
-        $filter_mapel = $this->request->getGet('id_mapel');
-        $filter_dari = $this->request->getGet('dari');
-        $filter_sampai = $this->request->getGet('sampai');
-
-        $siswa = $this->absensiModel->getRekapAbsensiLengkap($filter_kelas, $filter_mapel, $filter_dari, $filter_sampai);
-
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        $sheet->setCellValue('A1', 'REKAP ABSENSI SISWA');
-        $sheet->mergeCells('A1:J1');
-        $sheet->getStyle('A1')->getAlignment()->setHorizontal('center');
-        $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
-
-        $sheet->mergeCells('A2:A3')->setCellValue('A2', 'NO');
-        $sheet->mergeCells('B2:B3')->setCellValue('B2', 'NAMA SISWA');
-        $sheet->mergeCells('C2:C3')->setCellValue('C2', 'L/P');
-
-        $row = 2;
-        $no = 1;
-        foreach ($siswa as $s) {
-            $sheet->setCellValue('A' . $row, $no++);
-            $sheet->setCellValue('B' . $row, $s->nama_siswa);
-            $sheet->setCellValue('C' . $row, $s->nisn);
-            $sheet->setCellValue('D' . $row, $s->jk);
-            $sheet->setCellValue('E' . $row, $s->hari . ', ' . $s->tanggal);
-            $sheet->setCellValue('F' . $row, $s->waktu . ' (' . $s->jam_mulai . '-' . $s->jam_selesai . ')');
-            $sheet->setCellValue('G' . $row, str_pad($s->no_antrian, 3, '0', STR_PAD_LEFT));
-            $row++;
-        }
-
-        $writer = new Xlsx($spreadsheet);
-        $filename = 'Data-AntrianSiswa.xlsx';
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header("Content-Disposition: attachment; filename=\"$filename\"");
-        $writer->save("php://output");
-        exit;
     }
 }

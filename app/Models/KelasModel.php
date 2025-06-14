@@ -15,13 +15,19 @@ class KelasModel extends Model
     protected $useTimestamps    = true;
     protected $allowedFields    = ['nama_kls', 'rombel', 'jurusan_id', 'wali_kelas_id'];
 
-    public function getKelas()
+    public function getKelas($id_kelas = null)
     {
-        return $this->select('kelas.*, jurusan.nama_jurusan AS jurusan, jurusan.kode_jurusan AS kd_jurusan, guru.nama AS wakel')
+        $builder = $this->select('kelas.*, jurusan.nama_jurusan AS jurusan, jurusan.kode_jurusan AS kd_jurusan, guru.nama AS wakel')
             ->join('jurusan', 'jurusan.id = kelas.jurusan_id', 'left')
-            ->join('guru', 'guru.id = kelas.wali_kelas_id', 'left')
-            ->findAll();
+            ->join('guru', 'guru.id = kelas.wali_kelas_id', 'left');
+
+        if ($id_kelas !== null) {
+            return $builder->where('kelas.id', $id_kelas)->first();
+        }
+
+        return $builder->findAll();
     }
+
 
     public function isDuplicate($nama_kls, $rombel, $jurusan_id, $excludeId = null)
     {

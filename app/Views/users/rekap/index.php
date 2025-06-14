@@ -121,12 +121,9 @@
 
         <div class="mt-3">
           <div class="d-grid d-md-flex justify-content-md-end gap-2">
-            <button class="btn btn-success">
-              <i class="bi bi-box-arrow-in-down"></i> Export Excel
-            </button>
-            <button class="btn btn-danger">
+            <a href="<?= base_url('rekap/cetakLaporan?id_kelas=' . $id_kelas . '&id_mapel=' . $id_mapel . '&dari=' . $dari . '&sampai=' . $sampai); ?>" class="btn btn-danger">
               <i class="bi bi-box-arrow-in-down"></i> Export PDF
-            </button>
+            </a>
           </div>
         </div>
       </div>

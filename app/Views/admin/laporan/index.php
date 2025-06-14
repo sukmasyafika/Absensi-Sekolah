@@ -54,7 +54,7 @@
           </form>
 
           <div class="justify-content-between">
-            <a href="<?= base_url('laporan/siswa/pdf?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-danger btn-sm" title="Export PDF" tabindex="blank">
+            <a href="<?= base_url('laporan/exportpdf/pdf?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-danger btn-sm" title="Export PDF" tabindex="blank">
               <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF
             </a>
           </div>

@@ -25,44 +25,43 @@
         th {
             background-color: #f2f2f2;
         }
+
+        .text-left {
+            text-align: left;
+        }
     </style>
 </head>
 
 <body>
-    <h2 style="text-align:center;">Laporan Absensi</h2>
+    <h2 style="text-align: center;">Laporan Absensi Siswa</h2>
+
+    <p><strong>Kelas:</strong> <?= $kelas->nama_kls . ' ' . $kelas->rombel ?></p>
+    <p><strong>Mata Pelajaran:</strong> <?= $mapel->nama_mapel ?></p>
+    <p><strong>Guru Pengajar:</strong> <?= $guru->nama_guru ?></p>
+    <p><strong>Tahun Ajaran:</strong> <?= $tahun_ajaran ?></p>
+    <p><strong>Tanggal Cetak:</strong> <?= $tgl_cetak ?></p>
+
     <table>
         <thead>
             <tr>
                 <th>No</th>
-                <th>Nama Siswa</th>
-                <th>Jenis Kelamin</th>
-                <th>Kelas</th>
-                <th>Jurusan</th>
-                <th>Mata Pelajaran</th>
-                <th>Semester</th>
-                <th>Hadir</th>
-                <th>Sakit</th>
-                <th>Izin</th>
-                <th>Alpa</th>
-                <th>Total</th>
+                <th class="text-left">Nama Siswa</th>
+                <th>JK</th>
+                <?php foreach ($tanggalPertemuan as $t): ?>
+                    <th>P<?= $t->pertemuan_ke ?><br><small><?= date('d/m', strtotime($t->tanggal)) ?></small></th>
+                <?php endforeach; ?>
             </tr>
         </thead>
         <tbody>
             <?php $no = 1;
-            foreach ($data as $row): ?>
+            foreach ($siswa as $row): ?>
                 <tr>
                     <td><?= $no++ ?></td>
-                    <td><?= esc($row->nama) ?></td>
-                    <td><?= esc($row->jenis_kelamin) ?></td>
-                    <td><?= esc($row->nama_kls . ' ' . $row->rombel) ?></td>
-                    <td><?= esc($row->kode_jurusan) ?></td>
-                    <td><?= esc($row->nama_mapel) ?></td>
-                    <td><?= esc($row->semester) ?></td>
-                    <td><?= $row->hadir ?></td>
-                    <td><?= $row->sakit ?></td>
-                    <td><?= $row->izin ?></td>
-                    <td><?= $row->alpa ?></td>
-                    <td><?= $row->total ?></td>
+                    <td class="text-left"><?= esc($row->nama) ?></td>
+                    <td><?= esc($row->jk) ?></td>
+                    <?php foreach ($tanggalPertemuan as $t): ?>
+                        <td><?= $row->kehadiran[$t->pertemuan_ke] ?? '-' ?></td>
+                    <?php endforeach; ?>
                 </tr>
             <?php endforeach; ?>
         </tbody>

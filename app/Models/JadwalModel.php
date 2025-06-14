@@ -300,4 +300,13 @@ class JadwalModel extends Model
             ->groupBy('kelas.id, kelas.nama_kls, jurusan.kode_jurusan, kelas.rombel')
             ->findAll();
     }
+
+    public function getTahunAjaranByJadwal($id_jadwal)
+    {
+        return $this->select('thn_ajaran.tahun, thn_ajaran.semester')
+            ->join('thn_ajaran', 'thn_ajaran.id = jadwal.id_thnajaran')
+            ->where('jadwal.id', $id_jadwal)
+            ->get()
+            ->getRow();
+    }
 }
