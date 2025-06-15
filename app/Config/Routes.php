@@ -96,8 +96,8 @@ $routes->group('', ['filter' => 'role:admin'], function ($routes) {
 
   // laporan
   $routes->get('/laporan', 'Laporan::index');
-  $routes->get('/laporan/siswa/pdf', 'Laporan::siswaPdf');
-  $routes->get('/laporan/exportpdf/pdf', 'Laporan::exportpdf');
+  $routes->get('/laporan/siswaPdf', 'Laporan::siswaPdf');
+  $routes->get('/laporan/absenPdf', 'Laporan::absenPdf');
 });
 
 $routes->group('', ['filter' => 'role:guru'], function ($routes) {
@@ -112,7 +112,6 @@ $routes->group('', ['filter' => 'role:guru'], function ($routes) {
   $routes->get('/absensi', 'Absensi::index');
   $routes->post('/absensi/save', 'Absensi::save');
   $routes->post('/absensi/savegurutidakmasuk', 'Absensi::savegurutidakmasuk');
-
 
   $routes->get('/profil', 'Profil::index');
 });

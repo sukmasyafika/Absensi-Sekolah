@@ -13,63 +13,56 @@
         </div>
         <div class="card-body">
 
-          <form method="GET" action="<?= base_url('laporan/absensi'); ?>" class="mb-4 row g-3 align-items-center">
-
+          <form method="GET" action="<?= base_url('laporan/absenPdf'); ?>" target="_blank" class="mb-4 row g-3 align-items-center">
             <div class="col-md-6">
-              <label for="rombel_id" class="form-label small fw-bold">Kelas</label>
-              <select name="rombel_id" id="rombel_id" class="form-select form-select-sm">
-                <option value="">-- Semua Kelas --</option>
-
+              <label for="kelas" class="form-label fw-bold">Kelas</label>
+              <select name="id_kelas" id="kelas" class="form-select">
+                <option value="">-- Pilih Kelas --</option>
+                <?php foreach ($kelas as $kls) : ?>
+                  <option value="<?= $kls->id; ?>" <?= ($id_kelas == $kls->id) ? 'selected' : '' ?>>
+                    <?= esc("{$kls->nama_kls} {$kls->kd_jurusan} {$kls->rombel}"); ?>
+                  </option>
+                <?php endforeach; ?>
               </select>
             </div>
 
             <div class="col-md-6">
-              <label for="mapel" class="form-label small fw-bold">Mata Pelajaran</label>
-              <select name="mapel" id="mapel" class="form-select form-select-sm">
-                <option value="">-- Semua Mapel --</option>
-
+              <label for="mapel" class="form-label fw-bold">Mata Pelajaran</label>
+              <select name="id_mapel" id="mapel" class="form-select">
+                <option value="">-- Pilih Mapel --</option>
+                <?php foreach ($mapel as $m) : ?>
+                  <option value="<?= $m->id; ?>" <?= ($id_mapel == $m->id) ? 'selected' : '' ?>>
+                    <?= esc($m->kode_mapel); ?>
+                  </option>
+                <?php endforeach; ?>
               </select>
             </div>
 
-            <div class="col-md-6">
-              <label for="semester" class="form-label small fw-bold">Semester</label>
-              <select name="semester" id="semester" class="form-select form-select-sm">
-                <option value="">-- Semua Semester --</option>
-                <option value="1" <?= (old('semester', $filter['semester'] ?? '') == '1') ? 'selected' : '' ?>>1</option>
-                <option value="2" <?= (old('semester', $filter['semester'] ?? '') == '2') ? 'selected' : '' ?>>2</option>
-              </select>
+            <div class="row mb-3 g-3">
+              <div class="col-md-4">
+                <label for="semester" class="form-label fw-bold">Semester</label>
+                <select name="semester" id="semester" class="form-select form-select">
+                  <option value="Genap" <?= (old('semester', $filter['semester'] ?? '') == 'Genap') ? 'selected' : '' ?>>Genap</option>
+                  <option value="Gajil" <?= (old('semester', $filter['semester'] ?? '') == 'Gajil') ? 'selected' : '' ?>>Gajil</option>
+                </select>
+              </div>
+
+              <div class="col-md-4">
+                <label for="dari" class="form-label fw-semibold">Dari Tanggal</label>
+                <input type="date" class="form-control" id="dari" name="dari">
+              </div>
+              <div class="col-md-4">
+                <label for="sampai" class="form-label fw-semibold">Sampai Tanggal</label>
+                <input type="date" class="form-control" id="sampai" name="sampai">
+              </div>
             </div>
 
-            <div class="col-md-6">
-              <label for="bulan" class="form-label small fw-bold">Bulan</label>
-              <select name="bulan" id="bulan" class="form-select form-select-sm">
-                <option value="">-- Semua Bulan --</option>
-
-              </select>
-            </div>
-
-            <div class="mb-3 align-self-end">
-              <button type="submit" class="btn btn-primary">Filter</button>
+            <div class="float-end">
+              <button type="submit" name="download_pdf" value="1" class="btn btn-danger" title="Export PDF"> <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF
+              </button>
             </div>
           </form>
 
-          <div class="justify-content-between">
-            <a href="<?= base_url('laporan/exportpdf/pdf?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-danger btn-sm" title="Export PDF" tabindex="blank">
-              <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF
-            </a>
-          </div>
-
-          <!-- <div class="btn-group" role="group" aria-label="Export Buttons">
-            <a href="<?= base_url('laporan/absensi/excel?' . http_build_query($filter ?? [])); ?>" class="btn btn-sm btn-success" title="Export Excel">
-              <i class="bi bi-file-earmark-excel-fill"></i>
-            </a>
-            <a href="<?= base_url('laporan/absensi/pdf?' . http_build_query($filter ?? [])); ?>" class="btn btn-sm btn-danger" title="Export PDF">
-              <i class="bi bi-file-earmark-pdf-fill"></i>
-            </a>
-            <a href="<?= base_url('laporan/absensi/print?' . http_build_query($filter ?? [])); ?>" target="_blank" class="btn btn-sm btn-secondary" title="Cetak">
-              <i class="bi bi-printer-fill"></i>
-            </a>
-          </div> -->
         </div>
       </div>
     </div>
@@ -81,31 +74,31 @@
         </div>
         <div class="card-body">
 
-          <form action="<?= base_url('laporan/siswa'); ?>" method="GET" class="mb-4 row g-3 align-items-center">
-            <div class="col-md-6 mb-3">
-              <label for="kelasRombel" class="form-label fw-bold small fw-bold">Kelas</label>
-              <select name="kelas_rombel" id="kelasRombel" class="form-select form-select-sm">
+          <form action="<?= base_url('laporan/siswaPdf'); ?>" method="GET" target="_blank" class="mb-4 row g-3 align-items-center">
+            <div class="mb-3">
+              <label for="kelasRombel" class="form-label fw-bold">Kelas</label>
+              <select name="kelas_rombel" id="kelasRombel" class="form-select form-select">
                 <option value="">-- Semua Kelas --</option>
-
+                <?php foreach ($list_kelas as $k): ?>
+                  <?php
+                  $value = $k->nama_kls . '|' . $k->rombel . '|' . $k->kd_jurusan;
+                  $selected = ($value == ($_GET['kelas_rombel'] ?? '')) ? 'selected' : '';
+                  $label = $k->nama_kls . ' ' . $k->kd_jurusan . ' ' . $k->rombel;
+                  ?>
+                  <option value="<?= $value ?>" <?= $selected ?>>
+                    <?= $label ?>
+                  </option>
+                <?php endforeach; ?>
               </select>
             </div>
 
-            <div class="col-md-6 mb-3">
-              <label for="jurusan" class="form-label small fw-bold">Jurusan</label>
-              <select name="jurusan" id="jurusan" class="form-select form-select-sm">
-                <option value="">-- Semua Jurusan --</option>
-
-              </select>
+            <div class="float-end">
+              <button type="submit" class="btn btn-danger" name="download" value="1">
+                <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF
+              </button>
             </div>
-
-            <button type="submit" class="btn btn-primary btn-sm mb-3">Terapkan Filter</button>
           </form>
 
-          <div class="justify-content-between">
-            <a href="<?= base_url('laporan/siswa/pdf?' . $_SERVER['QUERY_STRING']); ?>" class="btn btn-danger btn-sm" title="Export PDF">
-              <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF
-            </a>
-          </div>
         </div>
       </div>
     </div>

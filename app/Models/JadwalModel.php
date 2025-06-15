@@ -309,4 +309,12 @@ class JadwalModel extends Model
             ->get()
             ->getRow();
     }
+
+    public function getJadwalWithSemester($semester)
+    {
+        return $this->select('jadwal.id')
+            ->join('thn_ajaran', 'thn_ajaran.id = jadwal.id_thnajaran')
+            ->where('thn_ajaran.semester', $semester)
+            ->findAll();
+    }
 }

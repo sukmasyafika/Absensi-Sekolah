@@ -8,24 +8,14 @@ use App\Models\AbsensiModel;
 use App\Models\KelasModel;
 use App\Models\MapelModel;
 use App\Models\GuruModel;
+use App\Models\JurusanModel;
 use App\Controllers\BaseController;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Models\ThnAjaranModel;
 use Dompdf\Dompdf;
-use Dompdf\Options;
 
 class Laporan extends BaseController
 {
-    protected $siswaModel, $jadwalModel, $absensiModel, $kelasModel, $mapelModel, $guruModel;
-
-    public function index()
-    {
-        $data = [
-            'title' => 'Laporan',
-        ];
-
-        return view('admin/laporan/index', $data);
-    }
+    protected $siswaModel, $jadwalModel, $absensiModel, $kelasModel, $mapelModel, $guruModel, $jurusanModel, $thnAjaranModel;
 
     public function __construct()
     {
@@ -35,130 +25,116 @@ class Laporan extends BaseController
         $this->kelasModel = new KelasModel();
         $this->mapelModel = new MapelModel();
         $this->guruModel = new GuruModel();
+        $this->jurusanModel = new JurusanModel();
+        $this->thnAjaranModel = new ThnAjaranModel();
     }
 
-    public function getSiswa()
+    public function index()
     {
-        $siswaModel = new \App\Models\SiswaModel();
-        $data = $siswaModel->findAll();
+        $id_kelas  = $this->request->getGet('id_kelas');
+        $id_mapel  = $this->request->getGet('id_mapel');
 
-        return $this->response->setJSON($data);
-    }
-    public function getAbsensi()
-    {
-        $absensiModel = new AbsensiModel();
-        $data = $absensiModel->getAbsen();
+        $kelas = $this->kelasModel->getKelas();
+        $mapel = $this->mapelModel->findAll();
 
-        return $this->response->setJSON($data);
-    }
+        $list_kelas = $this->kelasModel->getKelas();
+        $jurusan    = $this->jurusanModel->findAll();
 
-    // ================================================
-    // Laporan Siswa
-    // ================================================
-    public function siswaExcel()
-    {
-        $filter = $this->request->getGet();
-        $siswaModel = new SiswaModel();
-        $data = $siswaModel->getFilteredData($filter);
+        $data = [
+            'title'         => 'Laporan',
+            'mapel'         => $mapel,
+            'kelas'         => $kelas,
+            'list_kelas'    => $list_kelas,
+            'jurusan'       => $jurusan,
+            'id_mapel'      => $id_mapel,
+            'id_kelas'      => $id_kelas,
+        ];
 
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        // Header
-        $sheet->setCellValue('A1', 'No')
-            ->setCellValue('B1', 'NISN')
-            ->setCellValue('C1', 'Nama Siswa')
-            ->setCellValue('D1', 'Jenis Kelamin')
-            ->setCellValue('E1', 'Agama')
-            ->setCellValue('F1', 'Kelas')
-            ->setCellValue('G1', 'Jurusan')
-            ->setCellValue('H1', 'rombel');
-
-
-        // Data
-        $row = 2;
-        $no = 1;
-        foreach ($data as $siswa) {
-            $sheet->setCellValue('A' . $row, $no++)
-                ->setCellValue('B' . $row, $siswa['nisn'])
-                ->setCellValue('C' . $row, $siswa['nama'])
-                ->setCellValue('D' . $row, $siswa['jenis_kelamin'])
-                ->setCellValue('E' . $row, $siswa['agama'])
-                ->setCellValue('F' . $row, $siswa['kelas_name'])
-                ->setCellValue('G' . $row, $siswa['jurusan_name'])
-                ->setCellValue('H' . $row, $siswa['rombel']);
-
-            $row++;
-        }
-
-        // Output
-        $writer = new Xlsx($spreadsheet);
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="Laporan-Siswa.xlsx"');
-        $writer->save('php://output');
-        exit;
+        return view('admin/laporan/index', $data);
     }
 
     public function siswaPdf()
     {
-        $filter = $this->request->getGet();
-        $siswaModel = new SiswaModel();
-        $data['siswa'] = $siswaModel->getFilteredData($filter);
+        $kelas_rombel = $this->request->getGet('kelas_rombel');
+        $jurusan = $this->request->getGet('jurusan');
 
-        $dompdf = new Dompdf();
-        $html = view('admin/laporan/pdf_siswa', $data);
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-        $dompdf->stream('Laporan-Siswa.pdf', ['Attachment' => false]);
-        exit;
-    }
-    public function siswa_pdf()
-    {
-        $filter = $this->request->getGet(); // jika ingin pakai filter
-        $siswaModel = new SiswaModel();
-        $data['siswa'] = $siswaModel->getFilteredData($filter); // atau ->findAll()
+        $siswaQuery = $this->siswaModel->getSiswaQuery();
+
+        if (!empty($kelas_rombel)) {
+            $parts = explode('|', $kelas_rombel);
+            if (count($parts) === 3) {
+                [$nama_kls, $rombel, $kode_jurusan] = $parts;
+                $siswaQuery = $siswaQuery
+                    ->where('kelas.nama_kls', $nama_kls)
+                    ->where('kelas.rombel', $rombel)
+                    ->where('jurusan.kode_jurusan', $kode_jurusan);
+            }
+        }
+
+        $dataSiswa = $siswaQuery->findAll();
+
+        if ($this->request->is('get') && isset($_GET['download'])) {
+            $dompdf = new \Dompdf\Dompdf();
+            $html = view('admin/laporan/pdf_siswa', ['siswa' => $dataSiswa]);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'landscape');
+            $dompdf->render();
+            return $dompdf->stream('laporan-siswa-' . date('YmdHis') . '.pdf', ['Attachment' => false]);
+        }
+
+        $data = [
+            'list_kelas' => $this->kelasModel->findAll(),
+            'siswa' => $dataSiswa,
+        ];
 
         return view('admin/laporan/pdf_siswa', $data);
     }
-    public function siswa()
-    {
-        $filter = $this->request->getGet();
-        $siswaModel = new SiswaModel();
-        $data['siswa'] = $siswaModel->getFilteredData($filter);
 
-        return view('admin/laporan/pdf_siswa', $data);
-    }
-
-    // ================================================
-    // Laporan Absensi
-    // ================================================
-    public function exportpdf()
+    public function absenPdf()
     {
-        $dompdf = new Dompdf();
+        $dompdf = new \Dompdf\Dompdf();
 
         $id_kelas = $this->request->getGet('id_kelas');
         $id_mapel = $this->request->getGet('id_mapel');
+        $semester = $this->request->getGet('semester');
         $dari     = $this->request->getGet('dari');
         $sampai   = $this->request->getGet('sampai');
+        $semester   = $this->request->getGet('semester');
 
-        $siswa = $this->siswaModel->getSiswa();
+        $siswa = $this->siswaModel->where('kelas_id', $id_kelas)->findAll();
+
         $jadwal = $this->jadwalModel
             ->where('id_kelas', $id_kelas)
             ->where('id_mapel', $id_mapel)
             ->first();
 
         if (!$jadwal) {
-            return redirect()->back()->with('error', 'Data jadwal tidak ditemukan. Pastikan kelas dan mapel sudah sesuai.');
+            return redirect()->back()->with('error', 'Jadwal tidak ditemukan untuk kelas dan mapel yang dipilih.');
         }
 
-        $id_jadwal = $jadwal->id;
+        $tanggalQuery = $this->absensiModel
+            ->select('pertemuan_ke, tanggal');
 
-        $tanggalPertemuan = $this->absensiModel
-            ->select('pertemuan_ke, tanggal')
-            ->where('id_jadwal', $id_jadwal)
-            ->where('tanggal >=', $dari)
-            ->where('tanggal <=', $sampai)
+        if (!empty($semester)) {
+            $jadwalSemester = $this->jadwalModel->getJadwalWithSemester($semester);
+            $idJadwalList = array_map(fn($obj) => $obj->id, $jadwalSemester);
+
+            if (empty($idJadwalList)) {
+                return redirect()->back()->with('error', 'Tidak ada jadwal untuk semester tersebut.');
+            }
+
+            $tanggalQuery->whereIn('id_jadwal', $idJadwalList);
+        }
+
+        if (!empty($dari)) {
+            $tanggalQuery->where('tanggal >=', date('Y-m-d', strtotime($dari)));
+        }
+
+        if (!empty($sampai)) {
+            $tanggalQuery->where('tanggal <=', date('Y-m-d', strtotime($sampai)));
+        }
+
+        $tanggalPertemuan = $tanggalQuery
             ->groupBy('pertemuan_ke, tanggal')
             ->orderBy('pertemuan_ke', 'ASC')
             ->findAll();
@@ -169,39 +145,80 @@ class Laporan extends BaseController
             $rekap = new \stdClass();
             $rekap->id = $s->id;
             $rekap->nama = $s->nama;
-            $rekap->jk = $s->jenis_kelamin;
+            $rekap->jenis_kelamin = $s->jenis_kelamin;
             $rekap->kehadiran = [];
+            $rekap->H = 0;
+            $rekap->I = 0;
+            $rekap->S = 0;
+            $rekap->A = 0;
 
             foreach ($tanggalPertemuan as $t) {
-                $absen = $this->absensiModel
-                    ->where('id_jadwal', $id_jadwal)
-                    ->where('id_siswa', $s->id)
-                    ->where('pertemuan_ke', $t->pertemuan_ke)
-                    ->first();
+                if (!empty($semester) && !empty($idJadwalSemester)) {
+                    $absen = $this->absensiModel
+                        ->whereIn('id_jadwal', $idJadwalList)
+                        ->where('id_siswa', $s->id)
+                        ->where('pertemuan_ke', $t->pertemuan_ke)
+                        ->first();
+                } else {
+                    $absen = $this->absensiModel
+                        ->where('id_jadwal', $jadwal->id)
+                        ->where('id_siswa', $s->id)
+                        ->where('pertemuan_ke', $t->pertemuan_ke)
+                        ->first();
+                }
+
+                $mapStatus = [
+                    'Hadir' => 'H',
+                    'Izin'  => 'I',
+                    'Sakit' => 'S',
+                    'Alpa'  => 'A',
+                    'H'     => 'H',
+                    'I'     => 'I',
+                    'S'     => 'S',
+                    'A'     => 'A'
+                ];
 
                 $status = $absen->status ?? '-';
-                $rekap->kehadiran[$t->pertemuan_ke] = $status;
+                $singkat = $mapStatus[$status] ?? '-';
+
+                $rekap->kehadiran[$t->pertemuan_ke] = $singkat;
+
+                if (in_array($singkat, ['H', 'I', 'S', 'A'])) {
+                    $rekap->{$singkat}++;
+                }
             }
 
             $rekapAbsensi[] = $rekap;
         }
 
+        $kelas = $this->kelasModel->find($id_kelas);
+        $waliKelas = $this->guruModel->find($kelas->wali_kelas_id);
+
         $data = [
             'siswa' => $rekapAbsensi,
             'tanggalPertemuan' => $tanggalPertemuan,
-            'kelas' => $this->kelasModel->find($id_kelas),
+            'kelas' => $this->kelasModel->getKelas($id_kelas),
             'mapel' => $this->mapelModel->find($id_mapel),
-            'guru' => $this->guruModel->where('id_mapel', $id_mapel)->first(),
-            'tahun_ajaran' => 'Genap - 2021/2022',
+            'guru' => $this->guruModel->find($jadwal->id_guru),
+            'tahun_ajaran' => $this->jadwalModel->getTahunAjaranByJadwal($jadwal->id),
             'tgl_cetak' => date('d-m-Y'),
+            'periode' => (!empty($dari) && !empty($sampai))
+                ? date('d/m/Y', strtotime($dari)) . ' - ' . date('d/m/Y', strtotime($sampai))
+                : null,
+            'wali_kelas' => [
+                'nama' => $waliKelas->nama ?? '',
+                'nip' => $waliKelas->nip ?? '',
+            ]
         ];
 
-        $html = view('admin/laporan/pdf_absen', $data);
+        $dompdf->set_option('isHtml5ParserEnabled', true);
+        $dompdf->set_option('isPhpEnabled', true);
 
+        $html = view('admin/laporan/pdf_absen', $data);
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
 
-        $dompdf->stream('laporan-absensi.pdf' . date('Ymd_His') . '.pdf', ['Attachment' => false]);
+        $dompdf->stream('laporan-absensi' . date('Ymd_His') . '.pdf', ['Attachment' => false]);
     }
 }

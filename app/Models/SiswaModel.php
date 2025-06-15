@@ -31,6 +31,15 @@ class SiswaModel extends Model
         return $builder->where(['slug' => $slug])->first();
     }
 
+    public function getSiswaQuery()
+    {
+        return $this->select('siswa.*, kelas.nama_kls AS kelas_name, jurusan.kode_jurusan AS jurusan_name, kelas.rombel')
+            ->join('kelas', 'kelas.id = siswa.kelas_id')
+            ->join('jurusan', 'jurusan.id = kelas.jurusan_id')
+            ->orderBy('siswa.id', 'DESC');
+    }
+
+
     public function getSiswaWithKelas($filter_kelas = null)
     {
         $builder = $this->select('siswa.*, kelas.nama_kls AS kelas_name, jurusan.kode_jurusan AS jurusan_name, kelas.rombel')

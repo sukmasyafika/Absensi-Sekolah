@@ -1,71 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <title>Laporan Absensi</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 11px;
+            margin: 10px;
+        }
+
+        .kop {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .kop h3 {
+            margin: 0;
+            font-size: 13pt;
+            font-weight: bold;
+        }
+
+        .kop h4 {
+            margin: 2px 0;
+            font-size: 12pt;
+            font-weight: normal;
+        }
+
+        .kop .alamat {
+            font-size: 9pt;
+            margin: 4px 0;
+            line-height: 1.3;
+        }
+
+        hr {
+            border: 1px solid #000;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .info {
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        .info p {
+            margin: 3px 0;
         }
 
         table {
-            border-collapse: collapse;
             width: 100%;
-            font-size: 12px;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th {
+            font-size: 8pt;
         }
 
         th,
         td {
             border: 1px solid #000;
-            padding: 6px;
+            padding: 5px;
             text-align: center;
+            vertical-align: middle;
         }
 
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .text-left {
+        td:nth-child(2) {
             text-align: left;
+        }
+
+        .footer-ttd {
+            margin-top: 60px;
+            text-align: right;
         }
     </style>
 </head>
 
 <body>
-    <h2 style="text-align: center;">Laporan Absensi Siswa</h2>
 
-    <p><strong>Kelas:</strong> <?= $kelas->nama_kls . ' ' . $kelas->rombel ?></p>
-    <p><strong>Mata Pelajaran:</strong> <?= $mapel->nama_mapel ?></p>
-    <p><strong>Guru Pengajar:</strong> <?= $guru->nama_guru ?></p>
-    <p><strong>Tahun Ajaran:</strong> <?= $tahun_ajaran ?></p>
-    <p><strong>Tanggal Cetak:</strong> <?= $tgl_cetak ?></p>
+    <div class="kop">
+        <h3>PEMERINTAH KOTA JAYAPURA</h3>
+        <h3>DINAS PENDIDIKAN DAN KEBUDAYAAN</h3>
+        <h3>SMK NEGERI 5 SENI DAN INDUSTRI KREATIF KOTA JAYAPURA</h3>
+        <p class="alamat">
+            Jalan Baru Pasar Yotefa, Wai Mhorock, Abepura 99351<br>
+            Telp. (0967) 582201, E-mail: <i>smkn5jpr@gmail.com</i>
+        </p>
+        <hr>
+    </div>
+
+    <div class="info">
+        <p><strong>Kelas</strong> : <?= $kelas->nama_kls . ' ' . $kelas->kd_jurusan . ' ' . $kelas->rombel; ?></p>
+        <p><strong>Mata Pelajaran</strong> : <?= $mapel->nama_mapel; ?></p>
+        <p><strong>Guru Pengajar</strong> : <?= $guru->nama; ?></p>
+        <p><strong>Tahun Ajaran</strong> : <?= $tahun_ajaran->semester . ' - ' . $tahun_ajaran->tahun; ?></p>
+        <?php if (!empty($periode)): ?>
+            <p><strong>Periode</strong> : <?= $periode; ?></p>
+        <?php endif; ?>
+    </div>
 
     <table>
         <thead>
             <tr>
-                <th>No</th>
-                <th class="text-left">Nama Siswa</th>
-                <th>JK</th>
-                <?php foreach ($tanggalPertemuan as $t): ?>
-                    <th>P<?= $t->pertemuan_ke ?><br><small><?= date('d/m', strtotime($t->tanggal)) ?></small></th>
-                <?php endforeach; ?>
+                <th rowspan="3">No</th>
+                <th rowspan="3">Nama Siswa</th>
+                <th rowspan="3">JK</th>
+                <th colspan="<?= count($tanggalPertemuan); ?>">Pertemuan Ke-</th>
+                <th colspan="4">TOTAL</th>
+            </tr>
+            <tr>
+                <?php if (!empty($tanggalPertemuan)): ?>
+                    <?php foreach ($tanggalPertemuan as $i => $t): ?>
+                        <th><?= $i + 1 ?></th>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+                <th rowspan="2">H</th>
+                <th rowspan="2">I</th>
+                <th rowspan="2">S</th>
+                <th rowspan="2">A</th>
+            </tr>
+            <tr>
+                <?php if (!empty($tanggalPertemuan)): ?>
+                    <?php foreach ($tanggalPertemuan as $t): ?>
+                        <th><?= date('d/m', strtotime($t->tanggal)) ?></th>
+                    <?php endforeach; ?>
+                <?php endif; ?>
             </tr>
         </thead>
         <tbody>
-            <?php $no = 1;
-            foreach ($siswa as $row): ?>
+            <?php foreach ($siswa as $i => $s): ?>
                 <tr>
-                    <td><?= $no++ ?></td>
-                    <td class="text-left"><?= esc($row->nama) ?></td>
-                    <td><?= esc($row->jk) ?></td>
+                    <td><?= $i + 1 ?></td>
+                    <td><?= $s->nama ?></td>
+                    <td><?= ($s->jenis_kelamin == 'Laki-laki') ? 'L' : 'P' ?></td>
                     <?php foreach ($tanggalPertemuan as $t): ?>
-                        <td><?= $row->kehadiran[$t->pertemuan_ke] ?? '-' ?></td>
+                        <td>
+                            <?php
+                            $status = $s->kehadiran[$t->pertemuan_ke] ?? '-';
+                            if ($status == 'H') {
+                                echo '✓';
+                            } elseif (in_array($status, ['I', 'S', 'A'])) {
+                                echo $status;
+                            } else {
+                                echo '-';
+                            }
+                            ?>
+                        </td>
                     <?php endforeach; ?>
+                    <td><?= $s->H ?></td>
+                    <td><?= $s->I ?></td>
+                    <td><?= $s->S ?></td>
+                    <td><?= $s->A ?></td>
                 </tr>
             <?php endforeach; ?>
         </tbody>
     </table>
+
+    <div class="footer-ttd">
+        <p>Jayapura, <?= $tgl_cetak; ?></p>
+        <p>Wali Kelas,</p>
+        <div style="height: 80px;"></div>
+        <p><strong><u><?= $wali_kelas['nama']; ?></u></strong><br>
+            NIP. <?= $wali_kelas['nip']; ?></p>
+    </div>
+
+
 </body>
 
 </html>

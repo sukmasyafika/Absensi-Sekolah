@@ -91,7 +91,6 @@
     <hr>
   </div>
 
-
   <div class="info">
     <p><strong>Kelas</strong> : <?= $kelas->nama_kls . ' ' . $kelas->kd_jurusan . ' ' . $kelas->rombel; ?></p>
     <p><strong>Mata Pelajaran</strong> : <?= $mapel->nama_mapel; ?></p>
