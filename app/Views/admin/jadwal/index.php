@@ -95,15 +95,14 @@
                         <thead class="bg-primary text-white text-center align-middle">
                             <tr>
                                 <th style="width: 2%;" class="align-middle"><input type="checkbox" id="selectAll"></th>
-                                <th>No</th>
-                                <th>Nama Guru</th>
-                                <th>Mata Pelajaran</th>
-                                <th>Kelas</th>
-                                <th>Hari & Jam</th>
-                                <th>Ruangan</th>
-                                <th>Tahun</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th class="align-middle">No</th>
+                                <th class="align-middle">Nama Guru</th>
+                                <th class="align-middle">Mata Pelajaran</th>
+                                <th class="align-middle">Kelas</th>
+                                <th class="align-middle">Hari & Jam</th>
+                                <th class="align-middle">Ruangan</th>
+                                <th class="align-middle">Tahun</th>
+                                <th class="align-middle" style="width: 21%;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -125,13 +124,6 @@
                                         </td>
                                         <td class="align-middle text-uppercase"><?= esc($j->ruangan); ?></td>
                                         <td class="align-middle"><?= esc($j->semester . ' - ' . $j->tahun); ?></td>
-                                        <td class="align-middle">
-                                            <?php if ($j->status == 'Aktif'): ?>
-                                                <span class="badge bg-success"><?= esc($j->status); ?></span>
-                                            <?php else: ?>
-                                                <span class="badge bg-danger"><?= esc($j->status); ?></span>
-                                            <?php endif; ?>
-                                        </td>
                                         <td class="align-middle">
                                             <div class="d-flex flex-wrap justify-content-center gap-2">
                                                 <a href="<?= site_url('jadwal/detail/' . $j->id); ?>" class="btn btn-primary btn-sm">

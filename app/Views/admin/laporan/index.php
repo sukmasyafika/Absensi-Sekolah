@@ -4,6 +4,31 @@
 <div class="container-fluid mt-5 pt-5">
   <h1 class="h3 mb-4 text-gray-800"><?= $title; ?></h1>
 
+  <?php if (session()->getFlashdata('error')): ?>
+    <div class="position-fixed top-0 end-0 pe-3 pt-4 mt-5" style="z-index: 1055">
+      <div id="toastPesan" class="toast align-items-center text-bg-danger border shadow-sm" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body flex-grow-1">
+            <i class="bi bi-exclamation-circle-fill me-2"></i><?= session()->getFlashdata('error'); ?>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 my-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+  <?php endif; ?>
+  <?php if (session()->getFlashdata('success')): ?>
+    <div class="position-fixed top-0 end-0 pe-3 pt-4 mt-5" style="z-index: 1055">
+      <div id="toastPesan" class="toast align-items-center text-bg-success border shadow-sm" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+          <div class="toast-body flex-grow-1">
+            <i class="bi bi-check-circle-fill me-2"></i><?= session()->getFlashdata('success'); ?>
+          </div>
+          <button type="button" class="btn-close btn-close-white me-2 my-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+      </div>
+    </div>
+  <?php endif; ?>
+
   <div class="row">
 
     <div class="col-xl-8 col-md-6 mb-4 d-flex">
@@ -13,7 +38,7 @@
         </div>
         <div class="card-body">
 
-          <form method="GET" action="<?= base_url('laporan/absenPdf'); ?>" target="_blank" class="mb-4 row g-3 align-items-center">
+          <form method="GET" action="<?= base_url('laporan/absenPdf'); ?>" class="mb-4 row g-3 align-items-center">
             <div class="col-md-6">
               <label for="kelas" class="form-label fw-bold">Kelas</label>
               <select name="id_kelas" id="kelas" class="form-select">
@@ -74,8 +99,8 @@
         </div>
         <div class="card-body">
 
-          <form action="<?= base_url('laporan/siswaPdf'); ?>" method="GET" target="_blank" class="mb-4 row g-3 align-items-center">
-            <div class="mb-3">
+          <form action="<?= base_url('laporan/siswaPdf'); ?>" method="GET" class="mb-4 row g-3 align-items-center">
+            <div class="col-md-6 mb-3">
               <label for="kelasRombel" class="form-label fw-bold">Kelas</label>
               <select name="kelas_rombel" id="kelasRombel" class="form-select form-select">
                 <option value="">-- Semua Kelas --</option>
@@ -87,6 +112,18 @@
                   ?>
                   <option value="<?= $value ?>" <?= $selected ?>>
                     <?= $label ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="jurusan" class="form-label fw-bold">Jurusan</label>
+              <select name="jurusan" id="jurusan" class="form-select form-select">
+                <option value="">-- Semua Jurusan --</option>
+                <?php foreach ($jurusan as $j) : ?>
+                  <option value="<?= $j->id; ?>" <?= ($id_jurusan == $j->id) ? 'selected' : '' ?>>
+                    <?= esc($j->kode_jurusan); ?>
                   </option>
                 <?php endforeach; ?>
               </select>

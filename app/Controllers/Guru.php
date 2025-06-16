@@ -479,6 +479,7 @@ class Guru extends BaseController
                     'thn_masuk' => $thn_masuk,
                     'status' => $status,
                     'foto' => 'default.png',
+                    'kategori' => 'umum'
                 ];
                 $berhasil++;
             }

@@ -57,7 +57,7 @@ class AbsensiModel extends Model
         return $this->where('id_jadwal', $jadwal->id)
             ->where('tanggal', $tanggal)
             ->where('pertemuan_ke', $pertemuan)
-            ->first();
+            ->countAllResults();
     }
 
     public function getRekapAbsensiLengkap($id_kelas = null, $id_mapel = null, $dari = null, $sampai = null)

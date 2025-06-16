@@ -33,6 +33,7 @@ class Laporan extends BaseController
     {
         $id_kelas  = $this->request->getGet('id_kelas');
         $id_mapel  = $this->request->getGet('id_mapel');
+        $id_jurusan  = $this->request->getGet('id_jurusan');
 
         $kelas = $this->kelasModel->getKelas();
         $mapel = $this->mapelModel->findAll();
@@ -48,6 +49,7 @@ class Laporan extends BaseController
             'jurusan'       => $jurusan,
             'id_mapel'      => $id_mapel,
             'id_kelas'      => $id_kelas,
+            'id_jurusan'    => $id_jurusan,
         ];
 
         return view('admin/laporan/index', $data);
@@ -56,7 +58,11 @@ class Laporan extends BaseController
     public function siswaPdf()
     {
         $kelas_rombel = $this->request->getGet('kelas_rombel');
-        $jurusan = $this->request->getGet('jurusan');
+        $jurusan  = $this->request->getGet('jurusan');
+
+        if (!empty($kelas_rombel) && !empty($jurusan)) {
+            return redirect()->back()->with('error', 'Silakan pilih salah satu filter saja: Kelas atau Jurusan, jangan keduanya.');
+        }
 
         $siswaQuery = $this->siswaModel->getSiswaQuery();
 
@@ -69,9 +75,15 @@ class Laporan extends BaseController
                     ->where('kelas.rombel', $rombel)
                     ->where('jurusan.kode_jurusan', $kode_jurusan);
             }
+        } elseif (!empty($jurusan)) {
+            $siswaQuery = $siswaQuery->where('kelas.jurusan_id', $jurusan);
         }
 
         $dataSiswa = $siswaQuery->findAll();
+
+        if (empty($dataSiswa)) {
+            return redirect()->back()->with('error', 'Tidak ada siswa ditemukan sesuai filter.');
+        }
 
         if ($this->request->is('get') && isset($_GET['download'])) {
             $dompdf = new \Dompdf\Dompdf();
@@ -83,12 +95,16 @@ class Laporan extends BaseController
         }
 
         $data = [
-            'list_kelas' => $this->kelasModel->findAll(),
+            'list_kelas' => !empty($jurusan)
+                ? $this->kelasModel->where('jurusan_id', $jurusan)->findAll()
+                : $this->kelasModel->findAll(),
+            'jurusan' => $this->jurusanModel->findAll(),
             'siswa' => $dataSiswa,
         ];
 
         return view('admin/laporan/pdf_siswa', $data);
     }
+
 
     public function absenPdf()
     {
@@ -102,6 +118,10 @@ class Laporan extends BaseController
         $semester   = $this->request->getGet('semester');
 
         $siswa = $this->siswaModel->where('kelas_id', $id_kelas)->findAll();
+
+        if (empty($siswa)) {
+            return redirect()->back()->with('error', 'Tidak ada siswa di kelas yang dipilih.');
+        }
 
         $jadwal = $this->jadwalModel
             ->where('id_kelas', $id_kelas)
@@ -138,6 +158,10 @@ class Laporan extends BaseController
             ->groupBy('pertemuan_ke, tanggal')
             ->orderBy('pertemuan_ke', 'ASC')
             ->findAll();
+
+        if (empty($tanggalPertemuan)) {
+            return redirect()->back()->with('error', 'Tidak ada data absensi pada rentang tanggal atau semester yang dipilih.');
+        }
 
         $rekapAbsensi = [];
 
@@ -219,6 +243,6 @@ class Laporan extends BaseController
         $dompdf->setPaper('A4', 'landscape');
         $dompdf->render();
 
-        $dompdf->stream('laporan-absensi' . date('Ymd_His') . '.pdf', ['Attachment' => false]);
+        $dompdf->stream('laporan-absensi-' . date('Ymd_His') . '.pdf', ['Attachment' => false]);
     }
 }

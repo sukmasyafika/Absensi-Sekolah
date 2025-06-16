@@ -107,7 +107,7 @@ class Absensi extends BaseController
         }
 
         $cekAbsen = $this->absensiModel->getCekAbsen($jadwal, $tanggal, $pertemuan);
-        if ($cekAbsen) {
+        if ($cekAbsen > 0) {
             return redirect()->to('/absensi')->with('error', 'Jadwal ini sudah diabsen sebelumnya. Absen hanya bisa dilakukan satu kali.');
         }
 
