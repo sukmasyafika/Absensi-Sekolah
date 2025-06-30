@@ -106,7 +106,7 @@ class Absensi extends BaseController
             return redirect()->to('/absensi')->with('error', 'Jadwal tidak ditemukan.');
         }
 
-        $cekAbsen = $this->absensiModel->getCekAbsen($jadwal, $tanggal, $pertemuan);
+        $cekAbsen = $this->absensiModel->getCekAbsen($jadwal, $tanggal);
         if ($cekAbsen > 0) {
             return redirect()->to('/absensi')->with('error', 'Jadwal ini sudah diabsen sebelumnya. Absen hanya bisa dilakukan satu kali.');
         }

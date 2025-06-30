@@ -159,7 +159,7 @@
                     <div class="d-flex flex-wrap gap-3">
                       <?php foreach ($status as $key => $label) : ?>
                         <div class="form-check">
-                          <input class="form-check-input" type="radio" name="status[<?= $a->id ?>]" id="status_<?= $a->id ?>_<?= $key ?>" value="<?= $label ?>" required>
+                          <input class="form-check-input" type="radio" name="status[<?= $a->id ?>]" id="status_<?= $a->id ?>_<?= $key ?>" value="<?= $label ?>" <?= $key == 'H' ? 'checked' : '' ?>>
                           <label class="form-check-label" for="status_<?= $a->id ?>_<?= $key ?>">
                             <?= $key ?>
                           </label>

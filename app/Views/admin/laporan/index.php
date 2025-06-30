@@ -68,7 +68,7 @@
                 <label for="semester" class="form-label fw-bold">Semester</label>
                 <select name="semester" id="semester" class="form-select form-select">
                   <option value="Genap" <?= (old('semester', $filter['semester'] ?? '') == 'Genap') ? 'selected' : '' ?>>Genap</option>
-                  <option value="Gajil" <?= (old('semester', $filter['semester'] ?? '') == 'Gajil') ? 'selected' : '' ?>>Gajil</option>
+                  <option value="Ganjil" <?= (old('semester', $filter['semester'] ?? '') == 'Ganjil') ? 'selected' : '' ?>>Ganjil</option>
                 </select>
               </div>
 

@@ -52,11 +52,10 @@ class AbsensiModel extends Model
             ->first();
     }
 
-    public function getCekAbsen($jadwal, $tanggal, $pertemuan)
+    public function getCekAbsen($jadwal, $tanggal)
     {
         return $this->where('id_jadwal', $jadwal->id)
             ->where('tanggal', $tanggal)
-            ->where('pertemuan_ke', $pertemuan)
             ->countAllResults();
     }
 

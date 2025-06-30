@@ -106,7 +106,7 @@
                 foreach ($rekap as $r) : ?>
                   <tr>
                     <td><?= $no++ ?></td>
-                    <td><?= esc($r->nama) ?></td>
+                    <td class="text-capitalize"><?= esc($r->nama) ?></td>
                     <td><?= $r->hadir ?></td>
                     <td><?= $r->izin ?></td>
                     <td><?= $r->sakit ?></td>

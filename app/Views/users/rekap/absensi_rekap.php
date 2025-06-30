@@ -69,6 +69,7 @@
 
     td:nth-child(2) {
       text-align: left;
+      text-transform: uppercase;
     }
 
     .footer-ttd {
