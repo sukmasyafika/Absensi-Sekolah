@@ -31,7 +31,6 @@ class Laporan extends BaseController
         $this->thnAjaranModel = new ThnAjaranModel();
     }
 
-    /* ===================== INDEX ===================== */
     public function index()
     {
         $data = [
@@ -53,7 +52,6 @@ class Laporan extends BaseController
         return view('admin/laporan/index', $data);
     }
 
-    /* ===================== PDF ABSENSI ===================== */
     public function absenPdf()
     {
         $id_kelas = $this->request->getGet('id_kelas');
