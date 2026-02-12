@@ -21,6 +21,7 @@ class Absensi extends BaseController
     protected $ketAbsenModel;
     protected $hariLiburModel;
 
+
     public function __construct()
     {
         $this->absensiModel   = new AbsensiModel();
@@ -37,30 +38,18 @@ class Absensi extends BaseController
         $guruId   = session()->get('id_guru');
         $tanggal  = date('Y-m-d');
 
-        // ======================
-        // Ambil filter dari GET
-        // ======================
         $id_kelas = $this->request->getGet('id_kelas');
         $id_mapel = $this->request->getGet('id_mapel');
 
-        // ======================
-        // Data dropdown
-        // ======================
         $kelas = $this->jadwalModel->getKelasHariIni($guruId);
         $mapel = $this->jadwalModel->getMapelHariIni($guruId);
 
-        // ======================
-        // Default value
-        // ======================
         $pertemuan  = 1;
         $id_jadwal  = null;
         $siswa      = [];
         $nama_mapel = '-';
         $nama_kelas = '-';
 
-        // ======================
-        // Validasi ID
-        // ======================
         if ($id_kelas && !is_numeric($id_kelas)) {
             return redirect()->back()->with('error', 'ID kelas tidak valid.');
         }
@@ -69,9 +58,6 @@ class Absensi extends BaseController
             return redirect()->back()->with('error', 'ID mapel tidak valid.');
         }
 
-        // ======================
-        // Jika filter lengkap
-        // ======================
         if ($id_kelas && $id_mapel) {
 
             $jadwal = $this->jadwalModel->getHariJadwal($id_mapel, $id_kelas);
@@ -83,12 +69,11 @@ class Absensi extends BaseController
             $id_jadwal = $jadwal->id;
             $pertemuan = $this->absensiModel->getJumlahPertemuan($id_jadwal) + 1;
 
-            // Guru tidak masuk
+
             if ($this->ketAbsenModel->isGuruTidakMasuk($guruId, $tanggal, $id_jadwal)) {
                 return redirect()->back()->with('error', 'Anda tercatat tidak masuk hari ini.');
             }
 
-            // Hari libur
             $libur = $this->hariLiburModel->where('tanggal', $tanggal)->first();
             if ($libur) {
                 return redirect()->back()->with(
@@ -97,7 +82,6 @@ class Absensi extends BaseController
                 );
             }
 
-            // Ambil siswa
             $siswa = $this->siswaModel
                 ->where('kelas_id', $id_kelas)
                 ->where('status', 'Aktif')
@@ -107,7 +91,6 @@ class Absensi extends BaseController
                 return redirect()->back()->with('error', 'Tidak ada siswa aktif di kelas ini.');
             }
 
-            // Nama mapel & kelas
             $mapelData = $this->mapelModel->find($id_mapel);
             $kelasData = $this->kelasModel->find($id_kelas);
 
@@ -115,9 +98,7 @@ class Absensi extends BaseController
             $nama_kelas = $kelasData->nama_kls ?? '-';
         }
 
-        // ======================
-        // Data ke view
-        // ======================
+
         $data = [
             'title'        => 'Absensi',
             'kelas'        => $kelas,
@@ -135,9 +116,7 @@ class Absensi extends BaseController
         return view('users/absensi/index', $data);
     }
 
-    // ======================
-    // SIMPAN ABSENSI
-    // ======================
+
     public function save()
     {
         $id_kelas  = $this->request->getPost('id_kelas');
@@ -147,15 +126,20 @@ class Absensi extends BaseController
         $status    = $this->request->getPost('status');
 
         $jadwal = $this->jadwalModel->getHariJadwal($id_mapel, $id_kelas);
-
         if (!$jadwal) {
             return redirect()->to('/absensi')->with('error', 'Jadwal tidak ditemukan.');
         }
 
-        if ($this->absensiModel->getCekAbsen($jadwal->id, $tanggal, $pertemuan) > 0) {
-            return redirect()->to('/absensi')->with('error', 'Absensi sudah dilakukan.');
+        // Cek apakah sudah pernah absen
+        $cekAbsen = $this->absensiModel->getCekAbsen($jadwal->id, $tanggal, $pertemuan);
+        if ($cekAbsen > 0) {
+            return redirect()->to('/absensi')->with(
+                'error',
+                'Jadwal ini sudah diabsen sebelumnya. Absen hanya bisa dilakukan satu kali.'
+            );
         }
 
+        // Simpan absensi
         foreach ($status as $id_siswa => $stat) {
             $this->absensiModel->insert([
                 'id_siswa'     => $id_siswa,

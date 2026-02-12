@@ -48,7 +48,6 @@ $sampai  = $_GET['sampai'] ?? '';
 
   <div class="row">
 
-    <!-- ================= LAPORAN ABSENSI ================= -->
     <div class="col-xl-8 col-md-6 mb-4">
       <div class="card shadow">
         <div class="card-header">
@@ -85,11 +84,11 @@ $sampai  = $_GET['sampai'] ?? '';
             </div>
 
             <div class="col-md-4">
-              <label class="fw-bold">Semester</label>
-              <select name="semester" class="form-select">
-                <option value="">-- Semua --</option>
-                <option value="Ganjil" <?= ($semester == 'Ganjil') ? 'selected' : '' ?>>Ganjil</option>
+              <label for="semester" class="form-label fw-bold">Semester</label>
+              <select name="semester" id="semester" class="form-select">
+                <option value="">-- Semua Semester --</option>
                 <option value="Genap" <?= ($semester == 'Genap') ? 'selected' : '' ?>>Genap</option>
+                <option value="Ganjil" <?= ($semester == 'Ganjil') ? 'selected' : '' ?>>Ganjil</option>
               </select>
             </div>
 
@@ -114,7 +113,6 @@ $sampai  = $_GET['sampai'] ?? '';
       </div>
     </div>
 
-    <!-- ================= LAPORAN SISWA ================= -->
     <div class="col-xl-4 col-md-6 mb-4">
       <div class="card shadow">
         <div class="card-header">
@@ -154,7 +152,7 @@ $sampai  = $_GET['sampai'] ?? '';
             </div>
 
             <div class="text-end">
-              <button type="submit" name="download" value="1" class="btn btn-danger">
+              <button type="submit" name="download_pdf" value="1" class="btn btn-danger">
                 <i class="bi bi-file-earmark-pdf-fill"></i> Download PDF
               </button>
             </div>
